@@ -4,8 +4,6 @@ import {
   GD_DARK,
   GD_PURPLE,
   GD_VIOLET,
-  GD_PINK,
-  GD_ACCENT,
   GD_GOLD,
   BackgroundLayer,
   springConfig,
@@ -13,44 +11,44 @@ import {
 import { ORGANIZERS } from "./shared/organizers";
 
 // ── Frame Constants ──
-const TOTAL_FRAMES = 450;
+// Quick intro (2s), then organizers reveal with crossfade, hold 10s, then outro
 const INTRO_START = 0;
-const INTRO_END = 119;
-const ORG_START = 120;
-const ORG_END = 299;
-const OUTRO_START = 300;
-const OUTRO_END = 449;
-const CROSSFADE_FRAMES = 15;
+const INTRO_END = 59;       // 2 seconds
+const ORG_START = 45;        // overlap with intro for crossfade
+const ORG_END = 439;         // hold until all faces visible for 10s
+const OUTRO_START = 440;
+const OUTRO_END = 589;
 
-// ── Placeholder Scene Components (implemented in tasks 3.2, 3.3, 3.4) ──
+
+// ── IntroScene: Quick logo fly-in with scale + opacity (frames 0–59) ──
 
 const IntroScene: React.FC<{ frame: number; fps: number }> = ({ frame, fps }) => {
-  // Spring entrance for GameDay logo (from top)
-  const logoTopSpring = spring({
+  // Combined logo entrance: scale from 0.3 → 1 + opacity 0 → 1
+  const logoSpring = spring({
     frame,
     fps,
-    config: springConfig.entry,
-    durationInFrames: 40,
+    config: { damping: 14, stiffness: 120, mass: 0.8 },
+    durationInFrames: 30,
   });
-  const logoTopY = interpolate(logoTopSpring, [0, 1], [-50, 0], {
+  const logoScale = interpolate(logoSpring, [0, 1], [0.3, 1], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
 
-  // Spring entrance for AWS Community Europe logo (from bottom)
-  const logoBotSpring = spring({
-    frame: frame - 10,
+  // AWS Community Europe logo enters slightly delayed
+  const logo2Spring = spring({
+    frame: Math.max(0, frame - 8),
     fps,
-    config: springConfig.entry,
-    durationInFrames: 40,
+    config: { damping: 14, stiffness: 120, mass: 0.8 },
+    durationInFrames: 30,
   });
-  const logoBotY = interpolate(logoBotSpring, [0, 1], [50, 0], {
+  const logo2Scale = interpolate(logo2Spring, [0, 1], [0.3, 1], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
 
-  // Exit crossfade (frames 105–119)
-  const exitOpacity = interpolate(frame, [105, 119], [1, 0], {
+  // Exit: fade out in last 15 frames (45–59)
+  const exitOpacity = interpolate(frame, [45, 59], [1, 0], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
@@ -74,7 +72,7 @@ const IntroScene: React.FC<{ frame: number; fps: number }> = ({ frame, fps }) =>
           gap: 24,
         }}
       >
-        {/* GameDay logo — spring from top */}
+        {/* GameDay logo — scale + fade in */}
         <Img
           src={staticFile(
             "AWSCommunityGameDayEurope/GameDay_Solid_Logo_for_swag/GameDay Logo Solid White.png",
@@ -82,11 +80,12 @@ const IntroScene: React.FC<{ frame: number; fps: number }> = ({ frame, fps }) =>
           style={{
             width: 320,
             objectFit: "contain",
-            transform: `translateY(${logoTopY}px)`,
+            opacity: logoSpring,
+            transform: `scale(${logoScale})`,
           }}
         />
 
-        {/* AWS Community Europe logo — spring from bottom */}
+        {/* AWS Community Europe logo — scale + fade in, slightly delayed */}
         <Img
           src={staticFile(
             "AWSCommunityGameDayEurope/AWSCommunityEurope_last_nobackground.png",
@@ -94,40 +93,28 @@ const IntroScene: React.FC<{ frame: number; fps: number }> = ({ frame, fps }) =>
           style={{
             width: 220,
             objectFit: "contain",
-            transform: `translateY(${logoBotY}px)`,
+            opacity: logo2Spring,
+            transform: `scale(${logo2Scale})`,
           }}
         />
-
-        {/* GAMEDAY title — fade + slide up */}
-        <div
-          style={{
-            opacity: titleOpacity,
-            transform: `translateY(${titleY}px)`,
-            fontSize: 52,
-            fontWeight: 900,
-            color: "white",
-            letterSpacing: 8,
-            textAlign: "center",
-          }}
-        >
-          GAMEDAY
-        </div>
       </AbsoluteFill>
     </AbsoluteFill>
   );
 };
 
 
+// ── OrganizerScene: Heading + staggered card reveals (frames 45–299) ──
+
 const OrganizerScene: React.FC<{ frame: number; fps: number }> = ({ frame, fps }) => {
   const relFrame = frame - ORG_START;
 
-  // Scene opacity: fade in first 15 frames, fade out last 15 frames
-  const sceneOpacity = interpolate(frame, [120, 134, 285, 299], [0, 1, 1, 0], {
+  // Scene opacity: fade in over 15 frames from ORG_START, fade out last 15 frames
+  const sceneOpacity = interpolate(frame, [ORG_START, ORG_START + 15, ORG_END - 15, ORG_END], [0, 1, 1, 0], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
 
-  // Heading spring entrance (5 frames into scene)
+  // Heading spring entrance
   const orgTitleSpring = spring({
     frame: Math.max(0, relFrame - 5),
     fps,
@@ -173,7 +160,7 @@ const OrganizerScene: React.FC<{ frame: number; fps: number }> = ({ frame, fps }
         </div>
       </div>
 
-      {/* 4×2 Organizer card grid */}
+      {/* 4×2 Organizer card grid — staggered one-by-one reveal */}
       <div
         style={{
           position: "absolute",
@@ -187,10 +174,16 @@ const OrganizerScene: React.FC<{ frame: number; fps: number }> = ({ frame, fps }
         }}
       >
         {ORGANIZERS.map((org, i) => {
+          // Each card enters 10 frames after the previous one
+          const cardDelay = 10 + i * 10;
           const cardSpring = spring({
-            frame: Math.max(0, relFrame - 15 - i * 12),
+            frame: Math.max(0, relFrame - cardDelay),
             fps,
-            config: springConfig.entry,
+            config: { damping: 12, stiffness: 100, mass: 0.8 },
+          });
+          const cardScale = interpolate(cardSpring, [0, 1], [0.5, 1], {
+            extrapolateLeft: "clamp",
+            extrapolateRight: "clamp",
           });
           return (
             <div
@@ -201,7 +194,7 @@ const OrganizerScene: React.FC<{ frame: number; fps: number }> = ({ frame, fps }
                 alignItems: "center",
                 gap: 10,
                 opacity: cardSpring,
-                transform: `translateY(${interpolate(cardSpring, [0, 1], [30, 0])}px)`,
+                transform: `scale(${cardScale}) translateY(${interpolate(cardSpring, [0, 1], [20, 0])}px)`,
               }}
             >
               <div
@@ -260,10 +253,11 @@ const OrganizerScene: React.FC<{ frame: number; fps: number }> = ({ frame, fps }
 };
 
 
+// ── OutroScene (frames 300–449) ──
+
 const OutroScene: React.FC<{ frame: number; fps: number }> = ({ frame, fps }) => {
   const relFrame = frame - OUTRO_START;
 
-  // Spring entrance for logos (centered)
   const logoSpring = spring({
     frame: relFrame,
     fps,
@@ -279,34 +273,29 @@ const OutroScene: React.FC<{ frame: number; fps: number }> = ({ frame, fps }) =>
     extrapolateRight: "clamp",
   });
 
-  // Tagline fade-in (relFrame 20–40)
   const taglineOpacity = interpolate(relFrame, [20, 40], [0, 1], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
 
-  // CTA delayed fade-in (relFrame 40–60)
   const ctaOpacity = interpolate(relFrame, [40, 60], [0, 1], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
 
-  // Fade to black: absolute frames 420–449
-  const fadeToBlack = interpolate(frame, [420, 449], [0, 1], {
+  const fadeToBlack = interpolate(frame, [OUTRO_END - 29, OUTRO_END], [0, 1], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
 
   return (
     <AbsoluteFill>
-      {/* Radial gradient glow burst */}
       <AbsoluteFill
         style={{
           background: `radial-gradient(ellipse at center, ${GD_PURPLE}60 0%, ${GD_VIOLET}30 40%, transparent 70%)`,
         }}
       />
 
-      {/* Content container */}
       <AbsoluteFill
         style={{
           display: "flex",
@@ -316,7 +305,6 @@ const OutroScene: React.FC<{ frame: number; fps: number }> = ({ frame, fps }) =>
           gap: 20,
         }}
       >
-        {/* GameDay logo + AWS Community Europe logo */}
         <div
           style={{
             display: "flex",
@@ -341,7 +329,6 @@ const OutroScene: React.FC<{ frame: number; fps: number }> = ({ frame, fps }) =>
           />
         </div>
 
-        {/* Tagline */}
         <div
           style={{
             opacity: taglineOpacity,
@@ -356,7 +343,6 @@ const OutroScene: React.FC<{ frame: number; fps: number }> = ({ frame, fps }) =>
           AWS Community GameDay Europe · 17 March 2026
         </div>
 
-        {/* CTA */}
         <div
           style={{
             opacity: ctaOpacity,
@@ -371,7 +357,6 @@ const OutroScene: React.FC<{ frame: number; fps: number }> = ({ frame, fps }) =>
         </div>
       </AbsoluteFill>
 
-      {/* Fade to black overlay */}
       <AbsoluteFill
         style={{
           backgroundColor: "black",

@@ -250,10 +250,10 @@ const HeroIntro: React.FC<{ frame: number }> = ({ frame }) => {
   const { fps } = useVideoConfig();
 
   // Global exit fade
-  const exitOpacity = interpolate(frame, [850, 899], [1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const exitOpacity = interpolate(frame, [1150, 1199], [1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
 
   // Ambient glow that shifts through scenes
-  const glowHue = interpolate(frame, [0, 450, 899], [270, 320, 280]);
+  const glowHue = interpolate(frame, [0, 600, 1199], [270, 320, 280]);
   const glowPulse = Math.sin(frame * 0.04) * 0.15 + 0.5;
 
   // ── SCENE 1: "WHAT. A. DAY." (frames 0-179) ──
@@ -279,16 +279,16 @@ const HeroIntro: React.FC<{ frame: number }> = ({ frame }) => {
   const s3Opacity = interpolate(frame, [380, 395, 530, 549], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   const flagTitleSpring = spring({ frame: Math.max(0, frame - 385), fps, config: { damping: 14, stiffness: 120 } });
 
-  // ── SCENE 4: Organizers (frames 550-699) ──
-  const s4Opacity = interpolate(frame, [550, 565, 680, 699], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  // ── SCENE 4: Organizers (frames 550-999) — 10s hold after last face ──
+  const s4Opacity = interpolate(frame, [550, 565, 980, 999], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   const orgTitleSpring = spring({ frame: Math.max(0, frame - 555), fps, config: { damping: 14, stiffness: 120 } });
 
-  // ── SCENE 5: "AND NOW... THE RESULTS" (frames 700-899) ──
-  const s5Opacity = interpolate(frame, [700, 715, 850, 899], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
-  const andNowSpring = spring({ frame: Math.max(0, frame - 710), fps, config: { damping: 12, stiffness: 100 } });
-  const resultsSpring = spring({ frame: Math.max(0, frame - 750), fps, config: { damping: 8, stiffness: 120 } });
-  const resultsPulse = frame >= 760 ? Math.sin((frame - 760) * 0.08) * 0.08 + 1 : 1;
-  const meetBadgeSpring = spring({ frame: Math.max(0, frame - 790), fps, config: { damping: 14, stiffness: 120 } });
+  // ── SCENE 5: "AND NOW... THE RESULTS" (frames 1000-1199) ──
+  const s5Opacity = interpolate(frame, [1000, 1015, 1150, 1199], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const andNowSpring = spring({ frame: Math.max(0, frame - 1010), fps, config: { damping: 12, stiffness: 100 } });
+  const resultsSpring = spring({ frame: Math.max(0, frame - 1050), fps, config: { damping: 8, stiffness: 120 } });
+  const resultsPulse = frame >= 1060 ? Math.sin((frame - 1060) * 0.08) * 0.08 + 1 : 1;
+  const meetBadgeSpring = spring({ frame: Math.max(0, frame - 1090), fps, config: { damping: 14, stiffness: 120 } });
 
   return (
     <AbsoluteFill style={{ opacity: exitOpacity }}>

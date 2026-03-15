@@ -96,6 +96,7 @@ const COUNTDOWN_MILESTONES = SCHEDULE.filter((s) => s.id !== "end").map((s) => (
   label: s.label,
   time: s.start,
   id: s.id,
+  desc: s.desc,
 }));
 
 export const App: React.FC = () => {
