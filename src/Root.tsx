@@ -4,13 +4,9 @@ import { GameDayPreShow } from "../00-GameDayStreamPreShow-Muted";
 import { GameDayMainEvent } from "../01-GameDayStreamMainEvent-Audio";
 import { GameDayGameplay } from "../02-GameDayStreamGameplay-Muted";
 import {
-  GameDayClosing,
-  ClosingShowcase,
-  ClosingReveal,
-  ClosingFinalStandings,
-  ClosingTeamPodium,
-  ClosingThankYou,
-} from "../03-GameDayStreamClosing-Audio";
+  GameDayClosingCountdown,
+  ClosingShowcase as ClosingShowcaseFixed,
+} from "../03a-ClosingFixed";
 import { OrganizersMarketingVideo } from "../OrganizersMarketingVideo";
 import { GameDayPreShowInfo } from "../04-GameDayStreamPreShowInfo-Muted";
 export const RemotionRoot: React.FC = () => {
@@ -65,61 +61,11 @@ export const RemotionRoot: React.FC = () => {
         height={720}
       />
 
-      {/* 3. Closing Ceremony (Audio): ~12 min */}
+      {/* 3. Closing Countdown (Part A): HeroIntro + FastScroll + Winners Teaser — pre-rendered */}
       <Composition
-        id="GameDayClosing"
-        component={GameDayClosing}
-        durationInFrames={21700}
-        fps={30}
-        width={1280}
-        height={720}
-      />
-
-      {/* 3a. Closing — Showcase Phase (Hero Intro + Fast Scroll): frames 0–1899 */}
-      <Composition
-        id="Closing-Showcase"
-        component={ClosingShowcase}
-        durationInFrames={1900}
-        fps={30}
-        width={1280}
-        height={720}
-      />
-
-      {/* 3b. Closing — Full Reveal Phase: frames 3700–12699 */}
-      <Composition
-        id="Closing-Reveal"
-        component={ClosingReveal}
-        durationInFrames={9000}
-        fps={30}
-        width={1280}
-        height={720}
-      />
-
-      {/* 3c. Closing — Final Standings (3+3 layout): frames 8200–9699 */}
-      <Composition
-        id="Closing-FinalStandings"
-        component={ClosingFinalStandings}
-        durationInFrames={1500}
-        fps={30}
-        width={1280}
-        height={720}
-      />
-
-      {/* 3d. Closing — Team Podium Reveal: frames 9700–12699 */}
-      <Composition
-        id="Closing-TeamPodium"
-        component={ClosingTeamPodium}
-        durationInFrames={3000}
-        fps={30}
-        width={1280}
-        height={720}
-      />
-
-      {/* 3e. Closing — Thank You Phase: frames 12700–21699 */}
-      <Composition
-        id="Closing-ThankYou"
-        component={ClosingThankYou}
-        durationInFrames={9000}
+        id="GameDayClosingCountdown"
+        component={GameDayClosingCountdown}
+        durationInFrames={3600}
         fps={30}
         width={1280}
         height={720}

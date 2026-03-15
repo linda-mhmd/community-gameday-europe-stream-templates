@@ -28,6 +28,18 @@ import {
   type ScheduleSegment,
 } from "./shared/GameDayDesignSystem";
 
+// ── GameDay Tips (from AWS GameDay PDF) ──
+const GAMEDAY_TIPS = [
+  "AWS GameDay is a collaborative learning exercise in a gamified, risk-free environment",
+  "Each Quest is open-ended - figure out the best way forward. Don't be afraid to try!",
+  "Bonus points are awarded to teams that finish Quests quickly",
+  "Set your team name and language, then review the Quest information",
+  "Use hints for quick tips - they are low cost!",
+  "If you need help, signal a staff member and they will assist you",
+  "Don't worry about completing everything - have fun, experiment, and try new things!",
+  "This GameDay is designed for each team to work together on each of the Quests",
+];
+
 // ── Gameplay Phases (15-min intervals for detailed timeline) ──
 // Total: 216000 frames = 120 min at 30fps
 export const GAMEPLAY_PHASES: ScheduleSegment[] = [
@@ -118,6 +130,30 @@ const PhaseIndicator: React.FC<{
             borderRadius: 2,
           }}
         />
+      </div>
+    </div>
+  );
+};
+
+// ── Rotating GameDay Tip ──
+const TIP_DURATION = 450; // 15 seconds per tip at 30fps
+const GameDayTip: React.FC<{ frame: number }> = ({ frame }) => {
+  const tipIndex = Math.floor(frame / TIP_DURATION) % GAMEDAY_TIPS.length;
+  const localFrame = frame % TIP_DURATION;
+  const fadeIn = interpolate(localFrame, [0, 20], [0, 1], { extrapolateRight: "clamp" });
+  const fadeOut = interpolate(localFrame, [TIP_DURATION - 20, TIP_DURATION], [1, 0], { extrapolateRight: "clamp" });
+  const opacity = Math.min(fadeIn, fadeOut);
+  return (
+    <div style={{
+      position: "absolute", bottom: 70, left: 0, right: 0,
+      display: "flex", justifyContent: "center", zIndex: 20,
+    }}>
+      <div style={{
+        opacity, maxWidth: 700, textAlign: "center",
+        fontSize: TYPOGRAPHY.body, fontWeight: 600, color: "rgba(255,255,255,0.7)",
+        fontFamily: "'Inter', sans-serif", lineHeight: 1.5,
+      }}>
+        {GAMEDAY_TIPS[tipIndex]}
       </div>
     </div>
   );
@@ -242,6 +278,9 @@ export const GameDayGameplay: React.FC = () => {
 
       {/* Layer 4: Phase Indicator (bottom-left) */}
       <PhaseIndicator frame={frame} segments={GAMEPLAY_PHASES} />
+
+      {/* Layer 4b: Rotating GameDay Tips */}
+      <GameDayTip frame={frame} />
 
       {/* Layer 5: "Final 30 Minutes" text with GD_ORANGE pulse */}
       {showFinal30 && (

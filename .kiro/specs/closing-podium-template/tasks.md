@@ -6,8 +6,8 @@ Split the closing ceremony into two independent compositions (Part A: fixed cont
 
 ## Tasks
 
-- [ ] 1. Create shared utilities module
-  - [-] 1.1 Create `shared/closing-utils.ts` with Phase enum, PHASE_BOUNDARIES, REVEAL_SCHEDULE, REVEAL_FRAMES, and all pure utility functions (getActivePhase, isTransitionFrame, getFadeOpacity, getCountUpValue, getPodiumBarHeight, getRevealedPlacements, getShowcasePage, getAllShowcasePages, getShuffleCycleSpeed)
+- [x] 1. Create shared utilities module
+  - [x] 1.1 Create `shared/closing-utils.ts` with Phase enum, PHASE_BOUNDARIES, REVEAL_SCHEDULE, REVEAL_FRAMES, and all pure utility functions (getActivePhase, isTransitionFrame, getFadeOpacity, getCountUpValue, getPodiumBarHeight, getRevealedPlacements, getShowcasePage, getAllShowcasePages, getShuffleCycleSpeed)
     - Export the TeamData interface with the new `country` field
     - Export PODIUM_TEAMS placeholder data ("Team #1" through "Team #6", no lorem ipsum, distinct descending scores)
     - Export WINNING_CITY_TEAMS placeholder data with same conventions
@@ -38,11 +38,11 @@ Split the closing ceremony into two independent compositions (Part A: fixed cont
     - **Property 8: Backward Compatibility Re-exports**
     - **Validates: Requirements 6.4**
 
-- [~] 2. Checkpoint - Ensure shared module and property tests pass
+- [x] 2. Checkpoint - Ensure shared module and property tests pass
   - Ensure all tests pass, ask the user if questions arise.
 
 - [ ] 3. Create Part A composition (03a-ClosingFixed.tsx)
-  - [~] 3.1 Create `03a-ClosingFixed.tsx` containing HeroIntro (Scenes 1-5) and FastScroll components extracted from the current closing file
+  - [x] 3.1 Create `03a-ClosingFixed.tsx` containing HeroIntro (Scenes 1-5) and FastScroll components extracted from the current closing file
     - Import Phase, boundaries, and utilities from `shared/closing-utils.ts`
     - Export `GameDayClosingFixed` as the main composition (1900 frames, 1280×720, 30fps)
     - Export `ClosingShowcase` as a standalone sub-composition for Remotion Studio preview
