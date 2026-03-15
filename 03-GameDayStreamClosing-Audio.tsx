@@ -250,14 +250,14 @@ const HeroIntro: React.FC<{ frame: number }> = ({ frame }) => {
   const { fps } = useVideoConfig();
 
   // Global exit fade
-  const exitOpacity = interpolate(frame, [1150, 1199], [1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const exitOpacity = interpolate(frame, [1550, 1599], [1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
 
   // Ambient glow that shifts through scenes
-  const glowHue = interpolate(frame, [0, 600, 1199], [270, 320, 280]);
+  const glowHue = interpolate(frame, [0, 800, 1599], [270, 320, 280]);
   const glowPulse = Math.sin(frame * 0.04) * 0.15 + 0.5;
 
   // ── SCENE 1: "WHAT. A. DAY." (frames 0-179) ──
-  const s1Opacity = interpolate(frame, [0, 10, 160, 179], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const s1Opacity = interpolate(frame, [0, 10, 150, 179], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   const word1Spring = spring({ frame: Math.max(0, frame - 8), fps, config: { damping: 10, stiffness: 150 } });
   const word2Spring = spring({ frame: Math.max(0, frame - 22), fps, config: { damping: 10, stiffness: 150 } });
   const word3Spring = spring({ frame: Math.max(0, frame - 36), fps, config: { damping: 10, stiffness: 150 } });
@@ -265,8 +265,8 @@ const HeroIntro: React.FC<{ frame: number }> = ({ frame }) => {
   const dateFade = interpolate(frame, [70, 90], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   const subtitleFade = interpolate(frame, [90, 110], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
 
-  // ── SCENE 2: Stats cascade (frames 180-379) ──
-  const s2Opacity = interpolate(frame, [180, 195, 360, 379], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  // ── SCENE 2: Stats cascade (frames 160-379) — overlaps with scene 1 for crossfade ──
+  const s2Opacity = interpolate(frame, [160, 195, 350, 379], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   const STATS = [
     { value: 53, label: "USER GROUPS", suffix: "+", delay: 190 },
     { value: COUNTRIES.length, label: "COUNTRIES", suffix: "+", delay: 210 },
@@ -275,20 +275,24 @@ const HeroIntro: React.FC<{ frame: number }> = ({ frame }) => {
     { value: 4, label: "TIMEZONES", suffix: "+", delay: 270 },
   ];
 
-  // ── SCENE 3: Flag parade (frames 380-549) ──
-  const s3Opacity = interpolate(frame, [380, 395, 530, 549], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  // ── SCENE 3: Flag parade (frames 360-549) — overlaps with scene 2 ──
+  const s3Opacity = interpolate(frame, [360, 395, 520, 549], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   const flagTitleSpring = spring({ frame: Math.max(0, frame - 385), fps, config: { damping: 14, stiffness: 120 } });
 
-  // ── SCENE 4: Organizers (frames 550-999) — 10s hold after last face ──
-  const s4Opacity = interpolate(frame, [550, 565, 980, 999], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  // ── SCENE 4: Community Organizers (frames 520-999) — smooth crossfade in/out ──
+  const s4Opacity = interpolate(frame, [520, 560, 960, 999], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   const orgTitleSpring = spring({ frame: Math.max(0, frame - 555), fps, config: { damping: 14, stiffness: 120 } });
 
-  // ── SCENE 5: "AND NOW... THE RESULTS" (frames 1000-1199) ──
-  const s5Opacity = interpolate(frame, [1000, 1015, 1150, 1199], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
-  const andNowSpring = spring({ frame: Math.max(0, frame - 1010), fps, config: { damping: 12, stiffness: 100 } });
-  const resultsSpring = spring({ frame: Math.max(0, frame - 1050), fps, config: { damping: 8, stiffness: 120 } });
-  const resultsPulse = frame >= 1060 ? Math.sin((frame - 1060) * 0.08) * 0.08 + 1 : 1;
-  const meetBadgeSpring = spring({ frame: Math.max(0, frame - 1090), fps, config: { damping: 14, stiffness: 120 } });
+  // ── SCENE 4b: AWS Supporters (frames 970-1399) — crossfade overlap with scene 4 ──
+  const s4bOpacity = interpolate(frame, [970, 1010, 1360, 1399], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const awsTitleSpring = spring({ frame: Math.max(0, frame - 980), fps, config: { damping: 14, stiffness: 120 } });
+
+  // ── SCENE 5: "AND NOW... THE RESULTS" (frames 1370-1599) — crossfade overlap ──
+  const s5Opacity = interpolate(frame, [1370, 1410, 1550, 1599], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const andNowSpring = spring({ frame: Math.max(0, frame - 1410), fps, config: { damping: 12, stiffness: 100 } });
+  const resultsSpring = spring({ frame: Math.max(0, frame - 1450), fps, config: { damping: 8, stiffness: 120 } });
+  const resultsPulse = frame >= 1460 ? Math.sin((frame - 1460) * 0.08) * 0.08 + 1 : 1;
+  const meetBadgeSpring = spring({ frame: Math.max(0, frame - 1490), fps, config: { damping: 14, stiffness: 120 } });
 
   return (
     <AbsoluteFill style={{ opacity: exitOpacity }}>
@@ -336,7 +340,7 @@ const HeroIntro: React.FC<{ frame: number }> = ({ frame }) => {
       )}
 
       {/* ── SCENE 2: Stats cascade ── */}
-      {frame >= 180 && frame < 380 && (
+      {frame >= 160 && frame < 380 && (
         <AbsoluteFill style={{ opacity: s2Opacity }}>
           <div style={{ position: "absolute", top: 50, left: 0, right: 0, textAlign: "center" }}>
             <span style={{ fontSize: 14, fontWeight: 600, color: "rgba(255,255,255,0.4)", fontFamily: "'Inter', sans-serif", letterSpacing: 4, textTransform: "uppercase" }}>
@@ -374,7 +378,7 @@ const HeroIntro: React.FC<{ frame: number }> = ({ frame }) => {
       )}
 
       {/* ── SCENE 3: Flag parade ── */}
-      {frame >= 380 && frame < 550 && (
+      {frame >= 360 && frame < 550 && (
         <AbsoluteFill style={{ opacity: s3Opacity }}>
           <div style={{
             position: "absolute", top: 80, left: 0, right: 0, textAlign: "center",
@@ -418,7 +422,7 @@ const HeroIntro: React.FC<{ frame: number }> = ({ frame }) => {
       )}
 
       {/* ── SCENE 4: Organizer shoutout ── */}
-      {frame >= 550 && frame < 1000 && (
+      {frame >= 520 && frame < 1000 && (
         <AbsoluteFill style={{ opacity: s4Opacity }}>
           <div style={{
             position: "absolute", top: 40, left: 0, right: 0, textAlign: "center",
@@ -468,8 +472,86 @@ const HeroIntro: React.FC<{ frame: number }> = ({ frame }) => {
         </AbsoluteFill>
       )}
 
+      {/* ── SCENE 4b: AWS Supporters ── */}
+      {frame >= 970 && frame < 1400 && (
+        <AbsoluteFill style={{ opacity: s4bOpacity }}>
+          <div style={{
+            position: "absolute", top: 40, left: 0, right: 0, textAlign: "center",
+            opacity: awsTitleSpring, transform: `translateY(${interpolate(awsTitleSpring, [0, 1], [20, 0])}px)`,
+          }}>
+            <div style={{ fontSize: 18, fontWeight: 600, color: "rgba(255,255,255,0.5)", fontFamily: "'Inter', sans-serif", letterSpacing: 5 }}>
+              POWERED BY
+            </div>
+            <div style={{
+              fontSize: 36, fontWeight: 900, fontFamily: "'Inter', sans-serif", marginTop: 8,
+              color: GD_ACCENT, letterSpacing: 1,
+            }}>Thank You, AWS</div>
+          </div>
+          {/* Subtitle */}
+          <div style={{
+            position: "absolute", top: 130, left: 0, right: 0, textAlign: "center",
+            opacity: interpolate(frame, [1000, 1030], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
+          }}>
+            <span style={{ fontSize: 15, color: "rgba(255,255,255,0.45)", fontFamily: "'Inter', sans-serif", letterSpacing: 1 }}>
+              For the GameDay environment, outstanding support during organization, and so much more
+            </span>
+          </div>
+          {/* AWS supporter cards — centered row of 3 */}
+          <div style={{
+            position: "absolute", top: "30%", left: "50%", transform: "translateX(-50%)",
+            display: "flex", gap: 60, justifyContent: "center", alignItems: "flex-start",
+          }}>
+            {AWS_SUPPORTERS.map((person, i) => {
+              const cardSpring = spring({ frame: Math.max(0, frame - 1000 - i * 15), fps, config: { damping: 12, stiffness: 100, mass: 0.8 } });
+              const cardScale = interpolate(cardSpring, [0, 1], [0.5, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+              return (
+                <div key={person.name} style={{
+                  display: "flex", flexDirection: "column", alignItems: "center", gap: 12,
+                  opacity: cardSpring, transform: `scale(${cardScale}) translateY(${interpolate(cardSpring, [0, 1], [20, 0])}px)`,
+                }}>
+                  <div style={{
+                    width: 140, height: 140, borderRadius: "50%", overflow: "hidden",
+                    boxShadow: `0 0 30px ${GD_ACCENT}50, 0 0 60px ${GD_PURPLE}30, 0 4px 16px rgba(0,0,0,0.4)`,
+                    border: `2px solid ${GD_ACCENT}40`,
+                  }}>
+                    <Img src={staticFile(person.face)} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                  </div>
+                  <div style={{ textAlign: "center", maxWidth: 200 }}>
+                    <div style={{ fontSize: 24, fontWeight: 800, color: "#ffffff", fontFamily: "'Inter', sans-serif" }}>
+                      {person.name}
+                    </div>
+                    <div style={{ fontSize: 14, color: GD_ACCENT, fontFamily: "'Inter', sans-serif", marginTop: 4, fontWeight: 600 }}>
+                      {person.country}
+                    </div>
+                    <div style={{ fontSize: 13, color: "rgba(255,255,255,0.5)", fontFamily: "'Inter', sans-serif", marginTop: 3, lineHeight: 1.3 }}>
+                      {person.role}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+          {/* "And many more" indicator */}
+          <div style={{
+            position: "absolute", bottom: 80, left: 0, right: 0, textAlign: "center",
+            opacity: interpolate(frame, [1060, 1090], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
+          }}>
+            <div style={{
+              display: "inline-flex", alignItems: "center", gap: 12,
+              background: "rgba(255,255,255,0.05)", backdropFilter: "blur(8px)",
+              borderRadius: 12, padding: "10px 24px", border: "1px solid rgba(255,255,255,0.08)",
+            }}>
+              <span style={{ fontSize: 20 }}>🙏</span>
+              <span style={{ fontSize: 15, fontWeight: 600, color: "rgba(255,255,255,0.6)", fontFamily: "'Inter', sans-serif", letterSpacing: 1 }}>
+                And many more AWS colleagues who made this possible
+              </span>
+            </div>
+          </div>
+        </AbsoluteFill>
+      )}
+
       {/* ── SCENE 5: "AND NOW... THE RESULTS" ── */}
-      {frame >= 1000 && (
+      {frame >= 1370 && (
         <AbsoluteFill style={{ opacity: s5Opacity }}>
           {/* Radial burst */}
           <div style={{

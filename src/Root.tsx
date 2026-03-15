@@ -64,27 +64,27 @@ export const RemotionRoot: React.FC = () => {
         height={720}
       />
 
-      {/* 3. Closing Ceremony (Audio): ~11.8 min */}
+      {/* 3. Closing Ceremony (Audio): ~12 min */}
       <Composition
         id="GameDayClosing"
         component={GameDayClosing}
-        durationInFrames={21300}
+        durationInFrames={21700}
         fps={30}
         width={1280}
         height={720}
       />
 
-      {/* 3a. Closing — Showcase Phase (Hero Intro + Fast Scroll): frames 0–1499 */}
+      {/* 3a. Closing — Showcase Phase (Hero Intro + Fast Scroll): frames 0–1899 */}
       <Composition
         id="Closing-Showcase"
         component={ClosingShowcase}
-        durationInFrames={1500}
+        durationInFrames={1900}
         fps={30}
         width={1280}
         height={720}
       />
 
-      {/* 3b. Closing — Full Reveal Phase: frames 3300–12299 */}
+      {/* 3b. Closing — Full Reveal Phase: frames 3700–12699 */}
       <Composition
         id="Closing-Reveal"
         component={ClosingReveal}
@@ -94,7 +94,7 @@ export const RemotionRoot: React.FC = () => {
         height={720}
       />
 
-      {/* 3c. Closing — Final Standings (3+3 layout): frames 7800–9299 */}
+      {/* 3c. Closing — Final Standings (3+3 layout): frames 8200–9699 */}
       <Composition
         id="Closing-FinalStandings"
         component={ClosingFinalStandings}
@@ -104,7 +104,7 @@ export const RemotionRoot: React.FC = () => {
         height={720}
       />
 
-      {/* 3d. Closing — Team Podium Reveal: frames 9300–12299 */}
+      {/* 3d. Closing — Team Podium Reveal: frames 9700–12699 */}
       <Composition
         id="Closing-TeamPodium"
         component={ClosingTeamPodium}
@@ -114,7 +114,7 @@ export const RemotionRoot: React.FC = () => {
         height={720}
       />
 
-      {/* 3e. Closing — Thank You Phase: frames 12300–21299 */}
+      {/* 3e. Closing — Thank You Phase: frames 12700–21699 */}
       <Composition
         id="Closing-ThankYou"
         component={ClosingThankYou}
