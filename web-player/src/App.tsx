@@ -211,21 +211,40 @@ export const App: React.FC = () => {
 
 // ─── Waiting / End screens ───────────────────────────────────────────
 const WaitingScreen: React.FC = () => {
-  const [countdown, setCountdown] = useState("");
+  const [, setTick] = useState(0);
   useEffect(() => {
-    const tick = () => setCountdown(formatCountdown(EVENT_DATE, SCHEDULE[0].start, TIMEZONE));
-    tick();
-    const id = setInterval(tick, 1000);
+    const id = setInterval(() => setTick((t) => t + 1), 1000);
     return () => clearInterval(id);
   }, []);
+
+  const countdowns = SCHEDULE.filter((s) => s.id !== "end").map((s) => ({
+    label: s.label,
+    time: s.start,
+    countdown: formatCountdown(EVENT_DATE, s.start, TIMEZONE),
+  }));
+
   return (
     <div style={screenStyle}>
       <h1 style={{ fontSize: 32, color: "#c084fc" }}>AWS Community GameDay Europe</h1>
-      <p style={{ fontSize: 20, marginTop: 16, color: "#8b5cf6" }}>Stream starts in</p>
-      <p style={{ fontSize: 64, fontFamily: "monospace", color: "#fbbf24", marginTop: 8 }}>{countdown}</p>
-      <p style={{ fontSize: 14, marginTop: 24, opacity: 0.5 }}>
-        {EVENT_DATE} — {SCHEDULE[0].start} CET
+      <p style={{ fontSize: 14, marginTop: 8, opacity: 0.5 }}>
+        {EVENT_DATE} — All times CET
       </p>
+      <div style={{ marginTop: 32, display: "flex", flexDirection: "column", gap: 16 }}>
+        {countdowns.map((c) => (
+          <div key={c.time} style={{ display: "flex", alignItems: "center", gap: 16 }}>
+            <span style={{ fontSize: 14, color: "#8b5cf6", width: 200, textAlign: "right" }}>
+              {c.label} ({c.time})
+            </span>
+            <span style={{
+              fontSize: 36,
+              fontFamily: "monospace",
+              color: c.countdown === "00:00:00" ? "#22c55e" : "#fbbf24",
+            }}>
+              {c.countdown === "00:00:00" ? "✓ LIVE" : c.countdown}
+            </span>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

@@ -8,7 +8,7 @@
  */
 
 // ─── Event date (YYYY-MM-DD) ────────────────────────────────────────
-export const EVENT_DATE = "2025-06-14"; // Saturday, June 14, 2025
+export const EVENT_DATE = "2026-03-17"; // Tuesday, March 17, 2026
 
 // ─── Schedule (CET 24h format "HH:MM") ──────────────────────────────
 // Each segment has a start time. The player switches when the clock hits that time.
