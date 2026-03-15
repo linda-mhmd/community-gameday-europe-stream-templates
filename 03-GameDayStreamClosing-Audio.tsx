@@ -279,20 +279,21 @@ const HeroIntro: React.FC<{ frame: number }> = ({ frame }) => {
   const s3Opacity = interpolate(frame, [360, 395, 520, 549], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   const flagTitleSpring = spring({ frame: Math.max(0, frame - 385), fps, config: { damping: 14, stiffness: 120 } });
 
-  // ── SCENE 4: Community Organizers (frames 520-999) — smooth crossfade in/out ──
-  const s4Opacity = interpolate(frame, [520, 560, 960, 999], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  // ── SCENE 4: Community Organizers (frames 520-1009) — no overlap, clean sequential ──
+  // Last face appears ~649, hold 10s (300 frames) until ~949, fade out 950-1009
+  const s4Opacity = interpolate(frame, [520, 560, 950, 1009], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   const orgTitleSpring = spring({ frame: Math.max(0, frame - 555), fps, config: { damping: 14, stiffness: 120 } });
 
-  // ── SCENE 4b: AWS Supporters (frames 970-1399) — crossfade overlap with scene 4 ──
-  const s4bOpacity = interpolate(frame, [970, 1010, 1360, 1399], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
-  const awsTitleSpring = spring({ frame: Math.max(0, frame - 980), fps, config: { damping: 14, stiffness: 120 } });
+  // ── SCENE 4b: AWS Supporters (frames 1010-1399) — starts after organizers fully gone ──
+  const s4bOpacity = interpolate(frame, [1010, 1060, 1350, 1399], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const awsTitleSpring = spring({ frame: Math.max(0, frame - 1020), fps, config: { damping: 14, stiffness: 120 } });
 
-  // ── SCENE 5: "AND NOW... THE RESULTS" (frames 1370-1599) — crossfade overlap ──
-  const s5Opacity = interpolate(frame, [1370, 1410, 1550, 1599], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
-  const andNowSpring = spring({ frame: Math.max(0, frame - 1410), fps, config: { damping: 12, stiffness: 100 } });
-  const resultsSpring = spring({ frame: Math.max(0, frame - 1450), fps, config: { damping: 8, stiffness: 120 } });
-  const resultsPulse = frame >= 1460 ? Math.sin((frame - 1460) * 0.08) * 0.08 + 1 : 1;
-  const meetBadgeSpring = spring({ frame: Math.max(0, frame - 1490), fps, config: { damping: 14, stiffness: 120 } });
+  // ── SCENE 5: "AND NOW... THE RESULTS" (frames 1400-1599) — starts after AWS fully gone ──
+  const s5Opacity = interpolate(frame, [1400, 1440, 1550, 1599], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const andNowSpring = spring({ frame: Math.max(0, frame - 1440), fps, config: { damping: 12, stiffness: 100 } });
+  const resultsSpring = spring({ frame: Math.max(0, frame - 1470), fps, config: { damping: 8, stiffness: 120 } });
+  const resultsPulse = frame >= 1480 ? Math.sin((frame - 1480) * 0.08) * 0.08 + 1 : 1;
+  const meetBadgeSpring = spring({ frame: Math.max(0, frame - 1510), fps, config: { damping: 14, stiffness: 120 } });
 
   return (
     <AbsoluteFill style={{ opacity: exitOpacity }}>
@@ -422,7 +423,7 @@ const HeroIntro: React.FC<{ frame: number }> = ({ frame }) => {
       )}
 
       {/* ── SCENE 4: Organizer shoutout ── */}
-      {frame >= 520 && frame < 1000 && (
+      {frame >= 520 && frame < 1010 && (
         <AbsoluteFill style={{ opacity: s4Opacity }}>
           <div style={{
             position: "absolute", top: 40, left: 0, right: 0, textAlign: "center",
@@ -473,7 +474,7 @@ const HeroIntro: React.FC<{ frame: number }> = ({ frame }) => {
       )}
 
       {/* ── SCENE 4b: AWS Supporters ── */}
-      {frame >= 970 && frame < 1400 && (
+      {frame >= 1010 && frame < 1400 && (
         <AbsoluteFill style={{ opacity: s4bOpacity }}>
           <div style={{
             position: "absolute", top: 40, left: 0, right: 0, textAlign: "center",
@@ -490,7 +491,7 @@ const HeroIntro: React.FC<{ frame: number }> = ({ frame }) => {
           {/* Subtitle */}
           <div style={{
             position: "absolute", top: 130, left: 0, right: 0, textAlign: "center",
-            opacity: interpolate(frame, [1000, 1030], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
+            opacity: interpolate(frame, [1060, 1090], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
           }}>
             <span style={{ fontSize: 15, color: "rgba(255,255,255,0.45)", fontFamily: "'Inter', sans-serif", letterSpacing: 1 }}>
               For the GameDay environment, outstanding support during organization, and so much more
@@ -502,7 +503,7 @@ const HeroIntro: React.FC<{ frame: number }> = ({ frame }) => {
             display: "flex", gap: 60, justifyContent: "center", alignItems: "flex-start",
           }}>
             {AWS_SUPPORTERS.map((person, i) => {
-              const cardSpring = spring({ frame: Math.max(0, frame - 1000 - i * 15), fps, config: { damping: 12, stiffness: 100, mass: 0.8 } });
+              const cardSpring = spring({ frame: Math.max(0, frame - 1070 - i * 15), fps, config: { damping: 12, stiffness: 100, mass: 0.8 } });
               const cardScale = interpolate(cardSpring, [0, 1], [0.5, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
               return (
                 <div key={person.name} style={{
@@ -534,7 +535,7 @@ const HeroIntro: React.FC<{ frame: number }> = ({ frame }) => {
           {/* "And many more" indicator */}
           <div style={{
             position: "absolute", bottom: 80, left: 0, right: 0, textAlign: "center",
-            opacity: interpolate(frame, [1060, 1090], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
+            opacity: interpolate(frame, [1120, 1150], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
           }}>
             <div style={{
               display: "inline-flex", alignItems: "center", gap: 12,
@@ -551,7 +552,7 @@ const HeroIntro: React.FC<{ frame: number }> = ({ frame }) => {
       )}
 
       {/* ── SCENE 5: "AND NOW... THE RESULTS" ── */}
-      {frame >= 1370 && (
+      {frame >= 1400 && (
         <AbsoluteFill style={{ opacity: s5Opacity }}>
           {/* Radial burst */}
           <div style={{

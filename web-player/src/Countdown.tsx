@@ -51,9 +51,9 @@ export const CountdownComposition: React.FC<CountdownProps> = ({ eventDate, mile
       {/* ═══ LEFT: Logos + Hero Countdown ═══ */}
       <div style={{ position: "absolute", left: 0, top: 0, width: 720, height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 20, marginBottom: 28, ...anim(0) }}>
-          <Img src={COMMUNITY_LOGO} style={{ height: 80 }} />
-          <div style={{ width: 1, height: 50, background: `${GD_PURPLE}55` }} />
-          <Img src={LOGO} style={{ height: 68 }} />
+          <Img src={COMMUNITY_LOGO} style={{ height: 100 }} />
+          <div style={{ width: 1, height: 60, background: `${GD_PURPLE}55` }} />
+          <Img src={LOGO} style={{ height: 85 }} />
         </div>
 
         <div style={{ ...anim(6), textAlign: "center" }}>
@@ -86,7 +86,7 @@ export const CountdownComposition: React.FC<CountdownProps> = ({ eventDate, mile
       <div style={{ position: "absolute", right: 0, top: 0, width: 560, height: "100%", display: "flex", flexDirection: "column", justifyContent: "center", padding: "0 36px 0 0", marginTop: -20 }}>
         <div style={{ ...anim(14) }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 15, fontWeight: 700, color: GD_ACCENT, textTransform: "uppercase", letterSpacing: 3, marginBottom: 14 }}>
-            <CalendarIcon size={18} /> Schedule — {eventDate}
+            <CalendarIcon size={18} /> Schedule for Community GameDay Europe
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
             {milestones.map((ms) => {
@@ -129,7 +129,7 @@ export const CountdownComposition: React.FC<CountdownProps> = ({ eventDate, mile
           </div>
         </div>
 
-        <div style={{ marginTop: 40, ...anim(22) }}>
+        <div style={{ marginTop: 56, ...anim(22) }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 15, fontWeight: 700, color: GD_ACCENT, textTransform: "uppercase", letterSpacing: 3, marginBottom: 12 }}>
             <CheckCircleIcon size={18} /> Get Ready
           </div>

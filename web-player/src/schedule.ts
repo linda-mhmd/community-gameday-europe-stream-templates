@@ -14,7 +14,7 @@ export const EVENT_DATE = "2026-03-17"; // Tuesday, March 17, 2026
 // Each segment has a start time. The player switches when the clock hits that time.
 export const SCHEDULE = [
   { id: "preshow",   start: "17:30", label: "Pre-Show Loop", desc: "Audio & stream test • Countdown to go-live" },
-  { id: "mainevent", start: "18:00", label: "Live Stream", desc: "Welcome, speakers, GameDay instructions & team codes" },
+  { id: "mainevent", start: "18:00", label: "Live Stream", desc: "Welcome, speakers & GameDay instructions" },
   { id: "gameplay",  start: "18:30", label: "GameDay", desc: "2 hours of competitive cloud gaming across Europe" },
   { id: "closing",   start: "20:30", label: "Closing Ceremony", desc: "Winners, local awards & wrap-up" },
   { id: "end",       start: "21:00", label: "Stream Ended", desc: "" },
