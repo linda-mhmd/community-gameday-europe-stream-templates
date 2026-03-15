@@ -1,375 +1,239 @@
 import React from "react";
 import {
-  AbsoluteFill,
-  interpolate,
-  Sequence,
-  spring,
-  useCurrentFrame,
-  useVideoConfig,
+  AbsoluteFill, Img, interpolate, Sequence, spring,
+  useCurrentFrame, useVideoConfig, staticFile,
 } from "remotion";
 import {
-  BackgroundLayer,
-  GlassCard,
-  AudioBadge,
-  calculateCountdown,
-  formatTime,
-  getPhaseInfo,
-  springConfig,
-  staggeredEntry,
-  TYPOGRAPHY,
-  GAME_START,
-  GAME_END,
-  GD_DARK,
-  GD_VIOLET,
-  GD_PINK,
-  GD_ACCENT,
-  GD_ORANGE,
-  GD_GOLD,
+  BackgroundLayer, HexGridOverlay, GlassCard, AudioBadge,
+  calculateCountdown, formatTime, springConfig, staggeredEntry,
+  GAME_START, GAME_END,
+  GD_DARK, GD_PURPLE, GD_VIOLET, GD_PINK, GD_ACCENT, GD_ORANGE, GD_GOLD,
   type ScheduleSegment,
 } from "./shared/GameDayDesignSystem";
 
-// ── GameDay Tips (from AWS GameDay PDF) ──
-const GAMEDAY_TIPS = [
-  "AWS GameDay is a collaborative learning exercise in a gamified, risk-free environment",
-  "Each Quest is open-ended - figure out the best way forward. Don't be afraid to try!",
-  "Bonus points are awarded to teams that finish Quests quickly",
-  "Set your team name and language, then review the Quest information",
-  "Use hints for quick tips - they are low cost!",
-  "If you need help, signal a staff member and they will assist you",
-  "Don't worry about completing everything - have fun, experiment, and try new things!",
-  "This GameDay is designed for each team to work together on each of the Quests",
-];
+const F = "'Amazon Ember', 'Inter', sans-serif";
+const GAMEDAY_LOGO = staticFile("AWSCommunityGameDayEurope/GameDay_Solid_Logo_for_swag/GameDay Logo Solid White Geometric with text.png");
+const COMMUNITY_LOGO = staticFile("AWSCommunityGameDayEurope/AWSCommunityEurope_last_nobackground.png");
+const EUROPE_MAP = staticFile("AWSCommunityGameDayEurope/gameday-map.png");
 
-// ── Gameplay Phases (15-min intervals for detailed timeline) ──
-// Total: 216000 frames = 120 min at 30fps
+// ── 30-min phases ──
 export const GAMEPLAY_PHASES: ScheduleSegment[] = [
-  { label: "Hour 1 — Q1 (0–15 min)", startFrame: 0, endFrame: 26999 },
-  { label: "Hour 1 — Q2 (15–30 min)", startFrame: 27000, endFrame: 53999 },
-  { label: "Hour 1 — Q3 (30–45 min)", startFrame: 54000, endFrame: 80999 },
-  { label: "Hour 1 — Q4 (45–60 min)", startFrame: 81000, endFrame: 107999 },
-  { label: "Hour 2 — Q1 (60–75 min)", startFrame: 108000, endFrame: 134999 },
-  { label: "Hour 2 — Q2 (75–90 min)", startFrame: 135000, endFrame: 161999 },
-  { label: "Hour 2 — Q3 (90–105 min)", startFrame: 162000, endFrame: 188999 },
-  { label: "Hour 2 — Final Q (105–120 min)", startFrame: 189000, endFrame: 215999 },
+  { label: "Phase 1", startFrame: 0, endFrame: 53999 },
+  { label: "Phase 2", startFrame: 54000, endFrame: 107999 },
+  { label: "Phase 3", startFrame: 108000, endFrame: 161999 },
+  { label: "Final Phase", startFrame: 162000, endFrame: 215999 },
 ];
 
-// ── Exported Helper Functions for Property Tests ──
 export function isGameplayAudioCueBannerVisible(frame: number): boolean {
   return frame >= 207000;
 }
-
 export function isFinal30MinutesActive(frame: number): boolean {
   return frame >= 162000;
 }
-
 export function isUrgencyGlowActive(frame: number): boolean {
   return frame >= 207000;
 }
 
+// ── SVG Icons ──
+const LightbulbIcon = ({ color = GD_GOLD, size = 40 }: { color?: string; size?: number }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M9 18h6"/><path d="M10 22h4"/>
+    <path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/>
+  </svg>
+);
+const TargetIcon = ({ color = GD_PINK, size = 40 }: { color?: string; size?: number }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>
+  </svg>
+);
+const ZapIcon = ({ color = GD_ORANGE, size = 40 }: { color?: string; size?: number }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill={color} stroke="none">
+    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+  </svg>
+);
+const UsersIcon = ({ color = GD_VIOLET, size = 40 }: { color?: string; size?: number }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+    <path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+  </svg>
+);
+const HelpIcon = ({ color = GD_ACCENT, size = 40 }: { color?: string; size?: number }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/>
+  </svg>
+);
+const TrophyIcon = ({ color = GD_GOLD, size = 40 }: { color?: string; size?: number }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/>
+    <path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20 7 22"/>
+    <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>
+  </svg>
+);
+const RocketIcon = ({ color = GD_PINK, size = 40 }: { color?: string; size?: number }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/>
+    <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/>
+    <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/>
+  </svg>
+);
+const SparklesIcon = ({ color = GD_GOLD, size = 40 }: { color?: string; size?: number }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/>
+    <path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/>
+  </svg>
+);
 
-// ── Phase Marker Sub-Component ──
-const PhaseIndicator: React.FC<{
-  frame: number;
-  segments: ScheduleSegment[];
-}> = ({ frame, segments }) => {
-  const { name, progress } = getPhaseInfo(frame, segments);
-  const isFinal = isFinal30MinutesActive(frame);
+// ── Tips with icons ──
+const TIPS: Array<{ text: string; icon: React.ReactNode; color: string }> = [
+  { text: "AWS GameDay is a collaborative learning exercise in a gamified, risk-free environment", icon: <RocketIcon />, color: GD_PINK },
+  { text: "Each Quest is open-ended - figure out the best way forward. Don't be afraid to try!", icon: <LightbulbIcon />, color: GD_GOLD },
+  { text: "Bonus points are awarded to teams that finish Quests quickly", icon: <ZapIcon />, color: GD_ORANGE },
+  { text: "Set your team name and language, then review the Quest information", icon: <TargetIcon />, color: GD_PINK },
+  { text: "Use hints for quick tips - they are low cost!", icon: <HelpIcon />, color: GD_ACCENT },
+  { text: "If you need help, signal a staff member and they will assist you", icon: <UsersIcon />, color: GD_VIOLET },
+  { text: "Don't worry about completing everything - have fun, experiment, and try new things!", icon: <SparklesIcon />, color: GD_GOLD },
+  { text: "This GameDay is designed for each team to work together on each Quest", icon: <TrophyIcon />, color: GD_GOLD },
+];
 
+// ── Tip Card (big, centered, with icon) ──
+const TIP_DUR = 600; // 20s per tip
+const TipCard: React.FC<{ frame: number }> = ({ frame }) => {
+  const idx = Math.floor(frame / TIP_DUR) % TIPS.length;
+  const local = frame % TIP_DUR;
+  const fadeIn = interpolate(local, [0, 25], [0, 1], { extrapolateRight: "clamp" });
+  const fadeOut = interpolate(local, [TIP_DUR - 25, TIP_DUR], [1, 0], { extrapolateRight: "clamp" });
+  const o = Math.min(fadeIn, fadeOut);
+  const slideY = interpolate(local, [0, 25], [30, 0], { extrapolateRight: "clamp" });
+  const tip = TIPS[idx];
   return (
-    <div
-      style={{
-        position: "absolute",
-        bottom: 20,
-        left: 20,
-        display: "flex",
-        alignItems: "center",
-        gap: 14,
-      }}
-    >
-      <div>
-        <div
-          style={{
-            fontSize: TYPOGRAPHY.labelSmall,
-            fontWeight: 600,
-            color: "#64748b",
-            letterSpacing: 2,
-            textTransform: "uppercase",
-            fontFamily: "'Inter', sans-serif",
-            marginBottom: 4,
-          }}
-        >
-          Current Phase
-        </div>
-        <div
-          style={{
-            fontSize: TYPOGRAPHY.bodySmall,
-            fontWeight: 700,
-            color: isFinal ? GD_ORANGE : "white",
-            fontFamily: "'Inter', sans-serif",
-          }}
-        >
-          {name}
-        </div>
+    <div style={{ opacity: o, transform: `translateY(${slideY}px)`, display: "flex", flexDirection: "column", alignItems: "center", gap: 20, maxWidth: 650, textAlign: "center" }}>
+      <div style={{ width: 80, height: 80, borderRadius: 20, background: `${tip.color}15`, border: `2px solid ${tip.color}33`, display: "flex", alignItems: "center", justifyContent: "center" }}>
+        {tip.icon}
       </div>
-      <div
-        style={{
-          width: 200,
-          height: 4,
-          background: "rgba(255,255,255,0.08)",
-          borderRadius: 2,
-          overflow: "hidden",
-        }}
-      >
-        <div
-          style={{
-            width: `${progress * 100}%`,
-            height: "100%",
-            background: isFinal
-              ? `linear-gradient(90deg, ${GD_ORANGE}, ${GD_PINK})`
-              : `linear-gradient(90deg, ${GD_VIOLET}, ${GD_PINK})`,
-            borderRadius: 2,
-          }}
-        />
-      </div>
+      <div style={{ fontSize: 28, fontWeight: 700, color: "white", fontFamily: F, lineHeight: 1.5 }}>{tip.text}</div>
     </div>
   );
 };
 
-// ── Rotating GameDay Tip ──
-const TIP_DURATION = 450; // 15 seconds per tip at 30fps
-const GameDayTip: React.FC<{ frame: number }> = ({ frame }) => {
-  const tipIndex = Math.floor(frame / TIP_DURATION) % GAMEDAY_TIPS.length;
-  const localFrame = frame % TIP_DURATION;
-  const fadeIn = interpolate(localFrame, [0, 20], [0, 1], { extrapolateRight: "clamp" });
-  const fadeOut = interpolate(localFrame, [TIP_DURATION - 20, TIP_DURATION], [1, 0], { extrapolateRight: "clamp" });
-  const opacity = Math.min(fadeIn, fadeOut);
+// ── Phase Timeline (4 x 30-min blocks) ──
+const PhaseTimeline: React.FC<{ frame: number; fps: number }> = ({ frame, fps }) => {
+  const totalSec = frame / fps;
+  const totalMin = totalSec / 60;
+  const phases = [
+    { label: "Phase 1", start: 0, end: 30 },
+    { label: "Phase 2", start: 30, end: 60 },
+    { label: "Phase 3", start: 60, end: 90 },
+    { label: "Final", start: 90, end: 120 },
+  ];
   return (
-    <div style={{
-      position: "absolute", bottom: 70, left: 0, right: 0,
-      display: "flex", justifyContent: "center", zIndex: 20,
-    }}>
-      <div style={{
-        opacity, maxWidth: 700, textAlign: "center",
-        fontSize: TYPOGRAPHY.body, fontWeight: 600, color: "rgba(255,255,255,0.7)",
-        fontFamily: "'Inter', sans-serif", lineHeight: 1.5,
-      }}>
-        {GAMEDAY_TIPS[tipIndex]}
-      </div>
+    <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+      {phases.map((p) => {
+        const active = totalMin >= p.start && totalMin < p.end;
+        const done = totalMin >= p.end;
+        const progress = active ? Math.min(1, (totalMin - p.start) / (p.end - p.start)) : done ? 1 : 0;
+        const isFinal = p.label === "Final";
+        const c = isFinal ? GD_ORANGE : active ? GD_VIOLET : done ? GD_ACCENT : `${GD_PURPLE}66`;
+        return (
+          <div key={p.label} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
+            <div style={{ fontSize: 11, fontWeight: 700, color: active ? "white" : done ? GD_ACCENT : "rgba(255,255,255,0.35)", letterSpacing: 1, textTransform: "uppercase", fontFamily: F }}>{p.label}</div>
+            <div style={{ width: 120, height: 6, borderRadius: 3, background: "rgba(255,255,255,0.08)", overflow: "hidden" }}>
+              <div style={{ width: `${progress * 100}%`, height: "100%", borderRadius: 3, background: `linear-gradient(90deg, ${c}, ${active && isFinal ? GD_PINK : c}cc)` }} />
+            </div>
+            <div style={{ fontSize: 10, color: "rgba(255,255,255,0.3)", fontFamily: F }}>{p.start}-{p.end} min</div>
+          </div>
+        );
+      })}
     </div>
   );
 };
 
-// ── Gameplay Composition ──
+// ── Main Composition ──
 export const GameDayGameplay: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
-
-  // ── Game-end countdown (shows 120:00 at frame 0) ──
-  const gameEndCountdown = calculateCountdown(frame, GAME_START, GAME_END, fps);
-
-  // ── Urgency states ──
+  const countdown = calculateCountdown(frame, GAME_START, GAME_END, fps);
   const showFinal30 = isFinal30MinutesActive(frame);
-  const showUrgencyGlow = isUrgencyGlowActive(frame);
+  const showUrgency = isUrgencyGlowActive(frame);
   const showAudioCue = isGameplayAudioCueBannerVisible(frame);
 
-  // ── Timer entry spring ──
-  const timerEntry = spring({
-    frame: frame - staggeredEntry(0, 0),
-    fps,
-    config: springConfig.entry,
-  });
+  const min = String(Math.floor(countdown / 60)).padStart(2, "0");
+  const sec = String(countdown % 60).padStart(2, "0");
 
-  // ── Final 30 Minutes pulse (GD_ORANGE) ──
-  const final30Pulse = showFinal30
-    ? interpolate(frame % 60, [0, 30, 60], [1, 1.04, 1], {
-        extrapolateRight: "clamp",
-      })
-    : 1;
-
-  // ── Urgency glow pulse (GD_PINK, ≤5 min remaining) ──
-  const urgencyGlow = showUrgencyGlow
-    ? interpolate(frame % 40, [0, 20, 40], [0.4, 1, 0.4], {
-        extrapolateRight: "clamp",
-      })
+  const urgencyPulse = showUrgency
+    ? interpolate(frame % 40, [0, 20, 40], [0.5, 1, 0.5], { extrapolateRight: "clamp" })
     : 0;
+  const timerColor = showUrgency ? GD_PINK : showFinal30 ? GD_ORANGE : GD_GOLD;
 
-  // ── Audio cue banner entry ──
   const audioCueEntry = showAudioCue
-    ? spring({
-        frame: frame - 207000,
-        fps,
-        config: springConfig.entry,
-      })
+    ? spring({ frame: frame - 207000, fps, config: springConfig.entry })
     : 0;
-  const audioCuePulse = showAudioCue
-    ? interpolate(frame % 60, [0, 30, 60], [1, 1.03, 1], {
-        extrapolateRight: "clamp",
-      })
-    : 1;
 
   return (
-    <AbsoluteFill
-      style={{
-        fontFamily: "'Inter', sans-serif",
-        background: GD_DARK,
-      }}
-    >
-      {/* Layer 1: Background (minimal overlay — darken ≤0.30) */}
-      <BackgroundLayer darken={0.25} />
-
-      {/* Layer 2: Audio Badge (muted) */}
+    <AbsoluteFill style={{ fontFamily: F, background: GD_DARK }}>
+      <BackgroundLayer darken={0.7} />
+      <HexGridOverlay />
       <AudioBadge muted />
 
-      {/* Layer 3: Game-End Countdown (top-right, compact GlassCard ≤200px × 80px) */}
-      <div
-        style={{
-          position: "absolute",
-          top: 16,
-          right: 16,
-          zIndex: 50,
-          opacity: timerEntry,
-        }}
-      >
-        <GlassCard
-          style={{
-            padding: "10px 20px",
-            borderRadius: 14,
-            maxWidth: 200,
-            maxHeight: 80,
-            borderTop: `2px solid ${showUrgencyGlow ? GD_PINK : GD_VIOLET}60`,
-            boxShadow: showUrgencyGlow
-              ? `0 0 ${20 + urgencyGlow * 20}px ${GD_PINK}${Math.round(urgencyGlow * 100).toString(16).padStart(2, "0")}`
-              : undefined,
-            transform: `scale(${showFinal30 ? final30Pulse : 1})`,
-          }}
-        >
-          <div
-            style={{
-              fontSize: TYPOGRAPHY.overline,
-              fontWeight: 700,
-              color: showUrgencyGlow ? GD_PINK : showFinal30 ? GD_ORANGE : GD_ACCENT,
-              letterSpacing: 2,
-              textTransform: "uppercase",
-              marginBottom: 2,
-              textAlign: "center",
-            }}
-          >
-            {showUrgencyGlow ? "Almost Done!" : "Time Left"}
-          </div>
-          <div
-            style={{
-              fontSize: TYPOGRAPHY.h5,
-              fontWeight: 900,
-              color: showUrgencyGlow ? GD_PINK : showFinal30 ? GD_ORANGE : "white",
-              fontFamily: "'Inter', monospace",
-              letterSpacing: 2,
-              textAlign: "center",
-              textShadow: showUrgencyGlow
-                ? `0 0 30px ${GD_PINK}80`
-                : showFinal30
-                  ? `0 0 20px ${GD_ORANGE}40`
-                  : `0 0 20px ${GD_VIOLET}30`,
-            }}
-          >
-            {formatTime(gameEndCountdown)}
-          </div>
-        </GlassCard>
-      </div>
+      {/* ── Center content: logos, countdown, tip, timeline ── */}
+      <AbsoluteFill style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 28, padding: "40px 60px" }}>
 
-      {/* Layer 4: Phase Indicator (bottom-left) */}
-      <PhaseIndicator frame={frame} segments={GAMEPLAY_PHASES} />
-
-      {/* Layer 4b: Rotating GameDay Tips */}
-      <GameDayTip frame={frame} />
-
-      {/* Layer 5: "Final 30 Minutes" text with GD_ORANGE pulse */}
-      {showFinal30 && (
-        <div
-          style={{
-            position: "absolute",
-            bottom: 60,
-            right: 36,
-            opacity: interpolate(
-              spring({
-                frame: frame - 162000,
-                fps,
-                config: springConfig.entry,
-              }),
-              [0, 1],
-              [0, 1],
-            ),
-            transform: `scale(${final30Pulse})`,
-          }}
-        >
-          <div
-            style={{
-              fontSize: TYPOGRAPHY.caption,
-              fontWeight: 800,
-              color: GD_ORANGE,
-              letterSpacing: 3,
-              textTransform: "uppercase",
-              textShadow: `0 0 20px ${GD_ORANGE}60`,
-              fontFamily: "'Inter', sans-serif",
-            }}
-          >
-            Final 30 Minutes
-          </div>
+        {/* Logos */}
+        <div style={{ display: "flex", alignItems: "center", gap: 24 }}>
+          <Img src={COMMUNITY_LOGO} style={{ height: 60 }} />
+          <div style={{ width: 1, height: 40, background: `${GD_PURPLE}44` }} />
+          <Img src={GAMEDAY_LOGO} style={{ height: 80 }} />
         </div>
-      )}
 
-      {/* Layer 6: Audio Cue Banner (frame ≥ 207000) */}
+        {/* Big countdown */}
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
+          <div style={{ fontSize: 14, fontWeight: 700, color: timerColor, textTransform: "uppercase", letterSpacing: 4, fontFamily: F }}>
+            {showUrgency ? "Almost Done!" : showFinal30 ? "Final 30 Minutes" : "Time Remaining"}
+          </div>
+          <div style={{
+            fontSize: 96, fontWeight: 900, fontFamily: "monospace", color: timerColor, lineHeight: 1,
+            textShadow: showUrgency ? `0 0 ${30 + urgencyPulse * 30}px ${GD_PINK}80` : showFinal30 ? `0 0 20px ${GD_ORANGE}40` : `0 0 20px ${GD_GOLD}30`,
+          }}>
+            {min}:{sec}
+          </div>
+          <div style={{ fontSize: 13, color: "rgba(255,255,255,0.4)", fontFamily: F }}>until Closing Ceremony</div>
+        </div>
+
+        {/* Rotating tip card */}
+        <TipCard frame={frame} />
+
+        {/* Phase timeline */}
+        <PhaseTimeline frame={frame} fps={fps} />
+      </AbsoluteFill>
+
+      {/* ── Europe map watermark (subtle, right side) ── */}
+      <Img src={EUROPE_MAP} style={{ position: "absolute", right: -60, top: "50%", transform: "translateY(-50%)", height: "80%", opacity: 0.04 }} />
+
+      {/* ── Audio cue banner (last 5 min) ── */}
       {showAudioCue && (
-        <div
-          style={{
-            position: "absolute",
-            top: 20,
-            left: 0,
-            right: 0,
-            display: "flex",
-            justifyContent: "center",
-            opacity: audioCueEntry,
-            transform: `scale(${audioCuePulse})`,
-            zIndex: 100,
-          }}
-        >
-          <div
-            style={{
-              background: `linear-gradient(90deg, ${GD_ORANGE}dd, ${GD_GOLD}dd)`,
-              borderRadius: 16,
-              padding: "14px 40px",
-              boxShadow: `0 8px 32px ${GD_ORANGE}40`,
-              display: "flex",
-              alignItems: "center",
-              gap: 14,
-            }}
-          >
-            <svg width="22" height="20" viewBox="0 0 22 20" fill="none" style={{ flexShrink: 0 }}>
-              <path d="M11 0L0 20h22L11 0z" fill={GD_DARK} />
-              <path d="M11 3L2 18h18L11 3z" stroke={GD_DARK} strokeWidth="2" fill="none" />
-              <path d="M10 8h2v5h-2V8zm0 7h2v2h-2v-2z" fill={GD_DARK} />
+        <div style={{
+          position: "absolute", top: 20, left: 0, right: 0,
+          display: "flex", justifyContent: "center", zIndex: 100, opacity: audioCueEntry,
+        }}>
+          <div style={{
+            background: `linear-gradient(90deg, ${GD_ORANGE}dd, ${GD_GOLD}dd)`,
+            borderRadius: 16, padding: "14px 40px",
+            boxShadow: `0 8px 32px ${GD_ORANGE}40`,
+            display: "flex", alignItems: "center", gap: 14,
+          }}>
+            <svg width="22" height="20" viewBox="0 0 24 24" fill="none" stroke={GD_DARK} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M3 9v6h4l5 5V4L7 9H3z"/><path d="M14.54 7.46a5 5 0 0 1 0 9.08"/>
+              <path d="M18.07 4.93a10 10 0 0 1 0 14.14"/>
             </svg>
-            <div
-              style={{
-                fontSize: TYPOGRAPHY.h6,
-                fontWeight: 700,
-                color: GD_DARK,
-              }}
-            >
-              Audio will be needed for Closing Ceremony — Prepare your speakers
+            <div style={{ fontSize: 20, fontWeight: 700, color: GD_DARK, fontFamily: F }}>
+              Audio will be needed for Closing Ceremony - Prepare your speakers
             </div>
           </div>
         </div>
       )}
 
-      {/* ── Timeline Sequences (Remotion Studio chapter markers) ── */}
+      {/* Timeline markers for Remotion Studio */}
       {GAMEPLAY_PHASES.map((seg) => (
-        <Sequence
-          key={seg.label}
-          from={seg.startFrame}
-          durationInFrames={seg.endFrame - seg.startFrame + 1}
-          name={seg.label}
-          layout="none"
-        >
+        <Sequence key={seg.label} from={seg.startFrame} durationInFrames={seg.endFrame - seg.startFrame + 1} name={seg.label} layout="none">
           <></>
         </Sequence>
       ))}

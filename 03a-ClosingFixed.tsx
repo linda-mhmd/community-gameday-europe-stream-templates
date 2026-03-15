@@ -24,21 +24,26 @@ import {
   GD_ORANGE,
   TYPOGRAPHY,
 } from "./shared/GameDayDesignSystem";
-import { USER_GROUPS } from "./shared/userGroups";
-import { LOGO_MAP } from "./archive/CommunityGamedayEuropeV4";
+import { USER_GROUPS, LOGO_MAP } from "./archive/CommunityGamedayEuropeV4";
 import { ORGANIZERS, AWS_SUPPORTERS } from "./shared/organizers";
 
 // ── Part A Constants ──
-const WIDTH = 1280;
-const HEIGHT = 720;
 const FPS = 30;
-const PART_A_TOTAL_FRAMES = 3600;
+const PART_A_TOTAL_FRAMES = 4200; // ~2min20s
 
 // ── Showcase Sub-Phase Timing ──
 const HERO_INTRO_END = 1599;
 const FAST_SCROLL_START = 1600;
-const FAST_SCROLL_END = 3299;
-const FINALE_START = 3300;
+const FAST_SCROLL_END = 1899;
+const SHUFFLE_START = 1900;
+const SHUFFLE_END = 3699;
+const FINALE_START = 3700;
+
+// ── Shuffle Constants ──
+const SHUFFLE_BAR_WIDTH = 160;
+const SHUFFLE_BAR_GAP = 16;
+const SHUFFLE_SCORE_MIN = 3000;
+const SHUFFLE_SCORE_MAX = 5000;
 
 // ── Derived Data ──
 const COUNTRIES = Array.from(new Set(USER_GROUPS.map((g) => g.flag)));
@@ -605,9 +610,112 @@ const WinnersTeaser: React.FC<{ frame: number }> = ({ frame }) => {
   );
 };
 
-// ── ShowcasePhase (Hero Intro + Fast Scroll + Winners Teaser) ──
+// ── ShufflePhase: Bell Curve Horizontal Scroll ──
+// All 53 groups scroll right-to-left as vertical bars. Bars in the center of the screen
+// are tallest (bell curve peak), bars at edges are shorter.
+const ShufflePhase: React.FC<{ frame: number }> = ({ frame }) => {
+  const { fps } = useVideoConfig();
+  const frameInPhase = frame - SHUFFLE_START;
+  const phaseDuration = SHUFFLE_END - SHUFFLE_START;
+
+  const entrySpring = spring({ frame: frameInPhase, fps, config: { damping: 16, stiffness: 100 } });
+
+  const scrollProgress = interpolate(frameInPhase, [15, phaseDuration - 30], [0, 1], {
+    extrapolateLeft: "clamp", extrapolateRight: "clamp",
+  });
+  const easedScroll = scrollProgress < 0.5
+    ? 2 * scrollProgress * scrollProgress
+    : 1 - Math.pow(-2 * scrollProgress + 2, 2) / 2;
+
+  const totalWidth = USER_GROUPS.length * (SHUFFLE_BAR_WIDTH + SHUFFLE_BAR_GAP);
+  const totalScrollDist = totalWidth + 1280;
+  const scrollX = easedScroll * totalScrollDist - 1280 * 0.1;
+
+  // Assign deterministic shuffled scores
+  const groupsWithScores = USER_GROUPS.map((group, i) => {
+    const score = SHUFFLE_SCORE_MIN + ((i * 17 + 31) % (SHUFFLE_SCORE_MAX - SHUFFLE_SCORE_MIN + 1));
+    return { ...group, score };
+  });
+
+  // Bell curve ordering: highest scores in center
+  const ascending = [...groupsWithScores].sort((a, b) => a.score - b.score);
+  const bellCurveOrder: typeof ascending = [];
+  for (let i = 0; i < ascending.length; i++) {
+    if (i % 2 === 0) bellCurveOrder.push(ascending[i]);
+    else bellCurveOrder.unshift(ascending[i]);
+  }
+
+  const screenCenter = 1280 / 2;
+
+  return (
+    <AbsoluteFill style={{ opacity: entrySpring }}>
+      <div style={{
+        position: "absolute", top: 20, left: 0, right: 0, textAlign: "center", zIndex: 10,
+        opacity: interpolate(frameInPhase, [0, 30], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
+      }}>
+        <div style={{ fontSize: TYPOGRAPHY.bodySmall, fontWeight: 700, color: GD_ACCENT, fontFamily: "'Inter', sans-serif", letterSpacing: 2, textTransform: "uppercase" }}>
+          Calculating Winners...
+        </div>
+      </div>
+      <div style={{ position: "absolute", top: 60, left: 0, right: 0, bottom: 40, overflow: "hidden" }}>
+        <div style={{ position: "absolute", top: 0, left: 0, bottom: 0, width: 120, background: `linear-gradient(90deg, ${GD_DARK} 0%, transparent 100%)`, zIndex: 10, pointerEvents: "none" }} />
+        <div style={{ position: "absolute", top: 0, right: 0, bottom: 0, width: 120, background: `linear-gradient(270deg, ${GD_DARK} 0%, transparent 100%)`, zIndex: 10, pointerEvents: "none" }} />
+        <div style={{
+          display: "flex", alignItems: "flex-end", height: "100%",
+          transform: `translateX(${-scrollX}px)`, gap: SHUFFLE_BAR_GAP,
+          paddingLeft: 1280,
+        }}>
+          {bellCurveOrder.map((group, i) => {
+            const barX = i * (SHUFFLE_BAR_WIDTH + SHUFFLE_BAR_GAP) - scrollX + 1280;
+            const barCenter = barX + SHUFFLE_BAR_WIDTH / 2;
+            const distFromScreenCenter = Math.abs(barCenter - screenCenter);
+            const maxBarHeight = 420;
+            const minBarHeight = 80;
+            const bellFactor = Math.exp(-Math.pow(distFromScreenCenter / 400, 2));
+            const barHeight = minBarHeight + (maxBarHeight - minBarHeight) * bellFactor;
+            const barOpacity = interpolate(distFromScreenCenter, [0, 500, 800], [1, 0.7, 0.15], {
+              extrapolateRight: "clamp", extrapolateLeft: "clamp",
+            });
+            const accentColor = CARD_ACCENTS[i % CARD_ACCENTS.length];
+
+            return (
+              <div key={i} style={{
+                minWidth: SHUFFLE_BAR_WIDTH, maxWidth: SHUFFLE_BAR_WIDTH,
+                display: "flex", flexDirection: "column", alignItems: "center",
+                justifyContent: "flex-end", height: "100%", opacity: barOpacity,
+              }}>
+                <div style={{ fontSize: TYPOGRAPHY.h5, marginBottom: 6, filter: "drop-shadow(0 2px 6px rgba(0,0,0,0.5))" }}>{group.flag}</div>
+                <div style={{
+                  fontSize: TYPOGRAPHY.captionSmall, fontWeight: 700, color: "rgba(255,255,255,0.9)",
+                  fontFamily: "'Inter', sans-serif", textAlign: "center",
+                  marginBottom: 8, lineHeight: 1.3, width: SHUFFLE_BAR_WIDTH - 8,
+                  wordWrap: "break-word", overflowWrap: "break-word",
+                }}>{group.name}</div>
+                <div style={{
+                  width: "85%", height: barHeight, borderRadius: "10px 10px 0 0",
+                  background: `linear-gradient(180deg, ${accentColor}cc, ${GD_PURPLE}90)`,
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  boxShadow: `0 0 24px ${accentColor}25`, border: `1px solid ${accentColor}30`, borderBottom: "none",
+                  position: "relative",
+                }}>
+                  <div style={{
+                    fontSize: TYPOGRAPHY.bodySmall, fontWeight: 800, color: "white", fontFamily: "'Inter', sans-serif",
+                    fontVariantNumeric: "tabular-nums", textShadow: "0 1px 4px rgba(0,0,0,0.6)",
+                  }}>{Math.round(group.score)}</div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </AbsoluteFill>
+  );
+};
+
+// ── ShowcasePhase (Hero Intro + Fast Scroll + Shuffle + Winners Teaser) ──
 const ShowcasePhase: React.FC<{ frame: number }> = ({ frame }) => {
   if (frame >= FINALE_START) return <WinnersTeaser frame={frame} />;
+  if (frame >= SHUFFLE_START) return <ShufflePhase frame={frame} />;
   if (frame > HERO_INTRO_END) return <FastScroll frame={frame} />;
   return <HeroIntro frame={frame} />;
 };

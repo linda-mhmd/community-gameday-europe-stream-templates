@@ -7,6 +7,7 @@ import {
   GameDayClosingCountdown,
   ClosingShowcase as ClosingShowcaseFixed,
 } from "../03a-ClosingFixed";
+import { GameDayClosingWinners } from "../03b-ClosingWinners";
 import { OrganizersMarketingVideo } from "../OrganizersMarketingVideo";
 import { GameDayPreShowInfo } from "../04-GameDayStreamPreShowInfo-Muted";
 export const RemotionRoot: React.FC = () => {
@@ -61,11 +62,11 @@ export const RemotionRoot: React.FC = () => {
         height={720}
       />
 
-      {/* 3. Closing Countdown (Part A): HeroIntro + FastScroll + Winners Teaser — pre-rendered */}
+      {/* 3. Closing Countdown (Part A): HeroIntro + FastScroll + Shuffle + Winners Teaser — pre-rendered */}
       <Composition
         id="GameDayClosingCountdown"
         component={GameDayClosingCountdown}
-        durationInFrames={3600}
+        durationInFrames={4200}
         fps={30}
         width={1280}
         height={720}
