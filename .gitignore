@@ -35,3 +35,7 @@ yarn-error.log*
 # Web player
 web-player/node_modules/
 web-player/dist/
+
+# Screenshots — keep only readme-* files in git, rest are local debug captures
+screenshots/*
+!screenshots/readme-*
