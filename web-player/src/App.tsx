@@ -13,24 +13,62 @@ import {
 
 type SegmentId = "preshow" | "mainevent" | "gameplay" | "closing" | "end" | "waiting";
 
-function getCurrentSegment(): SegmentId {
-  const now = new Date();
-  // Convert current time to the event timezone
-  const formatter = new Intl.DateTimeFormat("en-CA", {
-    timeZone: TIMEZONE,
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-  });
-  const parts = formatter.formatToParts(now);
-  const get = (type: string) => parts.find((p) => p.type === type)?.value ?? "";
-  const currentDate = `${get("year")}-${get("month")}-${get("day")}`;
-  const currentTime = `${get("hour")}:${get("minute")}`;
+/**
+ * URL parameter overrides for testing:
+ *   ?segment=preshow        → jump directly to a segment
+ *   ?time=18:05             → simulate a specific CET time on event day
+ *   ?time=17:00&date=2025-06-14  → simulate a specific date + time
+ *
+ * Examples:
+ *   http://localhost:5173/?segment=closing
+ *   http://localhost:5173/?time=18:15
+ *   http://localhost:5173/?time=20:35&date=2025-06-14
+ */
+function getUrlParams() {
+  const params = new URLSearchParams(window.location.search);
+  return {
+    segment: params.get("segment"),
+    time: params.get("time"),
+    date: params.get("date"),
+  };
+}
 
-  if (currentDate !== EVENT_DATE) return "waiting";
+function getCurrentSegment(): SegmentId {
+  const { segment: urlSegment, time: urlTime, date: urlDate } = getUrlParams();
+
+  // Direct segment override: ?segment=closing
+  if (urlSegment) {
+    const valid: SegmentId[] = ["preshow", "mainevent", "gameplay", "closing", "end", "waiting"];
+    if (valid.includes(urlSegment as SegmentId)) return urlSegment as SegmentId;
+  }
+
+  // Determine date and time to use
+  let currentDate: string;
+  let currentTime: string;
+
+  if (urlTime) {
+    // Simulate time: ?time=18:05 (uses EVENT_DATE unless ?date= is also set)
+    currentDate = urlDate ?? EVENT_DATE;
+    currentTime = urlTime;
+  } else {
+    // Real clock
+    const now = new Date();
+    const formatter = new Intl.DateTimeFormat("en-CA", {
+      timeZone: TIMEZONE,
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    });
+    const parts = formatter.formatToParts(now);
+    const get = (type: string) => parts.find((p) => p.type === type)?.value ?? "";
+    currentDate = `${get("year")}-${get("month")}-${get("day")}`;
+    currentTime = `${get("hour")}:${get("minute")}`;
+  }
+
+  if (currentDate !== EVENT_DATE && !urlTime) return "waiting";
 
   // Walk the schedule backwards to find the active segment
   for (let i = SCHEDULE.length - 1; i >= 0; i--) {

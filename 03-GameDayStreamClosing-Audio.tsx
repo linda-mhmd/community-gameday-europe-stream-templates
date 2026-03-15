@@ -433,7 +433,7 @@ const HeroIntro: React.FC<{ frame: number }> = ({ frame }) => {
             opacity: orgTitleSpring, transform: `translateY(${interpolate(orgTitleSpring, [0, 1], [20, 0])}px)`,
           }}>
             <div style={{ fontSize: 18, fontWeight: 600, color: "rgba(255,255,255,0.5)", fontFamily: "'Inter', sans-serif", letterSpacing: 5 }}>
-              ORGANIZED BY
+              COMMUNITY GAMEDAY EUROPE ORGANIZERS
             </div>
             <div style={{
               fontSize: 36, fontWeight: 900, fontFamily: "'Inter', sans-serif", marginTop: 8,
@@ -442,13 +442,11 @@ const HeroIntro: React.FC<{ frame: number }> = ({ frame }) => {
           </div>
           {/* Organizer cards */}
           <div style={{
-            position: "absolute", top: "30%", left: "50%", transform: "translateX(-50%)",
-            display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "28px 40px", maxWidth: 1100,
+            position: "absolute", top: "28%", left: "50%", transform: "translateX(-50%)",
+            display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "36px 52px", maxWidth: 1150,
           }}>
             {ORGANIZERS.map((org, i) => {
               const cardSpring = spring({ frame: Math.max(0, frame - 565 - i * 12), fps, config: { damping: 12, stiffness: 100 } });
-              const borderColor = GD_PURPLE;
-              const glowColor = GD_VIOLET;
               return (
                 <div key={org.name} style={{
                   display: "flex", flexDirection: "column", alignItems: "center", gap: 10,
@@ -456,7 +454,7 @@ const HeroIntro: React.FC<{ frame: number }> = ({ frame }) => {
                 }}>
                   <div style={{
                     width: 130, height: 130, borderRadius: "50%", overflow: "hidden",
-                    border: `3px solid ${borderColor}`, boxShadow: `0 0 24px ${glowColor}40, 0 4px 16px rgba(0,0,0,0.4)`,
+                    boxShadow: `0 0 30px ${GD_VIOLET}70, 0 0 60px ${GD_PURPLE}40, 0 4px 16px rgba(0,0,0,0.4)`,
                   }}>
                     <Img src={staticFile(org.face)} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                   </div>
@@ -709,7 +707,7 @@ const ShufflePhase: React.FC<{ frame: number }> = ({ frame }) => {
         opacity: interpolate(frameInPhase, [0, 30], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
       }}>
         <div style={{ fontSize: 18, fontWeight: 700, color: GD_ACCENT, fontFamily: "'Inter', sans-serif", letterSpacing: 2, textTransform: "uppercase" }}>
-          Shuffling Results...
+          Calculating Winners...
         </div>
       </div>
 
