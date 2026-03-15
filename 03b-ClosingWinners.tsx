@@ -1,6 +1,7 @@
 import React from "react";
 import {
   AbsoluteFill,
+  Easing,
   Img,
   Sequence,
   interpolate,
@@ -79,6 +80,9 @@ const REVEAL_SCHEDULE = [
   { rank: 2, frame: REVEAL_2ND, duration: 1200 },
   { rank: 1, frame: REVEAL_1ST, duration: 1200 },
 ];
+
+// ── Crossfade duration for smooth phase transitions ──
+const CROSSFADE = 30; // frames of overlap
 
 // ── Utility Functions ──
 export function getRevealedPlacements(frame: number): number[] {
@@ -160,17 +164,25 @@ const ShufflePhase: React.FC<{ frame: number }> = ({ frame }) => {
 
   const screenCenter = 1280 / 2;
 
+  // Pulsing glow on title
+  const titlePulse = interpolate(frameInPhase % 60, [0, 30, 60], [0.6, 1, 0.6], {
+    extrapolateRight: "clamp",
+  });
+
   return (
     <AbsoluteFill style={{ opacity: entrySpring }}>
       <div style={{
         position: "absolute", top: 20, left: 0, right: 0, textAlign: "center", zIndex: 10,
         opacity: interpolate(frameInPhase, [0, 30], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
       }}>
-        <div style={{ fontSize: TYPOGRAPHY.bodySmall, fontWeight: 700, color: GD_ACCENT, fontFamily: "'Inter', sans-serif", letterSpacing: 2, textTransform: "uppercase" }}>
+        <div style={{
+          fontSize: TYPOGRAPHY.bodySmall, fontWeight: 700, color: GD_ACCENT, fontFamily: "'Inter', sans-serif", letterSpacing: 2, textTransform: "uppercase",
+          textShadow: `0 0 ${20 + titlePulse * 20}px ${GD_ACCENT}${Math.round(titlePulse * 80).toString(16).padStart(2, "0")}`,
+        }}>
           Calculating Winners...
         </div>
       </div>
-      <div style={{ position: "absolute", top: 60, left: 0, right: 0, bottom: 40, overflow: "hidden" }}>
+      <div style={{ position: "absolute", top: 60, left: 0, right: 0, bottom: 0, overflow: "hidden" }}>
         <div style={{ position: "absolute", top: 0, left: 0, bottom: 0, width: 220, background: `linear-gradient(90deg, ${GD_DARK} 0%, transparent 100%)`, zIndex: 10, pointerEvents: "none" }} />
         <div style={{ position: "absolute", top: 0, right: 0, bottom: 0, width: 220, background: `linear-gradient(270deg, ${GD_DARK} 0%, transparent 100%)`, zIndex: 10, pointerEvents: "none" }} />
         <div style={{
@@ -243,6 +255,15 @@ const PodiumBar: React.FC<{
   const animatedHeight = barHeight * progress;
   const displayScore = getCountUpValue(team.score, frame, revealFrame);
 
+  // Subtle scale bounce on entry
+  const scaleSpring = spring({ frame: elapsed, fps, config: { damping: 10, stiffness: 120 } });
+  const entryScale = interpolate(scaleSpring, [0, 1], [0.85, 1]);
+
+  // Pulsing glow for #1 winner
+  const glowIntensity = rank === 1 && elapsed > 30
+    ? interpolate(elapsed % 90, [0, 45, 90], [0.2, 0.6, 0.2], { extrapolateRight: "clamp" })
+    : 0;
+
   const barWidth = isTop3 ? 160 : 130;
   const borderColor = rank === 1 ? GD_GOLD : rank === 2 ? GD_GOLD + "80" : rank === 3 ? GD_GOLD + "80" : GD_ACCENT + "60";
   const barGradient = rank === 1
@@ -267,6 +288,8 @@ const PodiumBar: React.FC<{
       display: "flex", flexDirection: "column", alignItems: "center",
       justifyContent: "flex-end", height: "100%", opacity: opacity * progress,
       width: barWidth,
+      transform: `scale(${entryScale})`,
+      transformOrigin: "bottom center",
     }}>
       {/* Rank badge */}
       <div style={{
@@ -295,7 +318,9 @@ const PodiumBar: React.FC<{
         border: `1.5px solid ${borderColor}`, borderBottom: "none",
         display: "flex", flexDirection: "column", alignItems: "center",
         justifyContent: "flex-end", paddingBottom: 12,
-        boxShadow: rank === 1 ? `0 0 40px ${GD_GOLD}30` : `0 0 20px ${GD_PURPLE}20`,
+        boxShadow: rank === 1
+          ? `0 0 ${40 + glowIntensity * 40}px ${GD_GOLD}${Math.round((0.3 + glowIntensity * 0.4) * 255).toString(16).padStart(2, "0")}`
+          : `0 0 20px ${GD_PURPLE}20`,
       }}>
         <div style={{
           fontSize: isTop3 ? TYPOGRAPHY.h6 : TYPOGRAPHY.body, fontWeight: 900,
@@ -334,15 +359,23 @@ const RevealPhase: React.FC<{ frame: number }> = ({ frame }) => {
         }}>🏆 Final Standings 🏆</div>
       </div>
 
-      {/* Current reveal announcement */}
+      {/* Current reveal announcement with scale pop */}
       {frame < ROLL_CALL_START && (
         <div style={{
           position: "absolute", top: 70, left: 0, right: 0, textAlign: "center",
-          opacity: interpolate(frame - (currentReveal?.frame ?? 0), [0, 20], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
+          opacity: interpolate(frame - (currentReveal?.frame ?? 0), [0, 15], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
         }}>
           <span style={{
             fontSize: TYPOGRAPHY.body, fontWeight: 700, fontFamily: "'Inter', sans-serif",
             color: currentRank <= 3 ? GD_GOLD : "rgba(255,255,255,0.7)",
+            display: "inline-block",
+            transform: `scale(${interpolate(
+              frame - (currentReveal?.frame ?? 0),
+              [0, 8, 20],
+              [0.5, 1.15, 1],
+              { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.out(Easing.ease) }
+            )})`,
+            textShadow: currentRank <= 3 ? `0 0 20px ${GD_GOLD}50` : "none",
           }}>
             {currentRank === 1 ? "🥇 1st Place" : currentRank === 2 ? "🥈 2nd Place" : currentRank === 3 ? "🥉 3rd Place" : `#${currentRank}`}
           </span>
@@ -393,7 +426,7 @@ const PodiumCard: React.FC<{
 }> = ({ team, rank, isTop3, maxScore, minScore, entryDelay, frame }) => {
   const { fps } = useVideoConfig();
   const localFrame = frame - ROLL_CALL_START;
-  const cardSpring = spring({ frame: Math.max(0, localFrame - entryDelay), fps, config: { damping: 12, stiffness: 90 } });
+  const cardSpring = spring({ frame: Math.max(0, localFrame - entryDelay), fps, config: { damping: 10, stiffness: 80, mass: 0.8 } });
 
   const logoUrl = LOGO_MAP[team.ugName];
   const borderColor = rank === 1 ? GD_GOLD : rank <= 3 ? GD_ORANGE : GD_ACCENT + "60";
@@ -405,6 +438,14 @@ const PodiumCard: React.FC<{
   const cardMinH = isTop3 ? 200 : 180;
   const cardMaxH = isTop3 ? 360 : 220;
   const cardHeight = cardMinH + (cardMaxH - cardMinH) * normalized;
+
+  // Subtle rotation on entry for dynamism
+  const entryRotation = interpolate(cardSpring, [0, 0.5, 1], [rank % 2 === 0 ? -2 : 2, rank % 2 === 0 ? 0.5 : -0.5, 0]);
+
+  // Gold glow pulse for #1
+  const goldPulse = rank === 1 && localFrame > entryDelay + 30
+    ? interpolate((localFrame - entryDelay) % 120, [0, 60, 120], [0.15, 0.4, 0.15], { extrapolateRight: "clamp" })
+    : 0;
 
   return (
     <div style={{
@@ -418,8 +459,10 @@ const PodiumCard: React.FC<{
       padding: isTop3 ? "14px 10px 10px" : "10px 8px 8px",
       position: "relative",
       opacity: cardSpring,
-      transform: `translateY(${interpolate(cardSpring, [0, 1], [40, 0])}px) scale(${interpolate(cardSpring, [0, 1], [0.9, 1])})`,
-      boxShadow: rank === 1 ? `0 0 30px ${GD_GOLD}25` : `0 4px 20px rgba(0,0,0,0.3)`,
+      transform: `translateY(${interpolate(cardSpring, [0, 1], [40, 0])}px) scale(${interpolate(cardSpring, [0, 1], [0.9, 1])}) rotate(${entryRotation}deg)`,
+      boxShadow: rank === 1
+        ? `0 0 ${30 + goldPulse * 30}px ${GD_GOLD}${Math.round((0.25 + goldPulse * 0.3) * 255).toString(16).padStart(2, "0")}`
+        : `0 4px 20px rgba(0,0,0,0.3)`,
     }}>
       {/* TOP section: Rank + Team Name + Score */}
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: isTop3 ? 4 : 2 }}>
@@ -509,9 +552,9 @@ const RollCallPhase: React.FC<{ frame: number }> = ({ frame }) => {
         </div>
       </div>
 
-      {/* Bottom 3 row: 4-5-6 — shifted left to avoid AudioBadge overlap */}
+      {/* Bottom 3 row: 4-5-6 — centered */}
       <div style={{
-        position: "absolute", bottom: 20, left: 0, right: 160, 
+        position: "absolute", bottom: 20, left: 0, right: 0, 
         display: "flex", justifyContent: "center", alignItems: "flex-end", gap: 16,
       }}>
         <PodiumCard team={PODIUM_TEAMS[3]} rank={4} isTop3={false} maxScore={maxScore} minScore={minScore} entryDelay={45} frame={frame} />
@@ -573,6 +616,26 @@ export const GameDayClosingWinners: React.FC = () => {
     return <ThankYouPhase frame={frame} />;
   };
 
+  // Crossfade opacities at phase boundaries
+  const shuffleOut = frame >= REVEAL_6TH - CROSSFADE
+    ? interpolate(frame, [REVEAL_6TH - CROSSFADE, REVEAL_6TH], [1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })
+    : 1;
+  const revealIn = frame >= REVEAL_6TH - CROSSFADE
+    ? interpolate(frame, [REVEAL_6TH - CROSSFADE, REVEAL_6TH], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })
+    : 0;
+  const revealOut = frame >= ROLL_CALL_START - CROSSFADE
+    ? interpolate(frame, [ROLL_CALL_START - CROSSFADE, ROLL_CALL_START], [1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })
+    : 1;
+  const podiumIn = frame >= ROLL_CALL_START - CROSSFADE
+    ? interpolate(frame, [ROLL_CALL_START - CROSSFADE, ROLL_CALL_START], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })
+    : 0;
+  const podiumOut = frame >= THANKYOU_START - CROSSFADE
+    ? interpolate(frame, [THANKYOU_START - CROSSFADE, THANKYOU_START], [1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })
+    : 1;
+  const thankIn = frame >= THANKYOU_START - CROSSFADE
+    ? interpolate(frame, [THANKYOU_START - CROSSFADE, THANKYOU_START], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })
+    : 0;
+
   return (
     <AbsoluteFill style={{ fontFamily: "'Inter', sans-serif", background: GD_DARK }}>
       <BackgroundLayer darken={0.65} />
@@ -581,31 +644,31 @@ export const GameDayClosingWinners: React.FC = () => {
 
       <Sequence name="Shuffle" from={SHUFFLE_START} durationInFrames={SHUFFLE_END - SHUFFLE_START + 1} layout="none">
         {frame < REVEAL_6TH && (
-          <AbsoluteFill style={{ zIndex: 10 }}>
+          <AbsoluteFill style={{ zIndex: 10, opacity: shuffleOut }}>
             <ShufflePhase frame={frame} />
           </AbsoluteFill>
         )}
       </Sequence>
 
-      <Sequence name="Reveal (6th → 1st)" from={REVEAL_6TH} durationInFrames={ROLL_CALL_START - REVEAL_6TH} layout="none">
-        {frame >= REVEAL_6TH && frame < ROLL_CALL_START && (
-          <AbsoluteFill style={{ zIndex: 10 }}>
+      <Sequence name="Reveal (6th → 1st)" from={REVEAL_6TH - CROSSFADE} durationInFrames={ROLL_CALL_START - REVEAL_6TH + CROSSFADE} layout="none">
+        {frame >= REVEAL_6TH - CROSSFADE && frame < ROLL_CALL_START && (
+          <AbsoluteFill style={{ zIndex: 10, opacity: frame < REVEAL_6TH ? revealIn : revealOut }}>
             <RevealPhase frame={frame} />
           </AbsoluteFill>
         )}
       </Sequence>
 
-      <Sequence name="Podium" from={ROLL_CALL_START} durationInFrames={THANKYOU_START - ROLL_CALL_START} layout="none">
-        {frame >= ROLL_CALL_START && frame < THANKYOU_START && (
-          <AbsoluteFill style={{ zIndex: 10 }}>
+      <Sequence name="Podium" from={ROLL_CALL_START - CROSSFADE} durationInFrames={THANKYOU_START - ROLL_CALL_START + CROSSFADE} layout="none">
+        {frame >= ROLL_CALL_START - CROSSFADE && frame < THANKYOU_START && (
+          <AbsoluteFill style={{ zIndex: 10, opacity: frame < ROLL_CALL_START ? podiumIn : podiumOut }}>
             <RollCallPhase frame={frame} />
           </AbsoluteFill>
         )}
       </Sequence>
 
-      <Sequence name="Thank You + Fade" from={THANKYOU_START} durationInFrames={TOTAL_FRAMES - THANKYOU_START} layout="none">
-        {frame >= THANKYOU_START && (
-          <AbsoluteFill style={{ zIndex: 10 }}>
+      <Sequence name="Thank You + Fade" from={THANKYOU_START - CROSSFADE} durationInFrames={TOTAL_FRAMES - THANKYOU_START + CROSSFADE} layout="none">
+        {frame >= THANKYOU_START - CROSSFADE && (
+          <AbsoluteFill style={{ zIndex: 10, opacity: frame < THANKYOU_START ? thankIn : 1 }}>
             <ThankYouPhase frame={frame} />
           </AbsoluteFill>
         )}

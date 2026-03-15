@@ -45,11 +45,11 @@ const StarIcon: React.FC<{ size?: number; color?: string }> = ({ size = 22, colo
 const INTRO_START = 0;
 const INTRO_END = 59;
 const ORG_START = 45;
-const ORG_END = 199;       // ~5 seconds for organizers
-const AWS_START = 180;
-const AWS_END = 479;
-const OUTRO_START = 460;
-const OUTRO_END = 609;
+const ORG_END = 265;       // ~7.3 seconds for organizers
+const AWS_START = 245;
+const AWS_END = 509;
+const OUTRO_START = 490;
+const OUTRO_END = 639;
 
 const F = "'Inter', sans-serif";
 
@@ -76,7 +76,7 @@ const IntroScene: React.FC<{ frame: number; fps: number }> = ({ frame, fps }) =>
 const OrganizerScene: React.FC<{ frame: number; fps: number }> = ({ frame, fps }) => {
   const relFrame = frame - ORG_START;
   const sceneOpacity = interpolate(frame, [ORG_START, ORG_START + 10, ORG_END - 15, ORG_END], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
-  const orgTitleSpring = spring({ frame: Math.max(0, relFrame - 3), fps, config: { damping: 14, stiffness: 120 } });
+  const orgTitleSpring = spring({ frame: Math.max(0, relFrame - 3), fps, config: { damping: 18, stiffness: 80 } });
 
   return (
     <AbsoluteFill style={{ opacity: sceneOpacity }}>
@@ -86,7 +86,7 @@ const OrganizerScene: React.FC<{ frame: number; fps: number }> = ({ frame, fps }
       </div>
       <div style={{ position: "absolute", top: "25%", left: "50%", transform: "translateX(-50%)", display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "36px 80px", maxWidth: 1250 }}>
         {ORGANIZERS.map((org, i) => {
-          const cardSpring = spring({ frame: Math.max(0, relFrame - 5 - i * 5), fps, config: { damping: 12, stiffness: 100, mass: 0.8 } });
+          const cardSpring = spring({ frame: Math.max(0, relFrame - 5 - i * 18), fps, config: { damping: 18, stiffness: 80, mass: 1 } });
           const cardScale = interpolate(cardSpring, [0, 1], [0.5, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
           return (
             <div key={org.name} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 10, opacity: cardSpring, transform: `scale(${cardScale}) translateY(${interpolate(cardSpring, [0, 1], [20, 0])}px)` }}>
@@ -95,10 +95,10 @@ const OrganizerScene: React.FC<{ frame: number; fps: number }> = ({ frame, fps }
               </div>
               <div style={{ textAlign: "center" }}>
                 <div style={{ fontSize: TYPOGRAPHY.h6, fontWeight: 800, color: "#ffffff", fontFamily: F }}>{org.name}</div>
-                <div style={{ fontSize: TYPOGRAPHY.caption, color: "rgba(255,255,255,0.55)", fontFamily: F, marginTop: 3, whiteSpace: "nowrap" }}>{org.role}</div>
+                <div style={{ fontSize: TYPOGRAPHY.bodySmall, color: "rgba(255,255,255,0.55)", fontFamily: F, marginTop: 3, whiteSpace: "nowrap" }}>{org.role}</div>
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 4, marginTop: 2 }}>
-                  <span style={{ fontSize: 14 }}>{org.flag}</span>
-                  <span style={{ fontSize: TYPOGRAPHY.captionSmall, color: "rgba(255,255,255,0.4)", fontFamily: F }}>{org.country}</span>
+                  <span style={{ fontSize: 16 }}>{org.flag}</span>
+                  <span style={{ fontSize: TYPOGRAPHY.caption, color: "rgba(255,255,255,0.4)", fontFamily: F }}>{org.country}</span>
                 </div>
               </div>
             </div>
@@ -113,7 +113,7 @@ const OrganizerScene: React.FC<{ frame: number; fps: number }> = ({ frame, fps }
 const AWSScene: React.FC<{ frame: number; fps: number }> = ({ frame, fps }) => {
   const relFrame = frame - AWS_START;
   const sceneOpacity = interpolate(frame, [AWS_START, AWS_START + 15, AWS_END - 15, AWS_END], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
-  const titleSpring = spring({ frame: Math.max(0, relFrame - 5), fps, config: { damping: 14, stiffness: 120 } });
+  const titleSpring = spring({ frame: Math.max(0, relFrame - 5), fps, config: { damping: 18, stiffness: 80 } });
   const subtitleOpacity = interpolate(relFrame, [15, 35], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   const cardsStart = 30;
   const thanksStart = 120;
@@ -123,6 +123,7 @@ const AWSScene: React.FC<{ frame: number; fps: number }> = ({ frame, fps }) => {
     { icon: <ServerIcon size={28} />, text: "The GameDay environment & infrastructure" },
     { icon: <UsersIcon size={28} />, text: "Local and remote supporters across Europe" },
     { icon: <StarIcon size={28} />, text: "Outstanding support during organization & preparation" },
+    { icon: <HeartIcon size={28} />, text: "And many more AWS colleagues who made this possible" },
   ];
 
   return (
@@ -142,7 +143,7 @@ const AWSScene: React.FC<{ frame: number; fps: number }> = ({ frame, fps }) => {
       {/* Supporter cards */}
       <div style={{ position: "absolute", top: "25%", left: "50%", transform: "translateX(-50%)", display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "36px 80px", maxWidth: 1250 }}>
         {AWS_SUPPORTERS.map((person, i) => {
-          const cardSpring = spring({ frame: Math.max(0, relFrame - cardsStart - i * 15), fps, config: { damping: 12, stiffness: 100, mass: 0.8 } });
+          const cardSpring = spring({ frame: Math.max(0, relFrame - cardsStart - i * 18), fps, config: { damping: 18, stiffness: 80, mass: 1 } });
           const cardScale = interpolate(cardSpring, [0, 1], [0.5, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
           return (
             <div key={person.name} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 10, opacity: cardSpring, transform: `scale(${cardScale}) translateY(${interpolate(cardSpring, [0, 1], [20, 0])}px)` }}>
@@ -151,8 +152,8 @@ const AWSScene: React.FC<{ frame: number; fps: number }> = ({ frame, fps }) => {
               </div>
               <div style={{ textAlign: "center" }}>
                 <div style={{ fontSize: TYPOGRAPHY.h6, fontWeight: 800, color: "#ffffff", fontFamily: F }}>{person.name}</div>
-                <div style={{ fontSize: TYPOGRAPHY.caption, color: "rgba(255,255,255,0.55)", fontFamily: F, marginTop: 3, whiteSpace: "nowrap" }}>{person.role}</div>
-                <div style={{ fontSize: TYPOGRAPHY.captionSmall, color: "rgba(255,255,255,0.4)", fontFamily: F, marginTop: 2 }}>{person.country}</div>
+                <div style={{ fontSize: TYPOGRAPHY.bodySmall, color: "rgba(255,255,255,0.55)", fontFamily: F, marginTop: 3, whiteSpace: "nowrap" }}>{person.role}</div>
+                <div style={{ fontSize: TYPOGRAPHY.caption, color: "rgba(255,255,255,0.4)", fontFamily: F, marginTop: 2 }}>{person.country}</div>
               </div>
             </div>
           );
@@ -162,7 +163,7 @@ const AWSScene: React.FC<{ frame: number; fps: number }> = ({ frame, fps }) => {
       {/* Thank-you details */}
       <div style={{ position: "absolute", bottom: 80, left: 60, right: 60, display: "flex", flexDirection: "column", gap: 16, alignItems: "center", opacity: thanksOpacity }}>
         {thankYouItems.map((item, i) => {
-          const itemSpring = spring({ frame: Math.max(0, relFrame - thanksStart - 10 - i * 12), fps, config: { damping: 14, stiffness: 100 } });
+          const itemSpring = spring({ frame: Math.max(0, relFrame - thanksStart - 10 - i * 15), fps, config: { damping: 18, stiffness: 80 } });
           return (
             <div key={i} style={{ display: "flex", alignItems: "center", gap: 14, opacity: itemSpring, transform: `translateY(${interpolate(itemSpring, [0, 1], [10, 0])}px)` }}>
               {item.icon}
@@ -170,10 +171,6 @@ const AWSScene: React.FC<{ frame: number; fps: number }> = ({ frame, fps }) => {
             </div>
           );
         })}
-        <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 8, opacity: interpolate(relFrame, [thanksStart + 60, thanksStart + 80], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }) }}>
-          <HeartIcon size={22} />
-          <span style={{ fontSize: TYPOGRAPHY.bodySmall, fontWeight: 600, color: "rgba(255,255,255,0.45)", fontFamily: F, letterSpacing: 1 }}>And many more AWS colleagues who made this possible</span>
-        </div>
       </div>
     </AbsoluteFill>
   );
