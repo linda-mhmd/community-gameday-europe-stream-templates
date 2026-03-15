@@ -192,6 +192,9 @@ The closing ceremony is split into two compositions for live flexibility:
 
 The 53+ user group logos are not stored locally — they are loaded at render time from a shared Notion database hosted at `awscommunitydach.notion.site`. The URL-to-name mapping lives in `archive/CommunityGamedayEuropeV4.tsx` as `LOGO_MAP`, which is imported by the closing and pre-show compositions.
 
+[![Notion Gallery — AWS User Groups](screenshots/readme-notion-gallery.png)](https://awscommunitydach.notion.site/89ae998ccfc941f8a4ebf3e7b6586045?v=11f535253b02470f963a6d844ca671d4)
+> Click the image to open the public Notion gallery.
+
 This means:
 - Rendering requires internet access (Notion image CDN must be reachable)
 - If the Notion workspace is restructured or images are deleted, logos will break
