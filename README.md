@@ -220,7 +220,7 @@ The event spans 4+ timezones across Europe. All times below are CET — local ti
 
 ## The People
 
-- **Linda Mohamed** — Stream Host, AWS Community Hero, AWS & Women's UG Vienna
+- **Linda Mohamed** — Stream Host, AWS Community Hero, AWS & Women's UG Vienna (Austria)
 - **Jerome** — Co-organizer, AWS User Group Belgium (Brussels)
 - **Anda** — Co-organizer, AWS User Group Geneva (Switzerland)
 - **Special Guest** — To be revealed
