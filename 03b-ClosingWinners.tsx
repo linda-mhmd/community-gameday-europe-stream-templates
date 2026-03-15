@@ -51,21 +51,23 @@ const CARD_ACCENTS = [GD_VIOLET, GD_PURPLE, GD_PINK, GD_ACCENT, "#6366f1", GD_VI
 
 // ── TeamData Interface ──
 export interface TeamData {
-  name: string;
-  flag: string;
-  city: string;
+  teamName: string;       // The team name (most prominent)
+  ugName: string;         // User group name (for LOGO_MAP lookup)
+  flag: string;           // Country flag emoji
+  city: string;           // City, Country
   score: number;
-  logoUrl: string | null;
 }
 
 // ── Placeholder Podium Teams (update live during stream) ──
+// ugName must match a key in LOGO_MAP from CommunityGamedayEuropeV4
+// Use wide score spread so card height differences are clearly visible
 export const PODIUM_TEAMS: TeamData[] = [
-  { name: "Team #1", flag: "🏳️", city: "City A", score: 4850, logoUrl: null },
-  { name: "Team #2", flag: "🏳️", city: "City B", score: 4720, logoUrl: null },
-  { name: "Team #3", flag: "🏳️", city: "City C", score: 4580, logoUrl: null },
-  { name: "Team #4", flag: "🏳️", city: "City D", score: 4410, logoUrl: null },
-  { name: "Team #5", flag: "🏳️", city: "City E", score: 4250, logoUrl: null },
-  { name: "Team #6", flag: "🏳️", city: "City F", score: 4090, logoUrl: null },
+  { teamName: "TEAM NAME", ugName: "AWS User Group Belgium", flag: "🏳️", city: "CITY, COUNTRY", score: 18500 },
+  { teamName: "TEAM NAME", ugName: "AWS User Group Vienna", flag: "🏳️", city: "CITY, COUNTRY", score: 15200 },
+  { teamName: "TEAM NAME", ugName: "Berlin AWS User Group", flag: "🏳️", city: "CITY, COUNTRY", score: 12800 },
+  { teamName: "TEAM NAME", ugName: "AWS User Group France- Paris", flag: "🏳️", city: "CITY, COUNTRY", score: 11500 },
+  { teamName: "TEAM NAME", ugName: "Grenoble AWS User Group", flag: "🏳️", city: "CITY, COUNTRY", score: 10200 },
+  { teamName: "TEAM NAME", ugName: "Lille AWS User Group", flag: "🏳️", city: "CITY, COUNTRY", score: 8900 },
 ];
 
 // ── Reveal Schedule ──
@@ -169,8 +171,8 @@ const ShufflePhase: React.FC<{ frame: number }> = ({ frame }) => {
         </div>
       </div>
       <div style={{ position: "absolute", top: 60, left: 0, right: 0, bottom: 40, overflow: "hidden" }}>
-        <div style={{ position: "absolute", top: 0, left: 0, bottom: 0, width: 120, background: `linear-gradient(90deg, ${GD_DARK} 0%, transparent 100%)`, zIndex: 10, pointerEvents: "none" }} />
-        <div style={{ position: "absolute", top: 0, right: 0, bottom: 0, width: 120, background: `linear-gradient(270deg, ${GD_DARK} 0%, transparent 100%)`, zIndex: 10, pointerEvents: "none" }} />
+        <div style={{ position: "absolute", top: 0, left: 0, bottom: 0, width: 220, background: `linear-gradient(90deg, ${GD_DARK} 0%, transparent 100%)`, zIndex: 10, pointerEvents: "none" }} />
+        <div style={{ position: "absolute", top: 0, right: 0, bottom: 0, width: 220, background: `linear-gradient(270deg, ${GD_DARK} 0%, transparent 100%)`, zIndex: 10, pointerEvents: "none" }} />
         <div style={{
           display: "flex", alignItems: "flex-end", height: "100%",
           transform: `translateX(${-scrollX}px)`, gap: SHUFFLE_BAR_GAP,
@@ -280,7 +282,7 @@ const PodiumBar: React.FC<{
         fontSize: isTop3 ? TYPOGRAPHY.caption : TYPOGRAPHY.label, fontWeight: 700,
         color: "white", fontFamily: "'Inter', sans-serif", textAlign: "center",
         marginBottom: 4, lineHeight: 1.2, maxWidth: barWidth, opacity: nameOpacity,
-      }}>{team.flag} {team.name}</div>
+      }}>{team.flag} {team.teamName}</div>
       {/* City */}
       <div style={{
         fontSize: TYPOGRAPHY.overline, color: "rgba(255,255,255,0.5)",
@@ -347,11 +349,11 @@ const RevealPhase: React.FC<{ frame: number }> = ({ frame }) => {
         </div>
       )}
 
-      {/* Bar chart — bottom aligned */}
+      {/* Bar chart — bottom aligned, extra right padding to avoid AudioBadge */}
       <div style={{
         position: "absolute", bottom: 0, left: 0, right: 0, height: "75%",
         display: "flex", justifyContent: "center", alignItems: "flex-end", gap: 16,
-        padding: "0 60px",
+        padding: "0 180px 0 80px",
       }}>
         {/* Render bars for revealed teams: order 2-1-3 for top, 4-5-6 for bottom */}
         {revealed.includes(2) && (
@@ -379,53 +381,142 @@ const RevealPhase: React.FC<{ frame: number }> = ({ frame }) => {
   );
 };
 
-// ── RollCallPhase: Team names 6th→1st ──
+// ── PodiumCard: Individual team card for the podium grid ──
+const PodiumCard: React.FC<{
+  team: TeamData;
+  rank: number;
+  isTop3: boolean;
+  maxScore: number;
+  minScore: number;
+  entryDelay: number;
+  frame: number;
+}> = ({ team, rank, isTop3, maxScore, minScore, entryDelay, frame }) => {
+  const { fps } = useVideoConfig();
+  const localFrame = frame - ROLL_CALL_START;
+  const cardSpring = spring({ frame: Math.max(0, localFrame - entryDelay), fps, config: { damping: 12, stiffness: 90 } });
+
+  const logoUrl = LOGO_MAP[team.ugName];
+  const borderColor = rank === 1 ? GD_GOLD : rank <= 3 ? GD_ORANGE : GD_ACCENT + "60";
+  const bgColor = rank === 1 ? `${GD_GOLD}18` : rank <= 3 ? `${GD_ORANGE}10` : `${GD_PURPLE}30`;
+  const cardWidth = isTop3 ? 280 : 250;
+  // Height strongly relative to score — normalize between min and max
+  const scoreRange = maxScore - minScore || 1;
+  const normalized = (team.score - minScore) / scoreRange; // 0..1
+  const cardMinH = isTop3 ? 200 : 180;
+  const cardMaxH = isTop3 ? 360 : 220;
+  const cardHeight = cardMinH + (cardMaxH - cardMinH) * normalized;
+
+  return (
+    <div style={{
+      width: cardWidth,
+      height: cardHeight,
+      borderRadius: 14,
+      border: `2px solid ${borderColor}`,
+      background: bgColor,
+      display: "flex", flexDirection: "column", alignItems: "center",
+      justifyContent: "space-between",
+      padding: isTop3 ? "14px 10px 10px" : "10px 8px 8px",
+      position: "relative",
+      opacity: cardSpring,
+      transform: `translateY(${interpolate(cardSpring, [0, 1], [40, 0])}px) scale(${interpolate(cardSpring, [0, 1], [0.9, 1])})`,
+      boxShadow: rank === 1 ? `0 0 30px ${GD_GOLD}25` : `0 4px 20px rgba(0,0,0,0.3)`,
+    }}>
+      {/* TOP section: Rank + Team Name + Score */}
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: isTop3 ? 4 : 2 }}>
+        {/* Rank */}
+        <div style={{
+          fontSize: isTop3 ? 36 : 28, fontWeight: 900,
+          color: rank === 1 ? GD_GOLD : rank <= 3 ? "white" : "rgba(255,255,255,0.7)",
+          fontFamily: "'Inter', sans-serif", lineHeight: 1,
+        }}>#{rank}</div>
+
+        {/* Team Name — most prominent */}
+        <div style={{
+          fontSize: isTop3 ? 22 : 18, fontWeight: 800,
+          color: "white", fontFamily: "'Inter', sans-serif", textAlign: "center",
+          lineHeight: 1.2, maxWidth: cardWidth - 24,
+          wordWrap: "break-word", overflowWrap: "break-word",
+        }}>{team.teamName}</div>
+
+        {/* Score / Points */}
+        <div style={{
+          fontSize: isTop3 ? 28 : 22, fontWeight: 900,
+          color: rank <= 3 ? GD_GOLD : GD_ACCENT,
+          fontFamily: "'Inter', sans-serif", fontVariantNumeric: "tabular-nums",
+        }}>{team.score.toLocaleString()}</div>
+      </div>
+
+      {/* BOTTOM section: Logo + City/Country */}
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
+        {/* UG Logo — landscape, natural aspect ratio, rounded corners */}
+        {logoUrl && (
+          <Img src={logoUrl} style={{
+            width: isTop3 ? 160 : 100,
+            height: "auto",
+            borderRadius: 8,
+            border: `1.5px solid ${borderColor}30`,
+            flexShrink: 0,
+          }} />
+        )}
+
+        {/* City + Flag */}
+        <div style={{
+          fontSize: isTop3 ? 16 : 14, color: "rgba(255,255,255,0.7)",
+          fontFamily: "'Inter', sans-serif", textAlign: "center", fontWeight: 600,
+        }}>{team.flag} {team.city}</div>
+      </div>
+    </div>
+  );
+};
+
+// ── RollCallPhase → Podium Grid (replaces old list) ──
 const RollCallPhase: React.FC<{ frame: number }> = ({ frame }) => {
   const { fps } = useVideoConfig();
   const localFrame = frame - ROLL_CALL_START;
-  const entrySpring = spring({ frame: localFrame, fps, config: { damping: 14, stiffness: 100 } });
-
-  const teams = [...PODIUM_TEAMS].reverse(); // 6th first
+  const titleSpring = spring({ frame: localFrame, fps, config: { damping: 14, stiffness: 100 } });
+  const maxScore = PODIUM_TEAMS[0].score;
+  const minScore = PODIUM_TEAMS[PODIUM_TEAMS.length - 1].score;
 
   return (
-    <AbsoluteFill style={{ opacity: entrySpring }}>
+    <AbsoluteFill>
+      {/* Title */}
       <div style={{
-        position: "absolute", top: 40, left: 0, right: 0, textAlign: "center",
+        position: "absolute", top: 20, left: 0, right: 0, textAlign: "center",
+        opacity: titleSpring, transform: `translateY(${interpolate(titleSpring, [0, 1], [20, 0])}px)`,
       }}>
         <div style={{
           fontSize: TYPOGRAPHY.h5, fontWeight: 900, color: GD_GOLD,
-          fontFamily: "'Inter', sans-serif", letterSpacing: 4,
+          fontFamily: "'Inter', sans-serif", letterSpacing: 4, textTransform: "uppercase",
           textShadow: `0 2px 20px ${GD_GOLD}40`,
-        }}>🏆 Final Standings 🏆</div>
+        }}>🏆 PODIUM 🏆</div>
       </div>
+
+      {/* Top 3 row: 2-1-3 layout, vertically offset by score */}
       <div style={{
-        position: "absolute", top: "25%", left: "50%", transform: "translateX(-50%)",
-        display: "flex", flexDirection: "column", gap: 12, alignItems: "center",
+        position: "absolute", top: 50, left: 0, right: 0,
+        display: "flex", justifyContent: "center", alignItems: "flex-end", gap: 16,
+        height: 400,
       }}>
-        {teams.map((team, i) => {
-          const rank = 6 - i;
-          const teamSpring = spring({ frame: Math.max(0, localFrame - i * 15), fps, config: { damping: 12, stiffness: 100 } });
-          const medal = rank === 1 ? "🥇" : rank === 2 ? "🥈" : rank === 3 ? "🥉" : null;
-          return (
-            <div key={i} style={{
-              display: "flex", alignItems: "center", gap: 16,
-              opacity: teamSpring, transform: `translateX(${interpolate(teamSpring, [0, 1], [-40, 0])}px)`,
-            }}>
-              <div style={{
-                fontSize: TYPOGRAPHY.h6, fontWeight: 900, color: rank <= 3 ? GD_GOLD : "rgba(255,255,255,0.6)",
-                fontFamily: "'Inter', sans-serif", width: 60, textAlign: "right",
-              }}>{medal ? `${medal}` : `#${rank}`}</div>
-              <div style={{
-                fontSize: rank <= 3 ? TYPOGRAPHY.h5 : TYPOGRAPHY.h6, fontWeight: rank <= 3 ? 900 : 700,
-                color: rank === 1 ? GD_GOLD : "white", fontFamily: "'Inter', sans-serif",
-              }}>{team.flag} {team.name}</div>
-              <div style={{
-                fontSize: TYPOGRAPHY.body, fontWeight: 800, color: rank <= 3 ? GD_GOLD : GD_ACCENT,
-                fontFamily: "'Inter', sans-serif", fontVariantNumeric: "tabular-nums",
-              }}>{team.score.toLocaleString()}</div>
-            </div>
-          );
-        })}
+        {/* 2nd place — offset down */}
+        <div style={{ paddingTop: 50 }}>
+          <PodiumCard team={PODIUM_TEAMS[1]} rank={2} isTop3={true} maxScore={maxScore} minScore={minScore} entryDelay={15} frame={frame} />
+        </div>
+        {/* 1st place — tallest, no offset */}
+        <PodiumCard team={PODIUM_TEAMS[0]} rank={1} isTop3={true} maxScore={maxScore} minScore={minScore} entryDelay={30} frame={frame} />
+        {/* 3rd place — offset down more */}
+        <div style={{ paddingTop: 90 }}>
+          <PodiumCard team={PODIUM_TEAMS[2]} rank={3} isTop3={true} maxScore={maxScore} minScore={minScore} entryDelay={0} frame={frame} />
+        </div>
+      </div>
+
+      {/* Bottom 3 row: 4-5-6 — shifted left to avoid AudioBadge overlap */}
+      <div style={{
+        position: "absolute", bottom: 20, left: 0, right: 160, 
+        display: "flex", justifyContent: "center", alignItems: "flex-end", gap: 16,
+      }}>
+        <PodiumCard team={PODIUM_TEAMS[3]} rank={4} isTop3={false} maxScore={maxScore} minScore={minScore} entryDelay={45} frame={frame} />
+        <PodiumCard team={PODIUM_TEAMS[4]} rank={5} isTop3={false} maxScore={maxScore} minScore={minScore} entryDelay={55} frame={frame} />
+        <PodiumCard team={PODIUM_TEAMS[5]} rank={6} isTop3={false} maxScore={maxScore} minScore={minScore} entryDelay={65} frame={frame} />
       </div>
     </AbsoluteFill>
   );
@@ -504,7 +595,7 @@ export const GameDayClosingWinners: React.FC = () => {
         )}
       </Sequence>
 
-      <Sequence name="Roll Call" from={ROLL_CALL_START} durationInFrames={THANKYOU_START - ROLL_CALL_START} layout="none">
+      <Sequence name="Podium" from={ROLL_CALL_START} durationInFrames={THANKYOU_START - ROLL_CALL_START} layout="none">
         {frame >= ROLL_CALL_START && frame < THANKYOU_START && (
           <AbsoluteFill style={{ zIndex: 10 }}>
             <RollCallPhase frame={frame} />

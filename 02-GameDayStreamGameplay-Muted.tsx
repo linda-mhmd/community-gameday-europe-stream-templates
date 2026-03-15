@@ -14,7 +14,7 @@ import {
 const F = "'Amazon Ember', 'Inter', sans-serif";
 const GAMEDAY_LOGO = staticFile("AWSCommunityGameDayEurope/GameDay_Solid_Logo_for_swag/GameDay Logo Solid White Geometric with text.png");
 const COMMUNITY_LOGO = staticFile("AWSCommunityGameDayEurope/AWSCommunityEurope_last_nobackground.png");
-const EUROPE_MAP = staticFile("AWSCommunityGameDayEurope/gameday-map.png");
+const EUROPE_MAP = staticFile("AWSCommunityGameDayEurope/europe-map.png");
 
 // ── 30-min phases ──
 export const GAMEPLAY_PHASES: ScheduleSegment[] = [
@@ -106,11 +106,11 @@ const TipCard: React.FC<{ frame: number }> = ({ frame }) => {
   const slideY = interpolate(local, [0, 25], [30, 0], { extrapolateRight: "clamp" });
   const tip = TIPS[idx];
   return (
-    <div style={{ opacity: o, transform: `translateY(${slideY}px)`, display: "flex", flexDirection: "column", alignItems: "center", gap: 20, maxWidth: 650, textAlign: "center" }}>
-      <div style={{ width: 80, height: 80, borderRadius: 20, background: `${tip.color}15`, border: `2px solid ${tip.color}33`, display: "flex", alignItems: "center", justifyContent: "center" }}>
-        {tip.icon}
+    <div style={{ opacity: o, transform: `translateY(${slideY}px)`, display: "flex", flexDirection: "column", alignItems: "center", gap: 28, maxWidth: 850, textAlign: "center" }}>
+      <div style={{ width: 100, height: 100, borderRadius: 24, background: `${tip.color}15`, border: `2px solid ${tip.color}33`, display: "flex", alignItems: "center", justifyContent: "center" }}>
+        {React.cloneElement(tip.icon as React.ReactElement, { size: 54 })}
       </div>
-      <div style={{ fontSize: 28, fontWeight: 700, color: "white", fontFamily: F, lineHeight: 1.5 }}>{tip.text}</div>
+      <div style={{ fontSize: 38, fontWeight: 700, color: "white", fontFamily: F, lineHeight: 1.5 }}>{tip.text}</div>
     </div>
   );
 };
@@ -126,7 +126,7 @@ const PhaseTimeline: React.FC<{ frame: number; fps: number }> = ({ frame, fps })
     { label: "Final", start: 90, end: 120 },
   ];
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
       {phases.map((p) => {
         const active = totalMin >= p.start && totalMin < p.end;
         const done = totalMin >= p.end;
@@ -134,12 +134,12 @@ const PhaseTimeline: React.FC<{ frame: number; fps: number }> = ({ frame, fps })
         const isFinal = p.label === "Final";
         const c = isFinal ? GD_ORANGE : active ? GD_VIOLET : done ? GD_ACCENT : `${GD_PURPLE}66`;
         return (
-          <div key={p.label} style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            <div style={{ fontSize: 14, fontWeight: 700, width: 70, color: active ? "white" : done ? GD_ACCENT : "rgba(255,255,255,0.35)", letterSpacing: 1, textTransform: "uppercase", fontFamily: F }}>{p.label}</div>
-            <div style={{ width: 180, height: 8, borderRadius: 4, background: "rgba(255,255,255,0.08)", overflow: "hidden" }}>
-              <div style={{ width: `${progress * 100}%`, height: "100%", borderRadius: 4, background: `linear-gradient(90deg, ${c}, ${active && isFinal ? GD_PINK : c}cc)` }} />
+          <div key={p.label} style={{ display: "flex", alignItems: "center", gap: 16 }}>
+            <div style={{ fontSize: 18, fontWeight: 700, width: 90, color: active ? "white" : done ? GD_ACCENT : "rgba(255,255,255,0.35)", letterSpacing: 1, textTransform: "uppercase", fontFamily: F }}>{p.label}</div>
+            <div style={{ width: 240, height: 12, borderRadius: 6, background: "rgba(255,255,255,0.08)", overflow: "hidden" }}>
+              <div style={{ width: `${progress * 100}%`, height: "100%", borderRadius: 6, background: `linear-gradient(90deg, ${c}, ${active && isFinal ? GD_PINK : c}cc)` }} />
             </div>
-            <div style={{ fontSize: 13, color: active ? "rgba(255,255,255,0.6)" : "rgba(255,255,255,0.3)", fontFamily: F }}>{p.start}-{p.end} min</div>
+            <div style={{ fontSize: 16, color: active ? "rgba(255,255,255,0.6)" : "rgba(255,255,255,0.3)", fontFamily: F }}>{p.start}-{p.end} min</div>
           </div>
         );
       })}
@@ -172,27 +172,50 @@ export const GameDayGameplay: React.FC = () => {
     <AbsoluteFill style={{ fontFamily: F, background: GD_DARK }}>
       <BackgroundLayer darken={0.7} />
       <HexGridOverlay />
+
+      {/* ── Europe map background with heavy vignette fade ── */}
+      <div
+        style={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          width: 1600,
+          height: 1000,
+          transform: "translate(-50%, -48%)",
+          opacity: 0.18,
+          filter: "saturate(0.4) brightness(0.6)",
+        }}
+      >
+        <Img src={EUROPE_MAP} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+        <div
+          style={{
+            position: "absolute", top: 0, left: 0, width: "100%", height: "100%",
+            background: `radial-gradient(ellipse at center, transparent 10%, ${GD_DARK}99 40%, ${GD_DARK} 58%)`,
+          }}
+        />
+      </div>
+
       <AudioBadge muted />
 
       {/* ── Logos: top-left ── */}
-      <div style={{ position: "absolute", top: 24, left: 36, display: "flex", alignItems: "center", gap: 20, zIndex: 20 }}>
-        <Img src={COMMUNITY_LOGO} style={{ height: 80 }} />
-        <div style={{ width: 1, height: 50, background: `${GD_PURPLE}44` }} />
-        <Img src={GAMEDAY_LOGO} style={{ height: 100 }} />
+      <div style={{ position: "absolute", top: 28, left: 40, display: "flex", alignItems: "center", gap: 24, zIndex: 20 }}>
+        <Img src={COMMUNITY_LOGO} style={{ height: 100 }} />
+        <div style={{ width: 1, height: 60, background: `${GD_PURPLE}44` }} />
+        <Img src={GAMEDAY_LOGO} style={{ height: 120 }} />
       </div>
 
       {/* ── Countdown: top-right ── */}
-      <div style={{ position: "absolute", top: 24, right: 36, display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 4, zIndex: 20 }}>
-        <div style={{ fontSize: 14, fontWeight: 700, color: timerColor, textTransform: "uppercase", letterSpacing: 4, fontFamily: F }}>
+      <div style={{ position: "absolute", top: 28, right: 40, display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 6, zIndex: 20 }}>
+        <div style={{ fontSize: 18, fontWeight: 700, color: timerColor, textTransform: "uppercase", letterSpacing: 4, fontFamily: F }}>
           {showUrgency ? "Almost Done!" : showFinal30 ? "Final 30 Minutes" : "Time Remaining"}
         </div>
         <div style={{
-          fontSize: 72, fontWeight: 900, fontFamily: "monospace", color: timerColor, lineHeight: 1,
+          fontSize: 88, fontWeight: 900, fontFamily: "monospace", color: timerColor, lineHeight: 1,
           textShadow: showUrgency ? `0 0 ${30 + urgencyPulse * 30}px ${GD_PINK}80` : showFinal30 ? `0 0 20px ${GD_ORANGE}40` : `0 0 20px ${GD_GOLD}30`,
         }}>
           {min}:{sec}
         </div>
-        <div style={{ fontSize: 13, color: "rgba(255,255,255,0.4)", fontFamily: F }}>until Closing Ceremony</div>
+        <div style={{ fontSize: 16, color: "rgba(255,255,255,0.4)", fontFamily: F }}>until Closing Ceremony</div>
       </div>
 
       {/* ── Tip card: center ── */}
@@ -201,31 +224,28 @@ export const GameDayGameplay: React.FC = () => {
       </AbsoluteFill>
 
       {/* ── Phase timeline: bottom-left ── */}
-      <div style={{ position: "absolute", bottom: 28, left: 36, zIndex: 20 }}>
+      <div style={{ position: "absolute", bottom: 32, left: 40, zIndex: 20 }}>
         <PhaseTimeline frame={frame} fps={fps} />
       </div>
-
-      {/* ── Europe map watermark (subtle, right side) ── */}
-      <Img src={EUROPE_MAP} style={{ position: "absolute", right: -60, top: "50%", transform: "translateY(-50%)", height: "80%", opacity: 0.04 }} />
 
       {/* ── Audio cue banner (last 5 min) ── */}
       {showAudioCue && (
         <div style={{
-          position: "absolute", top: 20, left: 0, right: 0,
-          display: "flex", justifyContent: "center", zIndex: 100, opacity: audioCueEntry,
+          position: "absolute", bottom: 32, right: 40, left: "auto",
+          display: "flex", justifyContent: "flex-end", zIndex: 100, opacity: audioCueEntry,
         }}>
           <div style={{
             background: `linear-gradient(90deg, ${GD_ORANGE}dd, ${GD_GOLD}dd)`,
-            borderRadius: 16, padding: "14px 40px",
+            borderRadius: 16, padding: "16px 36px",
             boxShadow: `0 8px 32px ${GD_ORANGE}40`,
             display: "flex", alignItems: "center", gap: 14,
           }}>
-            <svg width="22" height="20" viewBox="0 0 24 24" fill="none" stroke={GD_DARK} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="26" height="24" viewBox="0 0 24 24" fill="none" stroke={GD_DARK} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M3 9v6h4l5 5V4L7 9H3z"/><path d="M14.54 7.46a5 5 0 0 1 0 9.08"/>
               <path d="M18.07 4.93a10 10 0 0 1 0 14.14"/>
             </svg>
-            <div style={{ fontSize: 20, fontWeight: 700, color: GD_DARK, fontFamily: F }}>
-              Audio will be needed for Closing Ceremony - Prepare your speakers
+            <div style={{ fontSize: 22, fontWeight: 700, color: GD_DARK, fontFamily: F }}>
+              Audio needed for Closing Ceremony
             </div>
           </div>
         </div>
