@@ -254,7 +254,6 @@ const PodiumBar: React.FC<{
     : { damping: 18, stiffness: 16, mass: 2.5 };
   const progress = spring({ frame: elapsed, fps, config });
   const animatedHeight = barHeight * progress;
-  const displayScore = getCountUpValue(team.score, frame, revealFrame);
 
   // Subtle scale bounce on entry
   const scaleSpring = spring({ frame: elapsed, fps, config: { damping: 16, stiffness: 20, mass: 2 } });
@@ -292,27 +291,7 @@ const PodiumBar: React.FC<{
       transform: `scale(${entryScale})`,
       transformOrigin: "bottom center",
     }}>
-      {/* Rank badge - centered */}
-      <div style={{
-        fontSize: isTop3 ? TYPOGRAPHY.h4 : TYPOGRAPHY.h5, fontWeight: 900,
-        color: rank === 1 ? GD_GOLD : "rgba(255,255,255,0.9)",
-        fontFamily: "'Inter', sans-serif", marginBottom: 4,
-        opacity: progress, textAlign: "center",
-      }}>
-        {medal ? `${medal} #${rank}` : `#${rank}`}
-      </div>
-      {/* Team name - centered */}
-      <div style={{
-        fontSize: isTop3 ? TYPOGRAPHY.body : TYPOGRAPHY.bodySmall, fontWeight: 700,
-        color: "white", fontFamily: "'Inter', sans-serif", textAlign: "center",
-        marginBottom: 4, lineHeight: 1.2, width: barWidth, opacity: nameOpacity,
-      }}>{team.flag} {team.teamName}</div>
-      {/* City - centered */}
-      <div style={{
-        fontSize: isTop3 ? TYPOGRAPHY.bodySmall : TYPOGRAPHY.caption, color: "rgba(255,255,255,0.7)",
-        fontFamily: "'Inter', sans-serif", marginBottom: 6, opacity: cityOpacity, textAlign: "center",
-      }}>{team.city}</div>
-      {/* Bar - empty */}
+      {/* Bar with text centered inside */}
       <div style={{
         width: barWidth - 20, height: animatedHeight, borderRadius: "10px 10px 0 0",
         background: barGradient,
@@ -320,7 +299,32 @@ const PodiumBar: React.FC<{
         boxShadow: rank === 1
           ? `0 0 ${40 + glowIntensity * 40}px ${GD_GOLD}${Math.round((0.3 + glowIntensity * 0.4) * 255).toString(16).padStart(2, "0")}`
           : `0 0 20px ${GD_PURPLE}20`,
+        display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
+        padding: "8px 4px", overflow: "hidden",
       }}>
+        {/* Rank badge */}
+        <div style={{
+          fontSize: isTop3 ? TYPOGRAPHY.body : TYPOGRAPHY.bodySmall, fontWeight: 900,
+          color: rank === 1 ? GD_GOLD : "rgba(255,255,255,0.95)",
+          fontFamily: "'Inter', sans-serif", textAlign: "center",
+          textShadow: "0 1px 3px rgba(0,0,0,0.5)",
+        }}>
+          {medal ? `${medal} #${rank}` : `#${rank}`}
+        </div>
+        {/* Team name */}
+        <div style={{
+          fontSize: isTop3 ? TYPOGRAPHY.caption : TYPOGRAPHY.captionSmall, fontWeight: 700,
+          color: "white", fontFamily: "'Inter', sans-serif", textAlign: "center",
+          lineHeight: 1.2, width: "100%", opacity: nameOpacity,
+          textShadow: "0 1px 3px rgba(0,0,0,0.5)",
+          wordWrap: "break-word", overflowWrap: "break-word",
+        }}>{team.flag} {team.teamName}</div>
+        {/* City */}
+        <div style={{
+          fontSize: isTop3 ? TYPOGRAPHY.captionSmall : TYPOGRAPHY.label, color: "rgba(255,255,255,0.8)",
+          fontFamily: "'Inter', sans-serif", opacity: cityOpacity, textAlign: "center",
+          textShadow: "0 1px 2px rgba(0,0,0,0.5)",
+        }}>{team.city}</div>
       </div>
     </div>
   );

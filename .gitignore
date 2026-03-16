@@ -39,3 +39,4 @@ web-player/dist/
 # Screenshots — keep only readme-* files in git, rest are local debug captures
 screenshots/*
 !screenshots/readme-*
+docs/input/*.MP4
