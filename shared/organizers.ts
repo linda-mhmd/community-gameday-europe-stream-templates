@@ -19,7 +19,7 @@ export const ORGANIZERS: Organizer[] = [
 ];
 
 export const AWS_SUPPORTERS: Organizer[] = [
-  { name: "Arnaud", role: "Developer Advocate, AWS", country: "Gamemaster", flag: "🎮", face: "AWSCommunityGameDayEurope/faces/arnaud.jpg", type: "aws" },
+  { name: "Arnaud", role: "Sr. Developer Advocate, AWS", country: "Gamemaster", flag: "🎮", face: "AWSCommunityGameDayEurope/faces/arnaud.jpg", type: "aws" },
   { name: "Loïc", role: "Sr. Technical Account Manager, AWS", country: "Gamemaster", flag: "🎮", face: "AWSCommunityGameDayEurope/faces/loic.jpg", type: "aws" },
   { name: "Uliana", role: "Community Manager, AWS", country: "DACH, CEE, CEAR & MENAT", flag: "🌍", face: "AWSCommunityGameDayEurope/faces/uliana.jpg", type: "aws" },
   { name: "Natalia", role: "DevEx Community Manager, AWS", country: "EMEA / Europe South", flag: "🌍", face: "AWSCommunityGameDayEurope/faces/natalia.jpg", type: "aws" },

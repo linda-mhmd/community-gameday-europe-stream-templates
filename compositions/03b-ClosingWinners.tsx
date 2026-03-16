@@ -177,7 +177,7 @@ const ShufflePhase: React.FC<{ frame: number }> = ({ frame }) => {
         opacity: interpolate(frameInPhase, [0, 30], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
       }}>
         <div style={{
-          fontSize: TYPOGRAPHY.bodySmall, fontWeight: 700, color: GD_ACCENT, fontFamily: "'Inter', sans-serif", letterSpacing: 2, textTransform: "uppercase",
+          fontSize: TYPOGRAPHY.h4, fontWeight: 700, color: GD_ACCENT, fontFamily: "'Inter', sans-serif", letterSpacing: 2, textTransform: "uppercase",
           textShadow: `0 0 ${20 + titlePulse * 20}px ${GD_ACCENT}${Math.round(titlePulse * 80).toString(16).padStart(2, "0")}`,
         }}>
           Calculating Winners...
@@ -210,9 +210,9 @@ const ShufflePhase: React.FC<{ frame: number }> = ({ frame }) => {
                 display: "flex", flexDirection: "column", alignItems: "center",
                 justifyContent: "flex-end", height: "100%", opacity: barOpacity,
               }}>
-                <div style={{ fontSize: TYPOGRAPHY.h5, marginBottom: 6, filter: "drop-shadow(0 2px 6px rgba(0,0,0,0.5))" }}>{group.flag}</div>
+                <div style={{ fontSize: TYPOGRAPHY.h4, marginBottom: 6, filter: "drop-shadow(0 2px 6px rgba(0,0,0,0.5))" }}>{group.flag}</div>
                 <div style={{
-                  fontSize: TYPOGRAPHY.captionSmall, fontWeight: 700, color: "rgba(255,255,255,0.9)",
+                  fontSize: TYPOGRAPHY.body, fontWeight: 700, color: "rgba(255,255,255,0.9)",
                   fontFamily: "'Inter', sans-serif", textAlign: "center",
                   marginBottom: 8, lineHeight: 1.3, width: SHUFFLE_BAR_WIDTH - 8,
                   wordWrap: "break-word", overflowWrap: "break-word",
@@ -225,7 +225,7 @@ const ShufflePhase: React.FC<{ frame: number }> = ({ frame }) => {
                   position: "relative",
                 }}>
                   <div style={{
-                    fontSize: TYPOGRAPHY.bodySmall, fontWeight: 800, color: "white", fontFamily: "'Inter', sans-serif",
+                    fontSize: TYPOGRAPHY.h5, fontWeight: 800, color: "white", fontFamily: "'Inter', sans-serif",
                     fontVariantNumeric: "tabular-nums", textShadow: "0 1px 4px rgba(0,0,0,0.6)",
                   }}>{Math.round(group.score)}</div>
                 </div>
@@ -292,42 +292,35 @@ const PodiumBar: React.FC<{
       transform: `scale(${entryScale})`,
       transformOrigin: "bottom center",
     }}>
-      {/* Rank badge */}
+      {/* Rank badge - centered */}
       <div style={{
-        fontSize: isTop3 ? TYPOGRAPHY.h5 : TYPOGRAPHY.h6, fontWeight: 900,
-        color: rank === 1 ? GD_GOLD : "rgba(255,255,255,0.8)",
+        fontSize: isTop3 ? TYPOGRAPHY.h4 : TYPOGRAPHY.h5, fontWeight: 900,
+        color: rank === 1 ? GD_GOLD : "rgba(255,255,255,0.9)",
         fontFamily: "'Inter', sans-serif", marginBottom: 4,
-        opacity: progress,
+        opacity: progress, textAlign: "center",
       }}>
         {medal ? `${medal} #${rank}` : `#${rank}`}
       </div>
-      {/* Team name */}
+      {/* Team name - centered */}
       <div style={{
-        fontSize: isTop3 ? TYPOGRAPHY.caption : TYPOGRAPHY.label, fontWeight: 700,
+        fontSize: isTop3 ? TYPOGRAPHY.body : TYPOGRAPHY.bodySmall, fontWeight: 700,
         color: "white", fontFamily: "'Inter', sans-serif", textAlign: "center",
-        marginBottom: 4, lineHeight: 1.2, maxWidth: barWidth, opacity: nameOpacity,
+        marginBottom: 4, lineHeight: 1.2, width: barWidth, opacity: nameOpacity,
       }}>{team.flag} {team.teamName}</div>
-      {/* City */}
+      {/* City - centered */}
       <div style={{
-        fontSize: TYPOGRAPHY.overline, color: "rgba(255,255,255,0.5)",
-        fontFamily: "'Inter', sans-serif", marginBottom: 6, opacity: cityOpacity,
+        fontSize: isTop3 ? TYPOGRAPHY.bodySmall : TYPOGRAPHY.caption, color: "rgba(255,255,255,0.7)",
+        fontFamily: "'Inter', sans-serif", marginBottom: 6, opacity: cityOpacity, textAlign: "center",
       }}>{team.city}</div>
-      {/* Bar */}
+      {/* Bar - empty */}
       <div style={{
         width: barWidth - 20, height: animatedHeight, borderRadius: "10px 10px 0 0",
         background: barGradient,
         border: `1.5px solid ${borderColor}`, borderBottom: "none",
-        display: "flex", flexDirection: "column", alignItems: "center",
-        justifyContent: "flex-end", paddingBottom: 12,
         boxShadow: rank === 1
           ? `0 0 ${40 + glowIntensity * 40}px ${GD_GOLD}${Math.round((0.3 + glowIntensity * 0.4) * 255).toString(16).padStart(2, "0")}`
           : `0 0 20px ${GD_PURPLE}20`,
       }}>
-        <div style={{
-          fontSize: isTop3 ? TYPOGRAPHY.h6 : TYPOGRAPHY.body, fontWeight: 900,
-          color: "white", fontFamily: "'Inter', sans-serif",
-          fontVariantNumeric: "tabular-nums", textShadow: "0 1px 4px rgba(0,0,0,0.6)",
-        }}>{displayScore.toLocaleString()}</div>
       </div>
     </div>
   );
@@ -354,7 +347,7 @@ const RevealPhase: React.FC<{ frame: number }> = ({ frame }) => {
         opacity: titleSpring, transform: `translateY(${interpolate(titleSpring, [0, 1], [20, 0])}px)`,
       }}>
         <div style={{
-          fontSize: TYPOGRAPHY.h5, fontWeight: 900, color: GD_GOLD,
+          fontSize: TYPOGRAPHY.h3, fontWeight: 900, color: GD_GOLD,
           fontFamily: "'Inter', sans-serif", letterSpacing: 4, textTransform: "uppercase",
           textShadow: `0 2px 20px ${GD_GOLD}40`,
         }}>🏆 Final Standings 🏆</div>
@@ -363,11 +356,11 @@ const RevealPhase: React.FC<{ frame: number }> = ({ frame }) => {
       {/* Current reveal announcement with scale pop */}
       {frame < ROLL_CALL_START && (
         <div style={{
-          position: "absolute", top: 70, left: 0, right: 0, textAlign: "center",
+          position: "absolute", top: 80, left: 0, right: 0, textAlign: "center",
           opacity: interpolate(frame - (currentReveal?.frame ?? 0), [0, 15], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
         }}>
           <span style={{
-            fontSize: TYPOGRAPHY.body, fontWeight: 700, fontFamily: "'Inter', sans-serif",
+            fontSize: TYPOGRAPHY.h5, fontWeight: 700, fontFamily: "'Inter', sans-serif",
             color: currentRank <= 3 ? GD_GOLD : "rgba(255,255,255,0.7)",
             display: "inline-block",
             transform: `scale(${interpolate(
@@ -469,14 +462,14 @@ const PodiumCard: React.FC<{
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: isTop3 ? 4 : 2 }}>
         {/* Rank */}
         <div style={{
-          fontSize: isTop3 ? 36 : 28, fontWeight: 900,
+          fontSize: isTop3 ? TYPOGRAPHY.h3 : TYPOGRAPHY.h4, fontWeight: 900,
           color: rank === 1 ? GD_GOLD : rank <= 3 ? "white" : "rgba(255,255,255,0.7)",
           fontFamily: "'Inter', sans-serif", lineHeight: 1,
         }}>#{rank}</div>
 
         {/* Team Name — most prominent */}
         <div style={{
-          fontSize: isTop3 ? 22 : 18, fontWeight: 800,
+          fontSize: isTop3 ? TYPOGRAPHY.h5 : TYPOGRAPHY.h6, fontWeight: 800,
           color: "white", fontFamily: "'Inter', sans-serif", textAlign: "center",
           lineHeight: 1.2, maxWidth: cardWidth - 24,
           wordWrap: "break-word", overflowWrap: "break-word",
@@ -484,7 +477,7 @@ const PodiumCard: React.FC<{
 
         {/* Score / Points */}
         <div style={{
-          fontSize: isTop3 ? 28 : 22, fontWeight: 900,
+          fontSize: isTop3 ? TYPOGRAPHY.h4 : TYPOGRAPHY.h5, fontWeight: 900,
           color: rank <= 3 ? GD_GOLD : GD_ACCENT,
           fontFamily: "'Inter', sans-serif", fontVariantNumeric: "tabular-nums",
         }}>{team.score.toLocaleString()}</div>
@@ -505,7 +498,7 @@ const PodiumCard: React.FC<{
 
         {/* City + Flag */}
         <div style={{
-          fontSize: isTop3 ? 16 : 14, color: "rgba(255,255,255,0.7)",
+          fontSize: isTop3 ? TYPOGRAPHY.body : TYPOGRAPHY.bodySmall, color: "rgba(255,255,255,0.7)",
           fontFamily: "'Inter', sans-serif", textAlign: "center", fontWeight: 600,
         }}>{team.flag} {team.city}</div>
       </div>
@@ -529,7 +522,7 @@ const RollCallPhase: React.FC<{ frame: number }> = ({ frame }) => {
         opacity: titleSpring, transform: `translateY(${interpolate(titleSpring, [0, 1], [20, 0])}px)`,
       }}>
         <div style={{
-          fontSize: TYPOGRAPHY.h5, fontWeight: 900, color: GD_GOLD,
+          fontSize: TYPOGRAPHY.h3, fontWeight: 900, color: GD_GOLD,
           fontFamily: "'Inter', sans-serif", letterSpacing: 4, textTransform: "uppercase",
           textShadow: `0 2px 20px ${GD_GOLD}40`,
         }}>🏆 PODIUM 🏆</div>
@@ -586,17 +579,17 @@ const ThankYouPhase: React.FC<{ frame: number }> = ({ frame }) => {
       }} />
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 24 }}>
         <div style={{
-          fontSize: TYPOGRAPHY.h6, color: GD_ACCENT, fontWeight: 500, letterSpacing: 4, textTransform: "uppercase",
+          fontSize: TYPOGRAPHY.h5, color: GD_ACCENT, fontWeight: 500, letterSpacing: 4, textTransform: "uppercase",
           opacity: subtitleSpring, transform: `translateY(${interpolate(subtitleSpring, [0, 1], [20, 0])}px)`,
           fontFamily: "'Inter', sans-serif",
         }}>AWS Community GameDay Europe</div>
         <div style={{
-          fontSize: TYPOGRAPHY.stat, fontWeight: 800, color: "white", textAlign: "center",
+          fontSize: TYPOGRAPHY.h1, fontWeight: 800, color: "white", textAlign: "center",
           opacity: titleSpring, transform: `translateY(${interpolate(titleSpring, [0, 1], [30, 0])}px) scale(${interpolate(titleSpring, [0, 1], [0.85, 1])})`,
           fontFamily: "'Inter', sans-serif", textShadow: `0 0 60px ${GD_VIOLET}40`,
         }}>Thank You</div>
         <div style={{
-          fontSize: TYPOGRAPHY.h6, color: "rgba(255,255,255,0.6)", fontWeight: 400,
+          fontSize: TYPOGRAPHY.h5, color: "rgba(255,255,255,0.6)", fontWeight: 400,
           opacity: closingSpring, transform: `translateY(${interpolate(closingSpring, [0, 1], [15, 0])}px)`,
           fontFamily: "'Inter', sans-serif",
         }}>See you at the next GameDay!</div>

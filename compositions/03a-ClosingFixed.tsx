@@ -601,79 +601,272 @@ const FastScroll: React.FC<{ frame: number }> = ({ frame }) => {
   );
 };
 
-// ── Finale: "Winners revealed in seconds" (frames 3300-3599) ──
+// ── Finale: "Winners revealed in seconds" (frames 3270-4200) ──
+// Timing synced with top-right "Results in" timer:
+// - Frame 3270 (FINALE_START) = 2nd/3rd prizes appear on right immediately
+// - Frame 3360 (3 sec later) = left countdown fades in slowly (after shuffle bars fade out)
+// - Frame 3750 = timer shows 00:15 → 1st prize revealed, 2nd/3rd move down
+// - Frame 4200 = timer shows 00:00 → composition ends
+const LEFT_COUNTDOWN_START = FINALE_START + 90; // 3 seconds after finale starts (90 frames)
+const PRIZE_REVEAL_FRAME = 3750; // Timer shows 15 seconds (15 * 30 = 450 frames before 4200)
+
 const WinnersTeaser: React.FC<{ frame: number }> = ({ frame }) => {
   const { fps } = useVideoConfig();
   const localFrame = frame - FINALE_START;
 
   // Fade in over 120 frames for a slow, smooth crossfade with ShufflePhase
   const entryOpacity = interpolate(frame, [FINALE_START, FINALE_START + 120], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
-  // Fade out in last 30 frames before composition ends
-  const exitOpacity = interpolate(frame, [PART_A_TOTAL_FRAMES - 30, PART_A_TOTAL_FRAMES], [1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  // No exit fade - composition ends at frame 4200
 
-  const titleSpring = spring({ frame: Math.max(0, localFrame - 10), fps, config: { damping: 12, stiffness: 100 } });
-  const countdownSpring = spring({ frame: Math.max(0, localFrame - 40), fps, config: { damping: 10, stiffness: 120 } });
-  const pulse = localFrame >= 60 ? Math.sin((localFrame - 60) * 0.06) * 0.06 + 1 : 1;
+  // Left side countdown - delayed by 3 seconds to avoid overlap with shuffle bars
+  const leftSideOpacity = interpolate(frame, [LEFT_COUNTDOWN_START, LEFT_COUNTDOWN_START + 90], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const titleSpring = spring({ frame: Math.max(0, frame - LEFT_COUNTDOWN_START - 10), fps, config: { damping: 12, stiffness: 100 } });
+  const countdownSpring = spring({ frame: Math.max(0, frame - LEFT_COUNTDOWN_START - 40), fps, config: { damping: 10, stiffness: 120 } });
+  const pulse = frame >= LEFT_COUNTDOWN_START + 60 ? Math.sin((frame - LEFT_COUNTDOWN_START - 60) * 0.06) * 0.06 + 1 : 1;
 
-  // Countdown from 30 to 0
-  const secondsLeft = Math.max(0, Math.ceil((PART_A_TOTAL_FRAMES - frame) / FPS));
+  // Countdown synced with top-right timer (same calculation as ResultsCountdown)
+  const secondsLeft = Math.max(0, Math.floor((PART_A_TOTAL_FRAMES - frame) / FPS));
+  
+  // Phase transitions - prizes show immediately when WinnersTeaser starts
+  const showPrizes = frame >= FINALE_START;
+  const isPhase2 = frame >= PRIZE_REVEAL_FRAME;
+  
+  // Springs for prize animations - start immediately with FINALE_START
+  const prizesSpring = spring({ frame: Math.max(0, localFrame), fps, config: { damping: 14, stiffness: 100 } });
+  const phase2Spring = spring({ frame: Math.max(0, frame - PRIZE_REVEAL_FRAME), fps, config: { damping: 12, stiffness: 100 } });
+
+  const prizes2nd3rd = [
+    { place: "🥈 2nd Place", items: ["Exclusive AWS Community Hoodies", "$100 AWS Credits per team member"], color: "#C0C0C0" },
+    { place: "🥉 3rd Place", items: ["Exclusive AWS Community Hoodies", "$50 AWS Credits per team member"], color: "#CD7F32" },
+  ];
+
+  const firstPrize = {
+    place: "🥇 1st Place",
+    items: [
+      "$1,000 AWS Credits per team member",
+      "Kiro Pro+ Credits for 3 Months",
+      "AWS Certification Exam Vouchers",
+      "Exclusive AWS Community Hoodies",
+      "GameDay Community Champion Trophy",
+    ],
+    color: GD_GOLD,
+  };
 
   return (
-    <AbsoluteFill style={{ opacity: entryOpacity * exitOpacity }}>
+    <AbsoluteFill style={{ opacity: entryOpacity }}>
       {/* Radial burst */}
       <div style={{
         position: "absolute", top: "50%", left: "50%", width: 1000, height: 1000,
         transform: "translate(-50%, -50%)",
         background: `radial-gradient(circle, ${GD_PURPLE}40 0%, ${GD_PINK}15 40%, transparent 70%)`,
-        borderRadius: "50%", opacity: titleSpring,
+        borderRadius: "50%", opacity: titleSpring * leftSideOpacity,
       }} />
-      <div style={{
-        position: "absolute", top: "28%", left: 0, right: 0, textAlign: "center",
-        opacity: titleSpring, transform: `translateY(${interpolate(titleSpring, [0, 1], [30, 0])}px)`,
-      }}>
-        <span style={{ fontSize: TYPOGRAPHY.h6, fontWeight: 600, color: "rgba(255,255,255,0.6)", fontFamily: "'Inter', sans-serif", letterSpacing: 6 }}>
-          GET READY
-        </span>
-      </div>
-      <div style={{
-        position: "absolute", top: "40%", left: 0, right: 0, textAlign: "center",
-        opacity: countdownSpring, transform: `scale(${pulse * interpolate(countdownSpring, [0, 1], [0.6, 1])})`,
+
+      {/* Left side - Countdown (fades in 3 seconds after prizes appear) */}
+      <div style={{ 
+        position: "absolute", top: 0, left: 0, 
+        width: "50%", 
+        height: "100%", 
+        display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
+        opacity: leftSideOpacity,
       }}>
         <div style={{
-          fontSize: TYPOGRAPHY.h2, fontWeight: 900, fontFamily: "'Inter', sans-serif", letterSpacing: 8,
-          background: `linear-gradient(135deg, ${GD_GOLD} 0%, #ffffff 40%, ${GD_GOLD} 100%)`,
-          WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
-          filter: `drop-shadow(0 0 30px ${GD_GOLD}40)`,
-        }}>WINNERS REVEALED</div>
-      </div>
-      {/* Countdown number */}
-      <div style={{
-        position: "absolute", top: "56%", left: 0, right: 0, textAlign: "center",
-        opacity: countdownSpring,
-      }}>
-        <span style={{
-          fontSize: TYPOGRAPHY.stat, fontWeight: 900, fontFamily: "'Inter', sans-serif",
-          color: GD_ACCENT, textShadow: `0 0 40px ${GD_ACCENT}60`,
-        }}>{secondsLeft}</span>
-        <div style={{
-          fontSize: TYPOGRAPHY.caption, fontWeight: 600, color: "rgba(255,255,255,0.5)",
-          fontFamily: "'Inter', sans-serif", letterSpacing: 3, marginTop: 8,
-        }}>SECONDS</div>
-      </div>
-      {/* GameDay badge */}
-      <div style={{
-        position: "absolute", bottom: 80, left: 0, right: 0, display: "flex", justifyContent: "center",
-        opacity: interpolate(localFrame, [60, 80], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
-      }}>
-        <div style={{
-          background: `linear-gradient(135deg, #4f46e5, ${GD_PINK})`, borderRadius: 12, padding: "10px 28px",
-          fontSize: TYPOGRAPHY.captionSmall, fontWeight: 700, color: "#ffffff", fontFamily: "'Inter', sans-serif", letterSpacing: 1,
-          display: "flex", alignItems: "center",
+          opacity: titleSpring, transform: `translateY(${interpolate(titleSpring, [0, 1], [30, 0])}px)`,
+          textAlign: "center", marginBottom: 12,
         }}>
-          <Img src={staticFile("AWSCommunityGameDayEurope/GameDay_Solid_Logo_for_swag/GameDay Logo Solid White.png")} style={{ height: 24, marginRight: 8 }} />
-          The moment you've been waiting for
+          <span style={{ fontSize: TYPOGRAPHY.h6, fontWeight: 600, color: "rgba(255,255,255,0.6)", fontFamily: "'Inter', sans-serif", letterSpacing: 6 }}>
+            GET READY
+          </span>
+        </div>
+        <div style={{
+          opacity: countdownSpring, transform: `scale(${pulse * interpolate(countdownSpring, [0, 1], [0.6, 1])})`,
+          textAlign: "center", marginBottom: 16,
+        }}>
+          <div style={{
+            fontSize: TYPOGRAPHY.h3, fontWeight: 900, fontFamily: "'Inter', sans-serif", letterSpacing: 4,
+            background: `linear-gradient(135deg, ${GD_GOLD} 0%, #ffffff 40%, ${GD_GOLD} 100%)`,
+            WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
+            filter: `drop-shadow(0 0 30px ${GD_GOLD}40)`,
+          }}>WINNERS REVEALED</div>
+        </div>
+        {/* Countdown number - synced with top-right timer */}
+        <div style={{ opacity: countdownSpring, textAlign: "center" }}>
+          <span style={{
+            fontSize: 120, fontWeight: 900, fontFamily: "'Inter', sans-serif",
+            color: GD_ACCENT, textShadow: `0 0 40px ${GD_ACCENT}60`,
+          }}>{secondsLeft}</span>
+          <div style={{
+            fontSize: TYPOGRAPHY.caption, fontWeight: 600, color: "rgba(255,255,255,0.5)",
+            fontFamily: "'Inter', sans-serif", letterSpacing: 3, marginTop: 4,
+          }}>SECONDS</div>
         </div>
       </div>
+
+      {/* Phase 1: 2nd/3rd prizes on right side (until frame 3750) */}
+      {showPrizes && !isPhase2 && (
+        <>
+          {/* Divider - only show when left side is visible */}
+          <div style={{
+            position: "absolute", top: "20%", left: "50%", width: 1, height: "60%",
+            background: `linear-gradient(180deg, transparent, ${GD_PURPLE}66, transparent)`,
+            opacity: leftSideOpacity,
+          }} />
+
+          {/* Right side - 2nd/3rd Prizes */}
+          <div style={{
+            position: "absolute", top: 0, right: 0, width: "50%", height: "100%",
+            display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
+            opacity: prizesSpring, transform: `translateX(${interpolate(prizesSpring, [0, 1], [30, 0])}px)`,
+          }}>
+            <div style={{
+              fontSize: TYPOGRAPHY.h5, fontWeight: 700, color: GD_ACCENT, letterSpacing: 3,
+              textTransform: "uppercase", marginBottom: 24, display: "flex", alignItems: "center", gap: 10,
+              fontFamily: "'Inter', sans-serif",
+            }}>
+              🏆 Winner Prizes
+            </div>
+            
+            {prizes2nd3rd.map((prize, i) => (
+              <div key={i} style={{
+                background: "rgba(255,255,255,0.04)",
+                border: `1px solid ${prize.color}44`,
+                borderLeft: `4px solid ${prize.color}`,
+                borderRadius: 14,
+                padding: "18px 24px",
+                marginBottom: 16,
+                minWidth: 400,
+              }}>
+                <div style={{ fontSize: TYPOGRAPHY.h5, fontWeight: 800, color: prize.color, marginBottom: 10, fontFamily: "'Inter', sans-serif" }}>
+                  {prize.place}
+                </div>
+                {prize.items.map((item, j) => (
+                  <div key={j} style={{
+                    fontSize: TYPOGRAPHY.body, color: "rgba(255,255,255,0.8)", marginBottom: 5,
+                    display: "flex", alignItems: "center", gap: 10, fontFamily: "'Inter', sans-serif",
+                  }}>
+                    <span style={{ color: prize.color, fontSize: 16 }}>•</span> {item}
+                  </div>
+                ))}
+              </div>
+            ))}
+            
+            <div style={{
+              fontSize: TYPOGRAPHY.bodySmall, color: "rgba(255,255,255,0.5)", marginTop: 12,
+              textAlign: "center", fontFamily: "'Inter', sans-serif",
+            }}>
+              1st place prizes revealed at 15 seconds!
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* Phase 2: 1st Prize Revealed + 2nd/3rd stacked below (frames 3750+) */}
+      {isPhase2 && (
+        <>
+          {/* Divider stays */}
+          <div style={{
+            position: "absolute", top: "10%", left: "50%", width: 1, height: "80%",
+            background: `linear-gradient(180deg, transparent, ${GD_PURPLE}66, transparent)`,
+            opacity: 1,
+          }} />
+
+          {/* Right side - 1st Prize on top, 2nd/3rd stacked vertically below */}
+          <div style={{
+            position: "absolute", top: 0, right: 0, width: "50%", height: "100%",
+            display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
+            gap: 12,
+          }}>
+            {/* 1st Place - Big on top */}
+            <div style={{
+              opacity: phase2Spring, 
+              display: "flex", flexDirection: "column", alignItems: "center",
+              transform: `translateY(${interpolate(phase2Spring, [0, 1], [-20, 0])}px)`,
+            }}>
+              <div style={{
+                fontSize: TYPOGRAPHY.h5, fontWeight: 900, color: GD_GOLD, letterSpacing: 3,
+                textTransform: "uppercase", marginBottom: 10, fontFamily: "'Inter', sans-serif",
+                textShadow: `0 0 30px ${GD_GOLD}60`,
+              }}>
+                🏆 Grand Prize 🏆
+              </div>
+              
+              <div style={{
+                background: `linear-gradient(135deg, rgba(251, 191, 36, 0.15), rgba(251, 191, 36, 0.05))`,
+                border: `2px solid ${GD_GOLD}55`,
+                borderRadius: 16,
+                padding: "14px 20px",
+                minWidth: 400,
+              }}>
+                <div style={{
+                  fontSize: TYPOGRAPHY.h4, fontWeight: 900, color: GD_GOLD, marginBottom: 8,
+                  fontFamily: "'Inter', sans-serif", textAlign: "center",
+                  textShadow: `0 0 20px ${GD_GOLD}40`,
+                }}>
+                  {firstPrize.place}
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                  {firstPrize.items.map((item, j) => (
+                    <div key={j} style={{
+                      fontSize: TYPOGRAPHY.body, color: "white", 
+                      display: "flex", alignItems: "center", gap: 8, fontFamily: "'Inter', sans-serif",
+                    }}>
+                      <span style={{ color: GD_GOLD, fontSize: 14 }}>★</span> {item}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* 2nd and 3rd Place - Stacked vertically below with bigger text */}
+            <div style={{
+              display: "flex", flexDirection: "column", gap: 10,
+              opacity: phase2Spring,
+              transform: `translateY(${interpolate(phase2Spring, [0, 1], [20, 0])}px)`,
+              width: "90%",
+              maxWidth: 420,
+            }}>
+              {prizes2nd3rd.map((prize, i) => (
+                <div key={i} style={{
+                  background: "rgba(255,255,255,0.04)",
+                  border: `1px solid ${prize.color}44`,
+                  borderLeft: `4px solid ${prize.color}`,
+                  borderRadius: 12,
+                  padding: "12px 16px",
+                }}>
+                  <div style={{ fontSize: TYPOGRAPHY.body, fontWeight: 800, color: prize.color, marginBottom: 6, fontFamily: "'Inter', sans-serif" }}>
+                    {prize.place}
+                  </div>
+                  {prize.items.map((item, j) => (
+                    <div key={j} style={{
+                      fontSize: TYPOGRAPHY.bodySmall, color: "rgba(255,255,255,0.75)", marginBottom: 3,
+                      display: "flex", alignItems: "center", gap: 8, fontFamily: "'Inter', sans-serif",
+                    }}>
+                      <span style={{ color: prize.color }}>•</span> {item}
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* GameDay badge - only before prizes show */}
+      {!showPrizes && (
+        <div style={{
+          position: "absolute", bottom: 50, left: 0, right: 0, display: "flex", justifyContent: "center",
+          opacity: interpolate(localFrame, [60, 80], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
+        }}>
+          <div style={{
+            background: `linear-gradient(135deg, #4f46e5, ${GD_PINK})`, borderRadius: 12, padding: "10px 28px",
+            fontSize: TYPOGRAPHY.captionSmall, fontWeight: 700, color: "#ffffff", fontFamily: "'Inter', sans-serif", letterSpacing: 1,
+            display: "flex", alignItems: "center",
+          }}>
+            <Img src={staticFile("AWSCommunityGameDayEurope/GameDay_Solid_Logo_for_swag/GameDay Logo Solid White.png")} style={{ height: 24, marginRight: 8 }} />
+            The moment you've been waiting for
+          </div>
+        </div>
+      )}
     </AbsoluteFill>
   );
 };

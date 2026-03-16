@@ -540,8 +540,8 @@ const SlideMeetAndaJerome: React.FC = () => {
   const noteE = useStagger(8, 8);
 
   const people = [
-    { person: anda, c: GD_PINK, logo: findLogo("AWS User Group Geneva") ?? findLogo("AWS Swiss User Group-Geneva"), desc: "AWS Community Builder and initiator of this GameDay. Anda had the original vision for a pan-European AWS community event and brought together volunteer organizers from 53 User Groups across the continent." },
-    { person: jerome, c: GD_VIOLET, logo: findLogo("AWS User Group Belgium"), desc: "AWS User Group Belgium leader and co-founder of this initiative. Jerome co-architected the event structure, competition framework, and built the network of 53 User Groups across 23 countries." },
+    { person: anda, c: GD_PINK, logo: findLogo("AWS User Group Geneva") ?? findLogo("AWS Swiss User Group-Geneva"), desc: "AWS User Group Leader and initiator of this GameDay. Anda had the original vision for a pan-European AWS community event and brought together volunteer organizers from 53 User Groups across the continent." },
+    { person: jerome, c: GD_VIOLET, logo: findLogo("AWS User Group Belgium"), desc: "AWS User Group Leader and co-founder of this initiative. Jerome co-architected the event structure, competition framework, and built the network of 53 User Groups across 23 countries." },
   ];
 
   return (
@@ -580,7 +580,7 @@ const SlideMeetAndaJerome: React.FC = () => {
 
       <div style={{ opacity: noteE, transform: `translateY(${interpolate(noteE, [0, 1], [12, 0])}px)`, width: "100%", maxWidth: 1060, background: `${GD_PURPLE}22`, border: `1px solid ${GD_PURPLE}44`, borderRadius: 14, padding: "12px 24px", fontSize: TYPOGRAPHY.caption, color: "rgba(255,255,255,0.5)", textAlign: "center", lineHeight: 1.6 }}>
         <HeartIcon size={14} color={GD_ACCENT} style={{ display: "inline", marginRight: 6 }} />
-        <strong style={{ color: GD_ACCENT }}>None of this is their job.</strong> Anda and Jerome are AWS User Group Leaders and AWS Community Builders who organize events and build things for the AWS community in their free time, just like so many others. They will share the story behind this GameDay live on stream.
+        <strong style={{ color: GD_ACCENT }}>None of this is their job.</strong> Anda and Jerome are AWS User Group Leaders who organize events and build things for the AWS community in their free time, just like so many others. They will share the story behind this GameDay live on stream.
       </div>
     </AbsoluteFill>
   );
@@ -597,7 +597,7 @@ const SlideMeetGamemasters: React.FC = () => {
   const noteE = useStagger(8, 8);
 
   const people = [
-    { person: arnaud, c: GD_ORANGE, desc: "Developer Advocate at AWS. Arnaud will deliver the official GameDay instructions at ~18:10 CET and guide all 53 teams through the competition format, rules, and scoring system." },
+    { person: arnaud, c: GD_ORANGE, desc: "Sr. Developer Advocate at AWS. Arnaud will deliver the official GameDay instructions at ~18:10 CET and guide all 53 teams through the competition format, rules, and scoring system." },
     { person: loic, c: GD_GOLD, desc: "Sr. Technical Account Manager at AWS. Loïc co-delivers the GameDay instructions and is available as a gamemaster throughout the competition to help with any technical questions." },
   ];
 

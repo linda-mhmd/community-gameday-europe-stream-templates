@@ -1,9 +1,9 @@
-import React, { useEffect, useState, useCallback } from "react";
-import { Player } from "@remotion/player";
-import { GameDayPreShow } from "@compositions/00-GameDayStreamPreShow-Muted";
-import { GameDayMainEvent } from "@compositions/01-GameDayStreamMainEvent-Audio";
-import { GameDayGameplay } from "@compositions/02-GameDayStreamGameplay-Muted";
-import { GameDayClosing } from "@compositions/03-GameDayStreamClosing-Audio";
+import React, { useEffect, useState, useCallback, useRef } from "react";
+import { Player, PlayerRef } from "@remotion/player";
+import { GameDayPreShowInfoV4 } from "@compositions/compositions/04v4-GameDayStreamPreShowInfo-V4";
+import { GameDayMainEventV3 } from "@compositions/compositions/01v3-GameDayStreamMainEvent-V3";
+import { GameDayGameplay } from "@compositions/compositions/02-GameDayStreamGameplay-Muted";
+import { GameDayClosingCountdown } from "@compositions/compositions/03a-ClosingFixed";
 import { CountdownComposition } from "./Countdown";
 import {
   EVENT_DATE,
@@ -22,11 +22,15 @@ type SegmentId = "preshow" | "mainevent" | "gameplay" | "closing" | "end" | "wai
  *   ?date=2026-03-17     → Override the event date (use with ?time=)
  *   ?controls=false      → Hide operator controls (for clean fullscreen display)
  *   ?autoplay=true       → Start in auto mode with controls hidden (production mode)
+ *   ?frame=3750          → Start at a specific frame number
+ *   ?minute=2            → Start at a specific minute (converted to frames at 30fps)
  *
  * Examples:
  *   http://localhost:5173/                          → Live countdown until event
  *   http://localhost:5173/?segment=preshow          → Test Pre-Show composition
  *   http://localhost:5173/?segment=closing          → Test Closing composition
+ *   http://localhost:5173/?segment=closing&frame=3750 → Test Closing at frame 3750 (prize reveal)
+ *   http://localhost:5173/?segment=closing&minute=2   → Test Closing at 2 minutes in
  *   http://localhost:5173/?time=17:45               → Simulate 17:45 CET on event day
  *   http://localhost:5173/?time=20:35               → Simulate Closing time
  *   http://localhost:5173/?autoplay=true             → Production: auto-schedule, no controls
@@ -40,6 +44,8 @@ function getUrlParams() {
     date: params.get("date"),
     controls: params.get("controls"),
     autoplay: params.get("autoplay"),
+    frame: params.get("frame"),
+    minute: params.get("minute"),
   };
 }
 
@@ -109,6 +115,19 @@ export const App: React.FC = () => {
     urlParams.segment ? (urlParams.segment as SegmentId) : null
   );
   const [showControls, setShowControls] = useState(!controlsDisabled);
+  const playerRef = useRef<PlayerRef>(null);
+
+  // Calculate initial frame from URL params (frame takes precedence over minute)
+  const getInitialFrame = useCallback(() => {
+    if (urlParams.frame) {
+      return parseInt(urlParams.frame, 10);
+    }
+    if (urlParams.minute) {
+      // Convert minutes to frames at 30fps
+      return parseInt(urlParams.minute, 10) * 30 * 60;
+    }
+    return 0;
+  }, [urlParams.frame, urlParams.minute]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -116,6 +135,18 @@ export const App: React.FC = () => {
     }, 1000);
     return () => clearInterval(interval);
   }, [override]);
+
+  // Seek to initial frame when player is ready
+  useEffect(() => {
+    const initialFrame = getInitialFrame();
+    if (initialFrame > 0 && playerRef.current) {
+      // Small delay to ensure player is mounted
+      const timer = setTimeout(() => {
+        playerRef.current?.seekTo(initialFrame);
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [getInitialFrame]);
 
   const active = override ?? segment;
 
@@ -131,11 +162,23 @@ export const App: React.FC = () => {
   const handleOverride = useCallback((id: SegmentId) => {
     setOverride(id);
     setSegment(id);
+    // Update URL params without reload
+    const url = new URL(window.location.href);
+    url.searchParams.set("segment", id);
+    url.searchParams.delete("frame");
+    url.searchParams.delete("minute");
+    window.history.replaceState({}, "", url.toString());
   }, []);
 
   const handleAutoMode = useCallback(() => {
     setOverride(null);
     setSegment(getCurrentSegment());
+    // Clear segment from URL
+    const url = new URL(window.location.href);
+    url.searchParams.delete("segment");
+    url.searchParams.delete("frame");
+    url.searchParams.delete("minute");
+    window.history.replaceState({}, "", url.toString());
   }, []);
 
   // ─── Waiting: Remotion-rendered countdown ────────────────────────
@@ -180,12 +223,13 @@ export const App: React.FC = () => {
   return (
     <div style={{ width: "100vw", height: "100vh", background: "#0c0820", position: "relative" }}>
       <Player
+        ref={playerRef}
         key={active}
         component={
-          active === "preshow" ? GameDayPreShow :
-          active === "mainevent" ? GameDayMainEvent :
+          active === "preshow" ? GameDayPreShowInfoV4 :
+          active === "mainevent" ? GameDayMainEventV3 :
           active === "gameplay" ? GameDayGameplay :
-          GameDayClosing
+          GameDayClosingCountdown
         }
         inputProps={active === "preshow" ? { loopIteration: 0 } : {}}
         durationInFrames={comp.durationInFrames}
@@ -194,7 +238,7 @@ export const App: React.FC = () => {
         compositionHeight={comp.height}
         loop={active === "preshow"}
         autoPlay
-        controls={false}
+        controls
         style={{ width: "100%", height: "100%" }}
         initiallyMuted={active === "preshow" || active === "gameplay"}
       />
@@ -241,7 +285,7 @@ const screenStyle: React.CSSProperties = {
 };
 
 const controlsStyle: React.CSSProperties = {
-  position: "absolute", bottom: 12, left: 12, background: "rgba(0,0,0,0.85)",
+  position: "absolute", top: 12, left: 12, background: "rgba(0,0,0,0.85)",
   padding: "8px 12px", borderRadius: 8, color: "white", fontSize: 13, zIndex: 9999,
 };
 
