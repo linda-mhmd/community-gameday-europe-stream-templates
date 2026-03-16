@@ -1,7 +1,7 @@
 /**
  * 04v4 – GameDayPreShowInfoV4 (Muted)
  *
- * 30-minute cinematic pre-show loop — V4 improvements over V3:
+ * 30-minute cinematic pre-show loop - V4 improvements over V3:
  *   • SVG icon library (no emojis in UI chrome)
  *   • UG logos from Notion LOGO_MAP (full-size in spotlight)
  *   • Arnaud & Loïc introduced as GameDay Instructors
@@ -61,8 +61,8 @@ const EUROPE_MAP = staticFile("AWSCommunityGameDayEurope/europe-map.png");
 
 // ─── Timing constants ─────────────────────────────────────────────────────────
 const F = "'Amazon Ember', 'Inter', sans-serif";
-const S = 900;  // 30 s — content slides
-const U = 330;  // 11 s — UG spotlight
+const S = 900;  // 30 s - content slides
+const U = 330;  // 11 s - UG spotlight
 const T = 20;   // transition overlap frames
 
 // ─── Global frame context (TransitionSeries resets useCurrentFrame per sequence) ─
@@ -288,20 +288,20 @@ const TopBar: React.FC = () => {
         <div style={{ width: 1, height: 32, background: `${GD_PURPLE}55` }} />
         <Img src={GAMEDAY_LOGO} style={{ height: 46 }} />
       </div>
-      <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12, fontWeight: 700, color: GD_ACCENT, textTransform: "uppercase", letterSpacing: 3, background: `${GD_PURPLE}22`, border: `1px solid ${GD_PURPLE}55`, borderRadius: 8, padding: "5px 14px" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: TYPOGRAPHY.labelSmall, fontWeight: 700, color: GD_ACCENT, textTransform: "uppercase", letterSpacing: 3, background: `${GD_PURPLE}22`, border: `1px solid ${GD_PURPLE}55`, borderRadius: 8, padding: "5px 14px" }}>
         <div style={{ width: 7, height: 7, borderRadius: "50%", background: "#f87171" }} />
         Pre-Show Loop
       </div>
       <div style={{ display: "flex", gap: 24, alignItems: "center" }}>
         <div style={{ textAlign: "right" }}>
-          <div style={{ fontSize: 11, color: GD_PINK, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase", display: "flex", alignItems: "center", gap: 4, justifyContent: "flex-end" }}>
+          <div style={{ fontSize: TYPOGRAPHY.overline, color: GD_PINK, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase", display: "flex", alignItems: "center", gap: 4, justifyContent: "flex-end" }}>
             <BroadcastIcon size={11} color={GD_PINK} /> Stream In
           </div>
           <div style={{ fontSize: 26, fontWeight: 800, color: GD_PINK, fontFamily: "monospace" }}>{formatTime(sc)}</div>
         </div>
         <div style={{ width: 1, height: 36, background: `${GD_PURPLE}44` }} />
         <div style={{ textAlign: "right" }}>
-          <div style={{ fontSize: 11, color: GD_GOLD, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase", display: "flex", alignItems: "center", gap: 4, justifyContent: "flex-end" }}>
+          <div style={{ fontSize: TYPOGRAPHY.overline, color: GD_GOLD, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase", display: "flex", alignItems: "center", gap: 4, justifyContent: "flex-end" }}>
             <GamepadIcon size={11} color={GD_GOLD} /> Game In
           </div>
           <div style={{ fontSize: 26, fontWeight: 800, color: GD_GOLD, fontFamily: "monospace" }}>{formatTime(gc)}</div>
@@ -328,7 +328,7 @@ const Wrap: React.FC<{ children: React.ReactNode }> = ({ children }) => (
 const SectionLabel: React.FC<{ icon: React.ReactNode; text: string; color?: string }> = ({ icon, text, color = GD_ACCENT }) => {
   const o = useEntry(0);
   return (
-    <div style={{ opacity: o, transform: `translateY(${interpolate(o, [0, 1], [14, 0])}px)`, fontSize: 13, fontWeight: 700, color, textTransform: "uppercase", letterSpacing: 4, marginBottom: 28, display: "flex", alignItems: "center", gap: 8 }}>
+    <div style={{ opacity: o, transform: `translateY(${interpolate(o, [0, 1], [14, 0])}px)`, fontSize: TYPOGRAPHY.body, fontWeight: 700, color, textTransform: "uppercase", letterSpacing: 3, marginBottom: 28, display: "flex", alignItems: "center", gap: 10 }}>
       {icon}{text}
     </div>
   );
@@ -339,8 +339,7 @@ const InfoCard: React.FC<{ icon: React.ReactNode; title: string; body: string; a
   const o = useStagger(delay);
   return (
     <div style={{ opacity: o, transform: `translateY(${interpolate(o, [0, 1], [18, 0])}px)`, background: "rgba(255,255,255,0.04)", border: `1px solid ${accent}28`, borderLeft: `3px solid ${accent}`, borderRadius: 16, padding: "22px 22px", flex: 1 }}>
-      <div style={{ marginBottom: 10 }}>{icon}</div>
-      <div style={{ fontSize: TYPOGRAPHY.h6, fontWeight: 700, color: "white", marginBottom: 8 }}>{title}</div>
+      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>{icon}<div style={{ fontSize: TYPOGRAPHY.h6, fontWeight: 700, color: "white" }}>{title}</div></div>
       <div style={{ fontSize: TYPOGRAPHY.caption, color: "rgba(255,255,255,0.6)", lineHeight: 1.65 }}>{body}</div>
     </div>
   );
@@ -356,7 +355,7 @@ const PersonCard: React.FC<{ face: string; name: string; role: string; sub: stri
       </div>
       <div style={{ fontSize: TYPOGRAPHY.h4, fontWeight: 900, color: "white" }}>{name}</div>
       <div style={{ fontSize: TYPOGRAPHY.caption, color: accent, marginTop: 4, fontWeight: 600 }}>{role}</div>
-      <div style={{ fontSize: 12, color: "rgba(255,255,255,0.45)", marginTop: 3, display: "flex", alignItems: "center", gap: 4 }}>
+      <div style={{ fontSize: TYPOGRAPHY.labelSmall, color: "rgba(255,255,255,0.45)", marginTop: 3, display: "flex", alignItems: "center", gap: 4 }}>
         <LocationIcon size={12} color={GD_ACCENT} /> {flag} {sub}
       </div>
       {ugLogo && (
@@ -369,7 +368,7 @@ const PersonCard: React.FC<{ face: string; name: string; role: string; sub: stri
 };
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// SLIDE 1 — Hero V3
+// SLIDE 1 - Hero V3
 // ═══════════════════════════════════════════════════════════════════════════════
 const SlideHero: React.FC = () => {
   const frame = useContext(GlobalFrameCtx);
@@ -398,12 +397,12 @@ const SlideHero: React.FC = () => {
         <Img src={GAMEDAY_LOGO} style={{ height: 118 }} />
       </div>
       <div style={{ opacity: titleE, transform: `translateY(${interpolate(titleE, [0, 1], [24, 0])}px)`, textAlign: "center", marginBottom: 20 }}>
-        <div style={{ fontSize: 14, fontWeight: 700, color: GD_ACCENT, letterSpacing: 5, textTransform: "uppercase", marginBottom: 8 }}>The First-Ever</div>
+        <div style={{ fontSize: TYPOGRAPHY.captionSmall, fontWeight: 700, color: GD_ACCENT, letterSpacing: 5, textTransform: "uppercase", marginBottom: 8 }}>The First-Ever</div>
         <div style={{ fontSize: TYPOGRAPHY.h2, fontWeight: 900, letterSpacing: -1, lineHeight: 1.05, background: `linear-gradient(135deg, #fff 0%, ${GD_ACCENT} 45%, ${GD_PINK} 100%)`, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>AWS Community GameDay Europe</div>
         <div style={{ fontSize: TYPOGRAPHY.body, color: "rgba(255,255,255,0.45)", marginTop: 8, letterSpacing: 2 }}>Tuesday, March 17 2026 · Starting 18:00 CET</div>
       </div>
       <div style={{ opacity: timerE, transform: `scale(${interpolate(timerE, [0, 1], [0.9, 1])})`, textAlign: "center", marginBottom: 24 }}>
-        <div style={{ fontSize: 13, fontWeight: 700, color: GD_GOLD, textTransform: "uppercase", letterSpacing: 4, marginBottom: 10, display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
+        <div style={{ fontSize: TYPOGRAPHY.label, fontWeight: 700, color: GD_GOLD, textTransform: "uppercase", letterSpacing: 4, marginBottom: 10, display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
           <GamepadIcon size={14} color={GD_GOLD} /> Game Starts In
         </div>
         <div style={{ display: "flex", gap: 12, alignItems: "flex-end", justifyContent: "center" }}>
@@ -412,7 +411,7 @@ const SlideHero: React.FC = () => {
               {idx > 0 && <div style={{ fontSize: 52, color: GD_GOLD, opacity: 0.5, paddingBottom: 14, fontWeight: 300 }}>:</div>}
               <div style={{ background: `linear-gradient(180deg, ${GD_PURPLE}44, ${GD_DARK}cc)`, border: `1px solid ${GD_VIOLET}33`, borderRadius: 16, padding: "14px 28px", textAlign: "center", minWidth: 110, transform: `scale(${pulse})` }}>
                 <div style={{ fontSize: TYPOGRAPHY.timer, fontWeight: 800, color: GD_GOLD, lineHeight: 1, fontFamily: "monospace", textShadow: `0 0 20px ${GD_ORANGE}55` }}>{v}</div>
-                <div style={{ fontSize: 12, color: GD_ACCENT, marginTop: 4, letterSpacing: 2 }}>{u}</div>
+                <div style={{ fontSize: TYPOGRAPHY.labelSmall, color: GD_ACCENT, marginTop: 4, letterSpacing: 2 }}>{u}</div>
               </div>
             </React.Fragment>
           ))}
@@ -422,7 +421,7 @@ const SlideHero: React.FC = () => {
         {stats.map((st) => (
           <div key={st.l} style={{ background: "rgba(255,255,255,0.04)", border: `1px solid ${st.c}22`, borderRadius: 14, padding: "14px 22px", textAlign: "center" }}>
             <div style={{ fontSize: TYPOGRAPHY.h3, fontWeight: 900, color: st.c, lineHeight: 1 }}>{st.v}</div>
-            <div style={{ fontSize: 12, color: GD_ACCENT, marginTop: 6, textTransform: "uppercase", letterSpacing: 2 }}>{st.l}</div>
+            <div style={{ fontSize: TYPOGRAPHY.labelSmall, color: GD_ACCENT, marginTop: 6, textTransform: "uppercase", letterSpacing: 2 }}>{st.l}</div>
           </div>
         ))}
       </div>
@@ -431,18 +430,18 @@ const SlideHero: React.FC = () => {
 };
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// SLIDE 2 — What's Happening
+// SLIDE 2 - What's Happening
 // ═══════════════════════════════════════════════════════════════════════════════
 const SlideWhatsHappening: React.FC = () => {
   const cards = [
     { icon: <BroadcastIcon size={28} color={GD_VIOLET} />, title: "One Stream, 57 Cities", body: "Right now, AWS User Groups all over Europe are watching this exact stream at their local venue. You are part of the first-ever pan-European AWS Community GameDay.", c: GD_VIOLET },
-    { icon: <VolumeMuteIcon size={28} color={GD_PINK} />, title: "Why Is It Muted Right Now?", body: "This is the 30-minute pre-show loop that plays before the live stream begins at 18:00 CET. Use this time to test your audio — you'll need it soon!", c: GD_PINK },
+    { icon: <VolumeMuteIcon size={28} color={GD_PINK} />, title: "Why Is It Muted Right Now?", body: "This is the 30-minute pre-show loop that plays before the live stream begins at 18:00 CET. Use this time to test your audio - you'll need it soon!", c: GD_PINK },
     { icon: <GamepadIcon size={28} color={GD_GOLD} />, title: "The Competition", body: "At 18:30 CET all 57 groups start a 2-hour AWS challenge simultaneously. Stream goes mute during gameplay. Your local UG leader gives your team access codes.", c: GD_GOLD },
-    { icon: <TrophyIcon size={28} color={GD_ORANGE} />, title: "Stay for the Closing!", body: "At 20:30 CET the stream returns live. Winners are revealed globally, together. Don't leave — celebrate with 57 cities across Europe all at once.", c: GD_ORANGE },
+    { icon: <TrophyIcon size={28} color={GD_ORANGE} />, title: "Stay for the Closing!", body: "At 20:30 CET the stream returns live. Winners are revealed globally, together. Don't leave - celebrate with 57 cities across Europe all at once.", c: GD_ORANGE },
   ];
   return (
     <AbsoluteFill style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-      <SectionLabel icon={<BroadcastIcon size={14} color={GD_ACCENT} />} text="What's Happening Right Now" />
+      <SectionLabel icon={<BroadcastIcon size={20} color={GD_ACCENT} />} text="What's Happening Right Now" />
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, width: "100%", maxWidth: 1060 }}>
         {cards.map((card, i) => (
           <InfoCard key={card.title} icon={card.icon} title={card.title} body={card.body} accent={card.c} delay={i} />
@@ -453,7 +452,7 @@ const SlideWhatsHappening: React.FC = () => {
 };
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// SLIDE 3 — Meet Linda Mohamed (StreamHostCard-inspired)
+// SLIDE 3 - Meet Linda Mohamed (StreamHostCard-inspired)
 // ═══════════════════════════════════════════════════════════════════════════════
 const SlideMeetLinda: React.FC = () => {
   const linda = ORGANIZERS.find((p) => p.name === "Linda")!;
@@ -467,48 +466,48 @@ const SlideMeetLinda: React.FC = () => {
   const noteE = useStagger(10, 8);
 
   const points = [
-    { entry: p1, text: "Your host for today's GameDay Europe stream — broadcasting live across 57 cities" },
+    { entry: p1, text: "Your host for today's GameDay Europe stream - broadcasting live across ~57 cities" },
     { entry: p2, text: "Leader of AWS User Group Vienna & AWS Women's User Group Vienna" },
-    { entry: p3, text: "Co-organizer of GameDay Europe · Member of Förderverein AWS Community DACH e.V." },
-    { entry: p4, text: "AWS Community Hero — recognized for outstanding community advocacy" },
+    { entry: p3, text: "Chairwoman of Förderverein AWS Community DACH e.V." },
+    { entry: p4, text: "Vice Chair of the largest open source foundation in Austria" },
   ];
 
   return (
     <AbsoluteFill style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-      <SectionLabel icon={<MicIcon size={14} color={GD_ACCENT} />} text="Your Stream Host" />
       <div style={{ display: "flex", alignItems: "flex-start", gap: 48, width: "100%", maxWidth: 1060 }}>
         {/* Photo + UG logo column */}
-        <div style={{ opacity: cardE, transform: `scale(${interpolate(cardE, [0, 1], [0.88, 1])})`, flexShrink: 0, display: "flex", flexDirection: "column", alignItems: "center", gap: 16 }}>
-          <div style={{ width: 210, height: 210, borderRadius: "50%", overflow: "hidden", border: `3px solid ${GD_VIOLET}66`, boxShadow: `0 0 48px ${GD_VIOLET}33` }}>
+        <div style={{ opacity: cardE, transform: `scale(${interpolate(cardE, [0, 1], [0.88, 1])})`, flexShrink: 0, display: "flex", flexDirection: "column", alignItems: "center", gap: 14 }}>
+          <div style={{ width: 200, height: 200, borderRadius: "50%", overflow: "hidden", border: `3px solid ${GD_VIOLET}66`, boxShadow: `0 0 48px ${GD_VIOLET}33` }}>
             <Img src={staticFile(linda.face)} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
           </div>
           {ugViennaLogo && (
-            <GlassCard style={{ padding: "10px 16px", borderRadius: 12, textAlign: "center" }}>
-              <div style={{ fontSize: 11, color: GD_ACCENT, textTransform: "uppercase", letterSpacing: 2, marginBottom: 6 }}>AWS UG Vienna</div>
-              <Img src={ugViennaLogo} style={{ maxWidth: 130, maxHeight: 52, objectFit: "contain" }} />
-            </GlassCard>
+            <div style={{ width: 230, borderRadius: 14, overflow: "hidden", background: "rgba(255,255,255,0.04)" }}>
+              <Img src={ugViennaLogo} style={{ width: "100%", aspectRatio: "600/337", objectFit: "cover", display: "block", borderRadius: "14px 14px 0 0" }} />
+              <div style={{ padding: "6px 10px 8px", textAlign: "center", fontSize: TYPOGRAPHY.bodySmall, fontWeight: 700, color: GD_ACCENT, letterSpacing: 2, textTransform: "uppercase" as const }}>AWS UG Vienna</div>
+            </div>
           )}
-          <div style={{ fontSize: 13, color: "rgba(255,255,255,0.4)", display: "flex", alignItems: "center", gap: 4 }}>
-            <LocationIcon size={12} color={GD_ACCENT} /> {linda.flag} Vienna, Austria
+          <div style={{ fontSize: 15, color: "rgba(255,255,255,0.45)" }}>
+            🇦🇹 Austria
           </div>
         </div>
 
         {/* Text column */}
         <div style={{ flex: 1 }}>
-          <div style={{ opacity: textE, transform: `translateX(${interpolate(textE, [0, 1], [22, 0])}px)`, marginBottom: 20 }}>
+          <SectionLabel icon={<MicIcon size={20} color={GD_ACCENT} />} text="Your Stream Host" />
+          <div style={{ opacity: textE, transform: `translateX(${interpolate(textE, [0, 1], [22, 0])}px)`, marginBottom: 14 }}>
             <div style={{ fontSize: TYPOGRAPHY.h3, fontWeight: 900, color: "white", lineHeight: 1 }}>Linda Mohamed</div>
-            <div style={{ fontSize: TYPOGRAPHY.h6, color: GD_ACCENT, marginTop: 8, fontWeight: 600 }}>Stream Host · Co-Organizer · AWS Community Hero</div>
+            <div style={{ fontSize: TYPOGRAPHY.h6, color: GD_ACCENT, marginTop: 8, fontWeight: 600 }}>Stream Host · AWS Community Hero</div>
           </div>
-          <GlassCard style={{ padding: "20px 24px", borderLeft: `4px solid ${GD_VIOLET}` }}>
+          <GlassCard style={{ padding: "14px 22px", borderLeft: `4px solid ${GD_VIOLET}` }}>
             {points.map(({ entry, text }, i) => (
-              <div key={i} style={{ opacity: entry, transform: `translateX(${interpolate(entry, [0, 1], [16, 0])}px)`, display: "flex", alignItems: "flex-start", gap: 10, marginBottom: i < points.length - 1 ? 12 : 0, fontSize: TYPOGRAPHY.bodySmall, color: "rgba(255,255,255,0.85)", lineHeight: 1.5 }}>
+              <div key={i} style={{ opacity: entry, transform: `translateX(${interpolate(entry, [0, 1], [16, 0])}px)`, display: "flex", alignItems: "flex-start", gap: 10, marginBottom: i < points.length - 1 ? 8 : 0, fontSize: TYPOGRAPHY.bodySmall, color: "rgba(255,255,255,0.85)", lineHeight: 1.4 }}>
                 <CheckCircleIcon size={16} color={GD_VIOLET} />
                 <span>{text}</span>
               </div>
             ))}
           </GlassCard>
-          <div style={{ opacity: noteE, transform: `translateY(${interpolate(noteE, [0, 1], [10, 0])}px)`, marginTop: 14, background: `${GD_PURPLE}22`, border: `1px solid ${GD_PURPLE}44`, borderRadius: 12, padding: "12px 18px", fontSize: TYPOGRAPHY.caption, color: "rgba(255,255,255,0.5)", lineHeight: 1.6 }}>
-            <strong style={{ color: GD_ACCENT }}>Not sure who this is?</strong> Linda is the community volunteer hosting today's global stream. She is not an AWS employee — she organizes this in her free time.
+          <div style={{ opacity: noteE, transform: `translateY(${interpolate(noteE, [0, 1], [10, 0])}px)`, marginTop: 10, background: `${GD_PURPLE}22`, border: `1px solid ${GD_PURPLE}44`, borderRadius: 12, padding: "10px 16px", fontSize: TYPOGRAPHY.caption, color: "rgba(255,255,255,0.5)", lineHeight: 1.5 }}>
+            <strong style={{ color: GD_ACCENT }}>Not sure who this is?</strong> Just like the organizers of all local GameDay events across Europe, Linda is a volunteer who organizes community events in her free time. She is not an AWS employee.
           </div>
         </div>
       </div>
@@ -517,7 +516,7 @@ const SlideMeetLinda: React.FC = () => {
 };
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// SLIDE 4 — Meet Anda & Jerome (OrganizerSection-inspired)
+// SLIDE 4 - Meet Anda & Jerome (OrganizerSection-inspired)
 // ═══════════════════════════════════════════════════════════════════════════════
 const SlideMeetAndaJerome: React.FC = () => {
   const jerome = ORGANIZERS.find((p) => p.name === "Jerome")!;
@@ -527,51 +526,50 @@ const SlideMeetAndaJerome: React.FC = () => {
   const noteE = useStagger(8, 8);
 
   const people = [
-    { person: anda, c: GD_PINK, logo: findLogo("AWS User Group Geneva") ?? findLogo("AWS Swiss User Group-Geneva"), desc: "AWS Community Builder and initiator of this GameDay. Anda had the original vision for a pan-European AWS community event and brought together volunteer organizers from across the continent to make it a reality." },
-    { person: jerome, c: GD_VIOLET, logo: findLogo("AWS User Group Belgium"), desc: "AWS User Group Belgium leader and co-founder of this initiative. Jerome co-architected the event structure, competition framework, and built the network of 57 User Groups across 20+ countries." },
+    { person: anda, c: GD_PINK, logo: findLogo("AWS User Group Geneva") ?? findLogo("AWS Swiss User Group-Geneva"), desc: "AWS Community Builder and initiator of this GameDay. Anda had the original vision for a pan-European AWS community event and brought together volunteer organizers from ~57 User Groups across the continent." },
+    { person: jerome, c: GD_VIOLET, logo: findLogo("AWS User Group Belgium"), desc: "AWS User Group Belgium leader and co-founder of this initiative. Jerome co-architected the event structure, competition framework, and built the network of ~57 User Groups across 20+ countries." },
   ];
 
   return (
     <AbsoluteFill style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-      <div style={{ opacity: headingE, transform: `translateY(${interpolate(headingE, [0, 1], [16, 0])}px)`, textAlign: "center", marginBottom: 28 }}>
-        <div style={{ fontSize: 13, fontWeight: 700, color: GD_ACCENT, textTransform: "uppercase", letterSpacing: 4, marginBottom: 6, display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
-          <TrophyIcon size={14} color={GD_ACCENT} /> The People Behind This Event
+      <div style={{ opacity: headingE, transform: `translateY(${interpolate(headingE, [0, 1], [16, 0])}px)`, textAlign: "center", marginBottom: 24 }}>
+        <div style={{ fontSize: TYPOGRAPHY.label, fontWeight: 700, color: GD_ACCENT, textTransform: "uppercase", letterSpacing: 4, marginBottom: 6, display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+          <UsersIcon size={14} color={GD_ACCENT} /> The People Behind This Event
         </div>
         <div style={{ fontSize: TYPOGRAPHY.h4, fontWeight: 900, color: "white" }}>Meet Anda &amp; Jerome</div>
-        <div style={{ fontSize: TYPOGRAPHY.caption, color: "rgba(255,255,255,0.4)", marginTop: 6 }}>Organized entirely as volunteers — not employed by AWS</div>
       </div>
 
-      <div style={{ display: "flex", gap: 24, width: "100%", maxWidth: 1060, marginBottom: 20 }}>
+      <div style={{ display: "flex", gap: 24, width: "100%", maxWidth: 1060, marginBottom: 16 }}>
         {people.map(({ person, c, logo, desc }) => (
           <div key={person.name} style={{ flex: 1, opacity: cardE, transform: `translateY(${interpolate(cardE, [0, 1], [22, 0])}px)` }}>
-            <GlassCard style={{ padding: "24px 26px", borderLeft: `4px solid ${c}`, height: "100%" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 16 }}>
+            <GlassCard style={{ padding: "22px 24px", borderLeft: `4px solid ${c}`, height: "100%" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 14 }}>
                 <Img src={staticFile(person.face)} style={{ width: 80, height: 80, borderRadius: "50%", objectFit: "cover", flexShrink: 0, boxShadow: `0 0 20px ${c}44` }} />
                 <div>
                   <div style={{ fontSize: TYPOGRAPHY.h5, fontWeight: 900, color: "white" }}>{person.flag} {person.name}</div>
                   <div style={{ fontSize: TYPOGRAPHY.caption, color: c, marginTop: 3, fontWeight: 600 }}>{person.role}</div>
-                  <div style={{ fontSize: 12, color: "rgba(255,255,255,0.4)", marginTop: 2, display: "flex", alignItems: "center", gap: 4 }}>
+                  <div style={{ fontSize: TYPOGRAPHY.labelSmall, color: "rgba(255,255,255,0.4)", marginTop: 2, display: "flex", alignItems: "center", gap: 4 }}>
                     <LocationIcon size={11} color={GD_ACCENT} /> {person.country}
                   </div>
                 </div>
                 {logo && <Img src={logo} style={{ marginLeft: "auto", maxWidth: 70, maxHeight: 40, objectFit: "contain", opacity: 0.85 }} />}
               </div>
-              <div style={{ fontSize: TYPOGRAPHY.bodySmall, color: "rgba(255,255,255,0.65)", lineHeight: 1.65 }}>{desc}</div>
+              <div style={{ fontSize: TYPOGRAPHY.caption, color: "rgba(255,255,255,0.65)", lineHeight: 1.6 }}>{desc}</div>
             </GlassCard>
           </div>
         ))}
       </div>
 
-      <div style={{ opacity: noteE, transform: `translateY(${interpolate(noteE, [0, 1], [12, 0])}px)`, width: "100%", maxWidth: 1060, background: "rgba(34,197,94,0.08)", border: "1px solid rgba(34,197,94,0.22)", borderRadius: 14, padding: "14px 24px", fontSize: TYPOGRAPHY.caption, color: "rgba(255,255,255,0.7)", textAlign: "center", lineHeight: 1.6 }}>
-        <HeartIcon size={14} color="#4ade80" style={{ display: "inline", marginRight: 6 }} />
-        <strong style={{ color: "#4ade80" }}>None of this is their job.</strong> Anda and Jerome organized this entirely in their free time, out of passion for the AWS Community. Linda will introduce them live on stream.
+      <div style={{ opacity: noteE, transform: `translateY(${interpolate(noteE, [0, 1], [12, 0])}px)`, width: "100%", maxWidth: 1060, background: `${GD_PURPLE}22`, border: `1px solid ${GD_PURPLE}44`, borderRadius: 14, padding: "12px 24px", fontSize: TYPOGRAPHY.caption, color: "rgba(255,255,255,0.5)", textAlign: "center", lineHeight: 1.6 }}>
+        <HeartIcon size={14} color={GD_ACCENT} style={{ display: "inline", marginRight: 6 }} />
+        <strong style={{ color: GD_ACCENT }}>None of this is their job.</strong> Anda and Jerome are User Group leaders who organize events and build things for the AWS community in their free time, just like so many others. They will share the story behind this GameDay live on stream in a quick introduction.
       </div>
     </AbsoluteFill>
   );
 };
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// SLIDE 5 — Meet the GameDay Instructors (Arnaud & Loïc)
+// SLIDE 5 - Meet the GameDay Instructors (Arnaud & Loïc)
 // ═══════════════════════════════════════════════════════════════════════════════
 const SlideMeetGamemasters: React.FC = () => {
   const arnaud = AWS_SUPPORTERS.find((p) => p.name === "Arnaud")!;
@@ -588,11 +586,11 @@ const SlideMeetGamemasters: React.FC = () => {
   return (
     <AbsoluteFill style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
       <div style={{ opacity: headingE, transform: `translateY(${interpolate(headingE, [0, 1], [16, 0])}px)`, textAlign: "center", marginBottom: 28 }}>
-        <div style={{ fontSize: 13, fontWeight: 700, color: GD_ACCENT, textTransform: "uppercase", letterSpacing: 4, marginBottom: 6, display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+        <div style={{ fontSize: TYPOGRAPHY.label, fontWeight: 700, color: GD_ACCENT, textTransform: "uppercase", letterSpacing: 4, marginBottom: 6, display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
           <GamepadIcon size={14} color={GD_ACCENT} /> GameDay Instructors
         </div>
         <div style={{ fontSize: TYPOGRAPHY.h4, fontWeight: 900, color: "white" }}>Meet Arnaud &amp; Loïc</div>
-        <div style={{ fontSize: TYPOGRAPHY.caption, color: "rgba(255,255,255,0.4)", marginTop: 6 }}>AWS Gamemasters — delivering instructions live at 18:14 CET</div>
+        <div style={{ fontSize: TYPOGRAPHY.caption, color: "rgba(255,255,255,0.4)", marginTop: 6 }}>AWS Gamemasters - delivering instructions live at 18:14 CET</div>
       </div>
 
       <div style={{ display: "flex", gap: 24, width: "100%", maxWidth: 1060, marginBottom: 20 }}>
@@ -606,7 +604,7 @@ const SlideMeetGamemasters: React.FC = () => {
                   <div style={{ fontSize: TYPOGRAPHY.caption, color: c, marginTop: 3, fontWeight: 600 }}>{person.role}</div>
                   <div style={{ marginTop: 6, display: "inline-flex", alignItems: "center", gap: 5, background: `${GD_ORANGE}22`, border: `1px solid ${GD_ORANGE}44`, borderRadius: 6, padding: "3px 10px" }}>
                     <GamepadIcon size={11} color={GD_ORANGE} />
-                    <span style={{ fontSize: 11, color: GD_ORANGE, fontWeight: 700, letterSpacing: 1 }}>AWS GAMEMASTER</span>
+                    <span style={{ fontSize: TYPOGRAPHY.overline, color: GD_ORANGE, fontWeight: 700, letterSpacing: 1 }}>AWS GAMEMASTER</span>
                   </div>
                 </div>
               </div>
@@ -638,18 +636,18 @@ const SlideMeetGamemasters: React.FC = () => {
 };
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// SLIDE 6 — What is the AWS Community?
+// SLIDE 6 - What is the AWS Community?
 // ═══════════════════════════════════════════════════════════════════════════════
 const SlideAWSCommunity: React.FC = () => {
   const cards = [
     { icon: <HeartIcon size={32} color={GD_VIOLET} />, title: "Volunteers, not employees", body: "The AWS Community is made up of developers, architects, and cloud enthusiasts who are NOT employed by Amazon. They organize events and share knowledge purely out of passion." },
-    { icon: <UsersIcon size={32} color={GD_PINK} />, title: "Local User Groups", body: "AWS User Groups are local communities in cities around the world. They hold regular meetups, workshops, and technical talks — driven entirely by volunteer leaders." },
+    { icon: <UsersIcon size={32} color={GD_PINK} />, title: "Local User Groups", body: "AWS User Groups are local communities in cities around the world. They hold regular meetups, workshops, and technical talks - driven entirely by volunteer leaders." },
     { icon: <GlobeIcon size={32} color={GD_GOLD} />, title: "57 Groups Here Today", body: "Every group competing today is run by a volunteer leader. This event is the first time all these groups have ever competed together in a single event at the same time." },
   ];
   const quoteE = useStagger(4, 8);
   return (
     <AbsoluteFill style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-      <SectionLabel icon={<CloudIcon size={14} color={GD_ACCENT} />} text="About the AWS Community" />
+      <SectionLabel icon={<CloudIcon size={20} color={GD_ACCENT} />} text="About the AWS Community" />
       <div style={{ display: "flex", gap: 18, width: "100%", maxWidth: 1060, marginBottom: 18 }}>
         {cards.map((c, i) => <InfoCard key={c.title} icon={c.icon} title={c.title} body={c.body} accent={[GD_VIOLET, GD_PINK, GD_GOLD][i]} delay={i} />)}
       </div>
@@ -661,11 +659,11 @@ const SlideAWSCommunity: React.FC = () => {
 };
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// SLIDE 7 — What is an AWS User Group Leader?
+// SLIDE 7 - What is an AWS User Group Leader?
 // ═══════════════════════════════════════════════════════════════════════════════
 const SlideUGLeader: React.FC = () => {
   const points = [
-    { icon: <CalendarIcon size={22} color={GD_VIOLET} />, title: "They organize", body: "UG leaders plan and run local meetups — finding venues, speakers, and sponsors. Everything is done voluntarily in their personal time." },
+    { icon: <CalendarIcon size={22} color={GD_VIOLET} />, title: "They organize", body: "UG leaders plan and run local meetups - finding venues, speakers, and sponsors. Everything is done voluntarily in their personal time." },
     { icon: <BookOpenIcon size={22} color={GD_PINK} />, title: "They educate", body: "Leaders share knowledge about AWS services, cloud architecture, DevOps, AI/ML and more with their local tech community." },
     { icon: <UsersIcon size={22} color={GD_GOLD} />, title: "They connect", body: "They build local networks of cloud professionals, creating opportunities for mentorship, careers, and collaboration." },
     { icon: <HeartIcon size={22} color={GD_ORANGE} />, title: "They volunteer", body: "No salary, no budget from AWS. UG leaders do this entirely out of passion for the community and love of cloud technology." },
@@ -674,24 +672,26 @@ const SlideUGLeader: React.FC = () => {
   const noteE = useStagger(5, 8);
   return (
     <AbsoluteFill style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 18, marginBottom: 8 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 18, marginBottom: 12 }}>
         <div style={{ opacity: badgeE, transform: `scale(${interpolate(badgeE, [0, 1], [0.85, 1])})` }}>
-          <Img src={staticFile("AWSCommunityGameDayEurope/ug-leader-badge-dark.png")} style={{ width: 140, height: "auto", objectFit: "contain" }} />
+          <Img src={staticFile("AWSCommunityGameDayEurope/Usergroups-badges_leader-dark.png")} style={{ width: 112, height: "auto", objectFit: "contain" }} />
         </div>
-        <SectionLabel icon={<UsersIcon size={14} color={GD_ACCENT} />} text="What is an AWS User Group Leader?" />
+        <div style={{ fontSize: TYPOGRAPHY.body, fontWeight: 700, color: GD_ACCENT, textTransform: "uppercase" as const, letterSpacing: 3, display: "flex", alignItems: "center", gap: 10 }}>
+          <UsersIcon size={20} color={GD_ACCENT} />What is an AWS User Group Leader?
+        </div>
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, width: "100%", maxWidth: 1060, marginBottom: 18 }}>
         {points.map((p, i) => <InfoCard key={p.title} icon={p.icon} title={p.title} body={p.body} accent={[GD_VIOLET, GD_PINK, GD_GOLD, GD_ORANGE][i]} delay={i} />)}
       </div>
-      <div style={{ opacity: noteE, transform: `translateY(${interpolate(noteE, [0, 1], [12, 0])}px)`, width: "100%", maxWidth: 1060, background: "rgba(34,197,94,0.08)", border: "1px solid rgba(34,197,94,0.22)", borderRadius: 14, padding: "14px 24px", fontSize: TYPOGRAPHY.caption, color: "rgba(255,255,255,0.7)", lineHeight: 1.6, textAlign: "center" }}>
-        <strong style={{ color: "#4ade80" }}>The person who organized today's event in your city</strong> is an AWS User Group leader — a volunteer who did all of this in their free time, just to bring the community together.
+      <div style={{ opacity: noteE, transform: `translateY(${interpolate(noteE, [0, 1], [12, 0])}px)`, width: "100%", maxWidth: 1060, background: `${GD_PURPLE}22`, border: `1px solid ${GD_PURPLE}44`, borderRadius: 14, padding: "14px 24px", fontSize: TYPOGRAPHY.caption, color: "rgba(255,255,255,0.5)", lineHeight: 1.6, textAlign: "center" }}>
+        <strong style={{ color: GD_ACCENT }}>The person who organized today's event in your city</strong> is an AWS User Group leader - a volunteer who did all of this in their free time, just to bring the community together.
       </div>
     </AbsoluteFill>
   );
 };
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// SLIDE 8 — What is an AWS Community Builder?
+// SLIDE 8 - What is an AWS Community Builder?
 // ═══════════════════════════════════════════════════════════════════════════════
 const SlideCommunityBuilder: React.FC = () => {
   const badgeE = useEntry(0);
@@ -702,17 +702,17 @@ const SlideCommunityBuilder: React.FC = () => {
         <div style={{ opacity: badgeE, transform: `scale(${interpolate(badgeE, [0, 1], [0.85, 1])})` }}>
           <Img src={staticFile("AWSCommunityGameDayEurope/aws-community-builder-logo.png")} style={{ width: 140, height: "auto", objectFit: "contain" }} />
         </div>
-        <SectionLabel icon={<RocketIcon size={14} color={GD_ACCENT} />} text="What is an AWS Community Builder?" />
+        <SectionLabel icon={<RocketIcon size={20} color={GD_ACCENT} />} text="What is an AWS Community Builder?" />
       </div>
       <div style={{ display: "flex", gap: 18, width: "100%", maxWidth: 1060, marginBottom: 18 }}>
         <InfoCard icon={<RocketIcon size={32} color={GD_VIOLET} />} title="A recognition program" body="AWS Community Builders is an official AWS program that recognizes passionate community members who actively share knowledge, create technical content, and support others in the AWS ecosystem." accent={GD_VIOLET} delay={0} />
         <InfoCard icon={<BookOpenIcon size={32} color={GD_PINK} />} title="Content creators & educators" body="Builders write blog posts, record videos, give conference talks, create open-source tools, and answer community questions. They help others learn AWS through genuine, community-driven content." accent={GD_PINK} delay={1} />
-        <InfoCard icon={<UsersIcon size={32} color={GD_GOLD} />} title="Selected by AWS" body="Builders are selected by AWS based on their community contributions. They receive AWS credits, service previews, and direct access to product teams — but are NOT AWS employees." accent={GD_GOLD} delay={2} />
+        <InfoCard icon={<UsersIcon size={32} color={GD_GOLD} />} title="Selected by AWS" body="Builders are selected by AWS based on their community contributions. They receive AWS credits, service previews, and direct access to product teams - but are NOT AWS employees." accent={GD_GOLD} delay={2} />
       </div>
       <div style={{ opacity: noteE, transform: `translateY(${interpolate(noteE, [0, 1], [12, 0])}px)`, width: "100%", maxWidth: 1060 }}>
         <GlassCard style={{ padding: "16px 24px", borderLeft: `4px solid ${GD_VIOLET}` }}>
           <div style={{ fontSize: TYPOGRAPHY.bodySmall, color: "rgba(255,255,255,0.75)", lineHeight: 1.65 }}>
-            <strong style={{ color: GD_ACCENT }}>Example:</strong> Several of today's organizers are AWS Community Builders. They applied to the program, were selected by AWS, and now contribute knowledge back to the global AWS community — all in their spare time.
+            <strong style={{ color: GD_ACCENT }}>Example:</strong> Several of today's organizers are AWS Community Builders. They applied to the program, were selected by AWS, and now contribute knowledge back to the global AWS community - all in their spare time.
           </div>
         </GlassCard>
       </div>
@@ -721,7 +721,7 @@ const SlideCommunityBuilder: React.FC = () => {
 };
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// SLIDE 9 — What is an AWS Community Hero?
+// SLIDE 9 - What is an AWS Community Hero?
 // ═══════════════════════════════════════════════════════════════════════════════
 const SlideCommunityHero: React.FC = () => {
   const heroE = useStagger(0, 1);
@@ -733,26 +733,26 @@ const SlideCommunityHero: React.FC = () => {
 
   return (
     <AbsoluteFill style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-      <SectionLabel icon={<ShieldIcon size={14} color={GD_GOLD} />} text="What is an AWS Community Hero?" color={GD_GOLD} />
+      <SectionLabel icon={<ShieldIcon size={20} color={GD_GOLD} />} text="What is an AWS Hero?" color={GD_GOLD} />
       <div style={{ display: "flex", alignItems: "flex-start", gap: 48, width: "100%", maxWidth: 1060 }}>
         {/* Hero program logo */}
         <div style={{ flexShrink: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 14, minHeight: 280 }}>
           <div style={{ opacity: heroE, transform: `scale(${interpolate(heroE, [0, 1], [0.85, 1])})` }}>
-            <Img src={staticFile("AWSCommunityGameDayEurope/aws-community-hero-logo.svg")} style={{ width: 220, height: "auto", objectFit: "contain" }} />
+            <Img src={staticFile("AWSCommunityGameDayEurope/hero-white.png")} style={{ width: 220, height: "auto", objectFit: "contain" }} />
           </div>
         </div>
 
         {/* Explanation */}
         <div style={{ flex: 1 }}>
           <div style={{ opacity: textE, transform: `translateX(${interpolate(textE, [0, 1], [22, 0])}px)`, marginBottom: 20 }}>
-            <div style={{ fontSize: TYPOGRAPHY.h4, fontWeight: 900, color: "white", lineHeight: 1 }}>What makes a Community Hero?</div>
-            <div style={{ fontSize: TYPOGRAPHY.bodySmall, color: "rgba(255,255,255,0.5)", marginTop: 6 }}>AWS Community Heroes are exceptional contributors with years of community impact</div>
+            <div style={{ fontSize: TYPOGRAPHY.h4, fontWeight: 900, color: "white", lineHeight: 1 }}>AWS Heroes</div>
+            <div style={{ fontSize: TYPOGRAPHY.bodySmall, color: "rgba(255,255,255,0.5)", marginTop: 6 }}>A worldwide recognition program for passionate AWS advocates and technical leaders</div>
           </div>
           <GlassCard style={{ padding: "20px 24px", borderLeft: `4px solid ${GD_GOLD}` }}>
             {[
-              { entry: p1, icon: <StarIcon size={16} color={GD_GOLD} />, text: "Recognized by AWS for exceptional, long-standing contributions to the AWS community" },
-              { entry: p2, icon: <UsersIcon size={16} color={GD_GOLD} />, text: "Heroes go beyond content creation — they build communities, mentor others, and lead initiatives at scale" },
-              { entry: p3, icon: <ShieldIcon size={16} color={GD_GOLD} />, text: "There are different Hero categories: Community Hero, Data Hero, Machine Learning Hero, Serverless Hero, and more" },
+              { entry: p1, icon: <StarIcon size={16} color={GD_GOLD} />, text: "AWS Heroes are recognized for their real-world expertise, knowledge sharing, and impact on the broader AWS community" },
+              { entry: p2, icon: <UsersIcon size={16} color={GD_GOLD} />, text: "They educate, inspire, and support others through talks, blog posts, open-source projects, and community leadership" },
+              { entry: p3, icon: <ShieldIcon size={16} color={GD_GOLD} />, text: "Hero categories include Community, Data, Machine Learning, Serverless, DevTools, Container, Security, and more" },
             ].map(({ entry, icon, text }, i) => (
               <div key={i} style={{ opacity: entry, transform: `translateX(${interpolate(entry, [0, 1], [14, 0])}px)`, display: "flex", alignItems: "flex-start", gap: 10, marginBottom: i < 2 ? 12 : 0, fontSize: TYPOGRAPHY.bodySmall, color: "rgba(255,255,255,0.85)", lineHeight: 1.5 }}>
                 {icon}<span>{text}</span>
@@ -760,7 +760,7 @@ const SlideCommunityHero: React.FC = () => {
             ))}
           </GlassCard>
           <div style={{ opacity: noteE, marginTop: 14, background: `${GD_GOLD}12`, border: `1px solid ${GD_GOLD}30`, borderRadius: 12, padding: "12px 18px", fontSize: TYPOGRAPHY.caption, color: "rgba(255,255,255,0.55)", lineHeight: 1.6 }}>
-            Community Builders and Heroes are <strong style={{ color: GD_ACCENT }}>NOT AWS employees</strong>. They are independent contributors selected for their community impact.
+            AWS Heroes are <strong style={{ color: GD_ACCENT }}>NOT AWS employees</strong>. They are independent community members selected by AWS for their outstanding contributions.
           </div>
         </div>
       </div>
@@ -769,18 +769,18 @@ const SlideCommunityHero: React.FC = () => {
 };
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// SLIDE 10 — What are AWS Cloud Clubs?
+// SLIDE 10 - What are AWS Cloud Clubs?
 // ═══════════════════════════════════════════════════════════════════════════════
 const SlideCloudClubs: React.FC = () => {
   const cards = [
     { icon: <GraduationIcon size={32} color={GD_VIOLET} />, title: "Student-focused groups", body: "AWS Cloud Clubs are communities for students and young professionals at universities and colleges. They focus on learning cloud technology early in people's careers." },
     { icon: <BookOpenIcon size={32} color={GD_PINK} />, title: "Hands-on learning", body: "Cloud Clubs run workshops, study sessions, and certification prep. Members get hands-on access to AWS and learn by building real projects together." },
-    { icon: <RocketIcon size={32} color={GD_GOLD} />, title: "The next generation", body: "Cloud Clubs are growing rapidly across Europe. They represent the future of the AWS Community — today's students become tomorrow's User Group leaders and Heroes." },
+    { icon: <RocketIcon size={32} color={GD_GOLD} />, title: "The next generation", body: "Cloud Clubs are growing rapidly across Europe. They represent the future of the AWS Community - today's students become tomorrow's User Group leaders and Heroes." },
   ];
   const noteE = useStagger(4, 8);
   return (
     <AbsoluteFill style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-      <SectionLabel icon={<GraduationIcon size={14} color={GD_ACCENT} />} text="What are AWS Cloud Clubs?" />
+      <SectionLabel icon={<GraduationIcon size={20} color={GD_ACCENT} />} text="What are AWS Cloud Clubs?" />
       <div style={{ display: "flex", gap: 18, width: "100%", maxWidth: 1060, marginBottom: 18 }}>
         {cards.map((c, i) => <InfoCard key={c.title} icon={c.icon} title={c.title} body={c.body} accent={[GD_VIOLET, GD_PINK, GD_GOLD][i]} delay={i} />)}
       </div>
@@ -797,7 +797,7 @@ const SlideCloudClubs: React.FC = () => {
                 {item.icon}
                 <div>
                   <div style={{ color: "white", fontWeight: 700 }}>{item.label}</div>
-                  <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)" }}>{item.sub}</div>
+                  <div style={{ fontSize: TYPOGRAPHY.overline, color: "rgba(255,255,255,0.4)" }}>{item.sub}</div>
                 </div>
               </div>
             ))}
@@ -809,7 +809,7 @@ const SlideCloudClubs: React.FC = () => {
 };
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// SLIDE 11 — Schedule V3
+// SLIDE 11 - Schedule V3
 // ═══════════════════════════════════════════════════════════════════════════════
 const SlideSchedule: React.FC = () => {
   const frame = useContext(GlobalFrameCtx);
@@ -818,15 +818,15 @@ const SlideSchedule: React.FC = () => {
   const gc = calculateCountdown(frame, 0, GAME_START, fps);
 
   const phases = [
-    { time: "17:30", label: "Pre-Show Loop", desc: "This muted loop — test your audio now!", c: GD_ACCENT, audio: false, countdown: null },
-    { time: "18:00", label: "Live Stream Begins", desc: "Linda · Anda & Jerome · Special guest · Arnaud & Loïc — GameDay instructions", c: GD_PINK, audio: true, countdown: sc },
-    { time: "18:30", label: "GameDay Starts!", desc: "2 hours of competitive AWS challenges — stream muted", c: GD_GOLD, audio: false, countdown: gc, hl: true },
-    { time: "20:30", label: "Closing Ceremony", desc: "Winners revealed globally — audio returns!", c: GD_ORANGE, audio: true, countdown: null },
+    { time: "17:30", label: "Pre-Show Loop", desc: "This muted loop - test your audio now!", c: GD_ACCENT, audio: false, countdown: null },
+    { time: "18:00", label: "Live Stream Begins", desc: "Linda · Anda & Jerome · Special guest · Arnaud & Loïc - GameDay instructions", c: GD_PINK, audio: true, countdown: sc },
+    { time: "18:30", label: "GameDay Starts!", desc: "2 hours of competitive AWS challenges - stream muted", c: GD_GOLD, audio: false, countdown: gc, hl: true },
+    { time: "20:30", label: "Closing Ceremony", desc: "Winners revealed globally - audio returns!", c: GD_ORANGE, audio: true, countdown: null },
   ];
 
   return (
     <AbsoluteFill style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-      <SectionLabel icon={<CalendarIcon size={14} color={GD_ACCENT} />} text="Today's Schedule (CET)" />
+      <SectionLabel icon={<CalendarIcon size={20} color={GD_ACCENT} />} text="Today's Schedule (CET)" />
       <div style={{ display: "flex", flexDirection: "column", gap: 12, width: "100%", maxWidth: 860 }}>
         {phases.map((ph, i) => {
           const o = useStagger(i, 8);
@@ -834,7 +834,7 @@ const SlideSchedule: React.FC = () => {
             <div key={ph.label} style={{ opacity: o, transform: `translateX(${interpolate(o, [0, 1], [26, 0])}px)`, display: "flex", alignItems: "center", gap: 18, padding: "16px 22px", borderRadius: 16, background: ph.hl ? `${GD_GOLD}0a` : "rgba(255,255,255,0.04)", border: `1px solid ${ph.c}${ph.hl ? "33" : "22"}`, borderLeft: `4px solid ${ph.c}` }}>
               <div style={{ flexShrink: 0, textAlign: "center", width: 80 }}>
                 <div style={{ fontSize: TYPOGRAPHY.h5, fontWeight: 800, color: ph.c, fontFamily: "monospace", lineHeight: 1 }}>{ph.time}</div>
-                <div style={{ fontSize: 11, color: ph.audio ? "#4ade80" : "#f87171", marginTop: 4, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", gap: 3 }}>
+                <div style={{ fontSize: TYPOGRAPHY.overline, color: ph.audio ? "#4ade80" : "#f87171", marginTop: 4, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", gap: 3 }}>
                   {ph.audio ? <VolumeIcon size={11} color="#4ade80" /> : <VolumeMuteIcon size={11} color="#f87171" />}
                   {ph.audio ? "Audio" : "Muted"}
                 </div>
@@ -854,7 +854,7 @@ const SlideSchedule: React.FC = () => {
 };
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// SLIDE 12 — How It Works
+// SLIDE 12 - How It Works
 // ═══════════════════════════════════════════════════════════════════════════════
 const SlideHowItWorks: React.FC = () => {
   const steps = [
@@ -866,13 +866,13 @@ const SlideHowItWorks: React.FC = () => {
   ];
   return (
     <AbsoluteFill style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-      <SectionLabel icon={<GamepadIcon size={14} color={GD_ACCENT} />} text="How GameDay Works" />
+      <SectionLabel icon={<GamepadIcon size={20} color={GD_ACCENT} />} text="How GameDay Works" />
       <div style={{ display: "flex", gap: 14, width: "100%", maxWidth: 1060 }}>
         {steps.map((step, i) => {
           const o = useStagger(i, 7);
           return (
             <div key={step.n} style={{ flex: 1, opacity: o, transform: `translateY(${interpolate(o, [0, 1], [20, 0])}px)`, background: "rgba(255,255,255,0.04)", border: `1px solid ${GD_VIOLET}28`, borderRadius: 16, padding: "20px 14px", textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center" }}>
-              <div style={{ width: 34, height: 34, borderRadius: "50%", background: `linear-gradient(135deg, ${GD_PURPLE}, ${GD_VIOLET})`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, fontWeight: 800, color: "white", marginBottom: 10 }}>{step.n}</div>
+              <div style={{ width: 34, height: 34, borderRadius: "50%", background: `linear-gradient(135deg, ${GD_PURPLE}, ${GD_VIOLET})`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: TYPOGRAPHY.captionSmall, fontWeight: 800, color: "white", marginBottom: 10 }}>{step.n}</div>
               <div style={{ marginBottom: 10 }}>{step.icon}</div>
               <div style={{ fontSize: TYPOGRAPHY.bodySmall, fontWeight: 700, color: "white", marginBottom: 8 }}>{step.title}</div>
               <div style={{ fontSize: TYPOGRAPHY.caption, color: "rgba(255,255,255,0.55)", lineHeight: 1.55 }}>{step.body}</div>
@@ -885,11 +885,11 @@ const SlideHowItWorks: React.FC = () => {
 };
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// SLIDE 13 — All Organizers
+// SLIDE 13 - All Organizers
 // ═══════════════════════════════════════════════════════════════════════════════
 const SlideAllOrganizers: React.FC = () => (
   <AbsoluteFill style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-    <SectionLabel icon={<UsersIcon size={14} color={GD_ACCENT} />} text="The Team Behind This Event" />
+    <SectionLabel icon={<UsersIcon size={20} color={GD_ACCENT} />} text="The Team Behind This Event" />
     <div style={{ display: "flex", flexWrap: "wrap", gap: 10, justifyContent: "center", maxWidth: 1060, marginBottom: 16 }}>
       {ORGANIZERS.map((p, i) => {
         const o = useStagger(i, 5);
@@ -899,8 +899,8 @@ const SlideAllOrganizers: React.FC = () => (
             <Img src={staticFile(p.face)} style={{ width: 52, height: 52, borderRadius: 26, objectFit: "cover", flexShrink: 0 }} />
             <div style={{ flex: 1 }}>
               <div style={{ fontSize: TYPOGRAPHY.bodySmall, fontWeight: 700, color: "white" }}>{p.flag} {p.name}</div>
-              <div style={{ fontSize: 12, color: GD_ACCENT, marginTop: 2 }}>{p.role}</div>
-              <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)" }}>{p.country}</div>
+              <div style={{ fontSize: TYPOGRAPHY.labelSmall, color: GD_ACCENT, marginTop: 2 }}>{p.role}</div>
+              <div style={{ fontSize: TYPOGRAPHY.overline, color: "rgba(255,255,255,0.4)" }}>{p.country}</div>
             </div>
             {logo && <Img src={logo} style={{ maxWidth: 44, maxHeight: 28, objectFit: "contain", opacity: 0.7 }} />}
           </div>
@@ -909,7 +909,7 @@ const SlideAllOrganizers: React.FC = () => (
     </div>
     {(() => {
       const o = useStagger(ORGANIZERS.length, 5);
-      return <div style={{ opacity: o, fontSize: 12, fontWeight: 700, color: GD_ORANGE, textTransform: "uppercase", letterSpacing: 3, marginBottom: 10, display: "flex", alignItems: "center", gap: 6 }}><GamepadIcon size={12} color={GD_ORANGE} /> AWS Support &amp; Gamemasters</div>;
+      return <div style={{ opacity: o, fontSize: TYPOGRAPHY.labelSmall, fontWeight: 700, color: GD_ORANGE, textTransform: "uppercase", letterSpacing: 3, marginBottom: 10, display: "flex", alignItems: "center", gap: 6 }}><GamepadIcon size={12} color={GD_ORANGE} /> AWS Support &amp; Gamemasters</div>;
     })()}
     <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap", maxWidth: 1060 }}>
       {AWS_SUPPORTERS.map((p, i) => {
@@ -919,8 +919,8 @@ const SlideAllOrganizers: React.FC = () => (
             <Img src={staticFile(p.face)} style={{ width: 52, height: 52, borderRadius: 26, objectFit: "cover", flexShrink: 0 }} />
             <div>
               <div style={{ fontSize: TYPOGRAPHY.bodySmall, fontWeight: 700, color: "white" }}>{p.flag} {p.name}</div>
-              <div style={{ fontSize: 12, color: GD_ORANGE, marginTop: 2 }}>{p.role}</div>
-              <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)" }}>{p.country}</div>
+              <div style={{ fontSize: TYPOGRAPHY.labelSmall, color: GD_ORANGE, marginTop: 2 }}>{p.role}</div>
+              <div style={{ fontSize: TYPOGRAPHY.overline, color: "rgba(255,255,255,0.4)" }}>{p.country}</div>
             </div>
           </div>
         );
@@ -930,21 +930,21 @@ const SlideAllOrganizers: React.FC = () => (
 );
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// SLIDE 14 — Get Ready
+// SLIDE 14 - Get Ready
 // ═══════════════════════════════════════════════════════════════════════════════
 const SlideGetReady: React.FC = () => {
   const items = [
     { icon: <UsersIcon size={20} color={GD_VIOLET} />, text: "Form your team locally before the stream starts" },
     { icon: <CalendarIcon size={20} color={GD_PINK} />, text: "Be seated with audio ready 5 minutes before 18:00 CET" },
-    { icon: <VolumeIcon size={20} color={GD_GOLD} />, text: "Watch the live stream carefully — the rules are explained live by Arnaud & Loïc" },
+    { icon: <VolumeIcon size={20} color={GD_GOLD} />, text: "Watch the live stream carefully - the rules are explained live by Arnaud & Loïc" },
     { icon: <CheckCircleIcon size={20} color={GD_ORANGE} />, text: "Your UG leader will distribute team codes at 18:30 CET" },
-    { icon: <GamepadIcon size={20} color={GD_ACCENT} />, text: "Gameplay runs for 2 hours — stream is muted during this time" },
-    { icon: <TrophyIcon size={20} color={GD_GOLD} />, text: "Stay in the stream — audio returns at 20:30 for the global winners reveal" },
+    { icon: <GamepadIcon size={20} color={GD_ACCENT} />, text: "Gameplay runs for 2 hours - stream is muted during this time" },
+    { icon: <TrophyIcon size={20} color={GD_GOLD} />, text: "Stay in the stream - audio returns at 20:30 for the global winners reveal" },
     { icon: <HeartIcon size={20} color={GD_PINK} />, text: "After the ceremony your local UG continues with their own local schedule" },
   ];
   return (
     <AbsoluteFill style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-      <SectionLabel icon={<CheckCircleIcon size={14} color={GD_ACCENT} />} text="Get Ready — Your Checklist" />
+      <SectionLabel icon={<CheckCircleIcon size={20} color={GD_ACCENT} />} text="Get Ready - Your Checklist" />
       <div style={{ display: "flex", flexDirection: "column", gap: 12, maxWidth: 800, width: "100%" }}>
         {items.map((item, i) => {
           const o = useStagger(i, 6);
@@ -960,14 +960,14 @@ const SlideGetReady: React.FC = () => {
 };
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// SLIDE 15 — Audio Check
+// SLIDE 15 - Audio Check
 // ═══════════════════════════════════════════════════════════════════════════════
 const SlideAudioCheck: React.FC = () => {
   const pulse = usePulse(48);
   const o = useEntry(0);
   const items = [
     { icon: <CheckCircleIcon size={20} color="#4ade80" />, text: "Make sure your venue audio is connected to this stream", c: "#4ade80" },
-    { icon: <VolumeIcon size={20} color="#4ade80" />, text: "The live stream at 18:00 CET requires audio — test NOW", c: "#4ade80" },
+    { icon: <VolumeIcon size={20} color="#4ade80" />, text: "The live stream at 18:00 CET requires audio - test NOW", c: "#4ade80" },
     { icon: <BookOpenIcon size={20} color={GD_GOLD} />, text: "If audio fails, use the backup video link your organizer provided", c: GD_GOLD },
     { icon: <VolumeMuteIcon size={20} color={GD_ACCENT} />, text: "Important: stream is muted again during gameplay (18:30–20:30 CET)", c: GD_ACCENT },
   ];
@@ -995,7 +995,7 @@ const SlideAudioCheck: React.FC = () => {
 };
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// SLIDE 16 — Stats V3
+// SLIDE 16 - Stats V3
 // ═══════════════════════════════════════════════════════════════════════════════
 const SlideStats: React.FC = () => {
   const stats = [
@@ -1007,7 +1007,7 @@ const SlideStats: React.FC = () => {
   const mapE = useStagger(5, 8);
   return (
     <AbsoluteFill style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-      <SectionLabel icon={<TrophyIcon size={14} color={GD_ACCENT} />} text="Community GameDay Europe — By the Numbers" />
+      <SectionLabel icon={<TrophyIcon size={20} color={GD_ACCENT} />} text="Community GameDay Europe - By the Numbers" />
       <div style={{ display: "flex", gap: 20, marginBottom: 24 }}>
         {stats.map((s, i) => {
           const o = useStagger(i, 8);
@@ -1028,7 +1028,7 @@ const SlideStats: React.FC = () => {
 };
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// SLIDE 17 — UG Spotlight V3 (with logo)
+// SLIDE 17 - UG Spotlight V3 (with logo)
 // ═══════════════════════════════════════════════════════════════════════════════
 const SlideUGSpotlight: React.FC<{ index: number }> = ({ index }) => {
   const g = SHUFFLED[index % SHUFFLED.length];
@@ -1041,16 +1041,14 @@ const SlideUGSpotlight: React.FC<{ index: number }> = ({ index }) => {
 
   return (
     <AbsoluteFill style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-      <div style={{ opacity: flagE, fontSize: 12, fontWeight: 700, color: GD_ACCENT, textTransform: "uppercase", letterSpacing: 5, marginBottom: 16, display: "flex", alignItems: "center", gap: 6 }}>
+      <div style={{ opacity: flagE, fontSize: TYPOGRAPHY.labelSmall, fontWeight: 700, color: GD_ACCENT, textTransform: "uppercase", letterSpacing: 5, marginBottom: 16, display: "flex", alignItems: "center", gap: 6 }}>
         <StarIcon size={12} color={GD_ACCENT} /> Competing Today
       </div>
 
       {/* Logo or flag */}
       <div style={{ opacity: flagE, transform: `scale(${interpolate(flagE, [0, 1], [0.7, 1]) * pulse})`, marginBottom: 20 }}>
         {logo ? (
-          <div style={{ background: "rgba(255,255,255,0.04)", borderRadius: 20, padding: "20px 36px", display: "flex", alignItems: "center", justifyContent: "center", minWidth: 320, minHeight: 140 }}>
-            <Img src={logo} style={{ maxWidth: 340, maxHeight: 140, objectFit: "contain" }} />
-          </div>
+          <Img src={logo} style={{ maxWidth: 340, maxHeight: 140, objectFit: "contain", borderRadius: 16 }} />
         ) : (
           <div style={{ fontSize: 130, lineHeight: 1, filter: "drop-shadow(0 8px 32px rgba(0,0,0,0.5))" }}>{g.flag}</div>
         )}
@@ -1058,7 +1056,7 @@ const SlideUGSpotlight: React.FC<{ index: number }> = ({ index }) => {
 
       {/* Flag shown below logo when logo exists */}
       {logo && (
-        <div style={{ opacity: nameE, transform: `translateY(${interpolate(nameE, [0, 1], [12, 0])}px)`, fontSize: 48, lineHeight: 1, marginBottom: 8 }}>{g.flag}</div>
+        <div style={{ opacity: nameE, transform: `translateY(${interpolate(nameE, [0, 1], [12, 0])}px)`, fontSize: TYPOGRAPHY.flag, lineHeight: 1, marginBottom: 8 }}>{g.flag}</div>
       )}
 
       {/* Name */}
@@ -1075,10 +1073,9 @@ const SlideUGSpotlight: React.FC<{ index: number }> = ({ index }) => {
           { label: "Group", value: `${displayNum} of ${USER_GROUPS.length}`, c: GD_VIOLET },
           { label: "Country", value: `${g.flag} ${g.city.split(", ")[1]?.trim()}`, c: GD_GOLD },
           { label: "City", value: g.city.split(",")[0]?.trim(), c: "#4ade80" },
-          { label: "Location", value: g.city.split(",")[0], c: GD_PINK },
         ].map((stat) => (
           <div key={stat.label} style={{ background: "rgba(255,255,255,0.05)", border: `1px solid ${stat.c}33`, borderRadius: 12, padding: "9px 18px", textAlign: "center" }}>
-            <div style={{ fontSize: 11, color: GD_ACCENT, textTransform: "uppercase", letterSpacing: 2, marginBottom: 3 }}>{stat.label}</div>
+            <div style={{ fontSize: TYPOGRAPHY.overline, color: GD_ACCENT, textTransform: "uppercase", letterSpacing: 2, marginBottom: 3 }}>{stat.label}</div>
             <div style={{ fontSize: TYPOGRAPHY.bodySmall, fontWeight: 700, color: stat.c }}>{stat.value}</div>
           </div>
         ))}
@@ -1092,10 +1089,31 @@ const SlideUGSpotlight: React.FC<{ index: number }> = ({ index }) => {
 // ═══════════════════════════════════════════════════════════════════════════════
 type Section = { key: string; name: string; dur: number; el: React.ReactNode };
 
+// ─── Content slide definitions (single source of truth) ──────────────────────
+const CONTENT_SLIDES: { key: string; name: string; el: React.ReactNode }[] = [
+  { key: "hero", name: "Hero + Countdown", el: <SlideHero /> },
+  { key: "whats-happening", name: "What's Happening?", el: <SlideWhatsHappening /> },
+  { key: "meet-linda", name: "Meet Linda Mohamed", el: <SlideMeetLinda /> },
+  { key: "meet-anda-jerome", name: "Meet Anda & Jerome", el: <SlideMeetAndaJerome /> },
+  { key: "meet-gamemasters", name: "Meet Arnaud & Loïc", el: <SlideMeetGamemasters /> },
+  { key: "aws-community", name: "What is the AWS Community?", el: <SlideAWSCommunity /> },
+  { key: "ug-leader", name: "What is a UG Leader?", el: <SlideUGLeader /> },
+  { key: "community-builder", name: "What is a Community Builder?", el: <SlideCommunityBuilder /> },
+  { key: "community-hero", name: "What is a Community Hero?", el: <SlideCommunityHero /> },
+  { key: "cloud-clubs", name: "What are Cloud Clubs?", el: <SlideCloudClubs /> },
+  { key: "schedule", name: "Today's Schedule", el: <SlideSchedule /> },
+  { key: "how-it-works", name: "How GameDay Works", el: <SlideHowItWorks /> },
+  { key: "all-organizers", name: "The Full Team", el: <SlideAllOrganizers /> },
+  { key: "stats", name: "By the Numbers", el: <SlideStats /> },
+  { key: "get-ready", name: "Get Ready", el: <SlideGetReady /> },
+  { key: "audio-check", name: "Audio Check", el: <SlideAudioCheck /> },
+];
+
+const NUM_CYCLES = 2;
+
 function buildSections(): Section[] {
   const out: Section[] = [];
   let ugIdx = 0;
-  let cycle = 0;
 
   const nextUGs = (count: number) => {
     for (let i = 0; i < count; i++) {
@@ -1105,74 +1123,17 @@ function buildSections(): Section[] {
     }
   };
 
-  const push = (key: string, name: string, el: React.ReactNode) =>
-    out.push({ key: `${key}-${cycle}`, name, dur: S, el: <Wrap>{el}</Wrap> });
+  for (let cycle = 1; cycle <= NUM_CYCLES; cycle++) {
+    for (let i = 0; i < CONTENT_SLIDES.length; i++) {
+      const s = CONTENT_SLIDES[i];
+      out.push({ key: `${s.key}-${cycle}`, name: s.name, dur: S, el: <Wrap>{s.el}</Wrap> });
+      // Insert 3 UG spotlights after each content slide (except the last in each cycle)
+      if (i < CONTENT_SLIDES.length - 1) nextUGs(3);
+    }
+  }
 
-  // ── Cycle 1 ──────────────────────────────────────────────────────────────
-  cycle = 1;
-  push("hero", "Hero + Countdown", <SlideHero />);
-  nextUGs(3);
-  push("whats-happening", "What's Happening?", <SlideWhatsHappening />);
-  nextUGs(3);
-  push("meet-linda", "Meet Linda Mohamed", <SlideMeetLinda />);
-  nextUGs(3);
-  push("meet-anda-jerome", "Meet Anda & Jerome", <SlideMeetAndaJerome />);
-  nextUGs(3);
-  push("meet-gamemasters", "Meet Arnaud & Loïc", <SlideMeetGamemasters />);
-  nextUGs(3);
-  push("aws-community", "What is the AWS Community?", <SlideAWSCommunity />);
-  nextUGs(3);
-  push("ug-leader", "What is a UG Leader?", <SlideUGLeader />);
-  nextUGs(3);
-  push("community-builder", "What is a Community Builder?", <SlideCommunityBuilder />);
-  nextUGs(3);
-  push("community-hero", "What is a Community Hero?", <SlideCommunityHero />);
-  nextUGs(3);
-  push("cloud-clubs", "What are Cloud Clubs?", <SlideCloudClubs />);
-  nextUGs(3);
-  push("schedule", "Today's Schedule", <SlideSchedule />);
-  nextUGs(3);
-  push("how-it-works", "How GameDay Works", <SlideHowItWorks />);
-  nextUGs(3);
-  push("all-organizers", "The Full Team", <SlideAllOrganizers />);
-  nextUGs(3);
-  push("stats", "By the Numbers", <SlideStats />);
-  nextUGs(3);
-  push("get-ready", "Get Ready", <SlideGetReady />);
-  nextUGs(3);
-  push("audio-check", "Audio Check", <SlideAudioCheck />);
-
-  // ── Cycle 2 (shorter, covers remaining UGs) ───────────────────────────────
-  cycle = 2;
-  push("hero", "Hero + Countdown", <SlideHero />);
-  nextUGs(3);
-  push("whats-happening", "What's Happening?", <SlideWhatsHappening />);
-  nextUGs(3);
-  push("meet-linda", "Meet Linda Mohamed", <SlideMeetLinda />);
-  nextUGs(3);
-  push("meet-anda-jerome", "Meet Anda & Jerome", <SlideMeetAndaJerome />);
-  nextUGs(3);
-  push("meet-gamemasters", "Meet Arnaud & Loïc", <SlideMeetGamemasters />);
-  nextUGs(3);
-  push("aws-community", "What is the AWS Community?", <SlideAWSCommunity />);
-  nextUGs(3);
-  push("ug-leader", "What is a UG Leader?", <SlideUGLeader />);
-  nextUGs(3);
-  push("community-builder", "Community Builder?", <SlideCommunityBuilder />);
-  nextUGs(3);
-  push("community-hero", "Community Hero?", <SlideCommunityHero />);
-  nextUGs(3);
-  push("cloud-clubs", "Cloud Clubs?", <SlideCloudClubs />);
-  nextUGs(3);
-  push("schedule", "Today's Schedule", <SlideSchedule />);
-  nextUGs(3);
-  push("how-it-works", "How GameDay Works", <SlideHowItWorks />);
-  nextUGs(3);
-  push("stats", "By the Numbers", <SlideStats />);
-  nextUGs(3);
-  push("get-ready", "Get Ready", <SlideGetReady />);
-  push("audio-check", "Audio Check", <SlideAudioCheck />);
-  push("hero-end", "Hero (Final)", <SlideHero />);
+  // Final hero bookend
+  out.push({ key: "hero-end", name: "Hero (Final)", dur: S, el: <Wrap><SlideHero /></Wrap> });
 
   return out;
 }

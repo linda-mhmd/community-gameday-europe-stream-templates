@@ -84,27 +84,40 @@ const SparklesIcon = ({ color = GD_GOLD, size = 40 }: { color?: string; size?: n
 );
 
 // ── Tips with icons ──
-const TIPS: Array<{ text: string; icon: React.ReactNode; color: string }> = [
+// Early tips: shown only in Phase 1 (first 30 min)
+const EARLY_TIPS: Array<{ text: string; icon: React.ReactNode; color: string }> = [
   { text: "AWS GameDay is a collaborative learning exercise in a gamified, risk-free environment", icon: <RocketIcon />, color: GD_PINK },
   { text: "Each Quest is open-ended - figure out the best way forward. Don't be afraid to try!", icon: <LightbulbIcon />, color: GD_GOLD },
-  { text: "Bonus points are awarded to teams that finish Quests quickly", icon: <ZapIcon />, color: GD_ORANGE },
   { text: "Set your team name and language, then review the Quest information", icon: <TargetIcon />, color: GD_PINK },
   { text: "Use hints for quick tips - they are low cost!", icon: <HelpIcon />, color: GD_ACCENT },
   { text: "If you need help, signal a staff member and they will assist you", icon: <UsersIcon />, color: GD_VIOLET },
-  { text: "Don't worry about completing everything - have fun, experiment, and try new things!", icon: <SparklesIcon />, color: GD_GOLD },
   { text: "This GameDay is designed for each team to work together on each Quest", icon: <TrophyIcon />, color: GD_GOLD },
+  { text: "Don't worry about completing everything - have fun, experiment, and try new things!", icon: <SparklesIcon />, color: GD_GOLD },
+  { text: "Bonus points are awarded to teams that finish Quests quickly", icon: <ZapIcon />, color: GD_ORANGE },
+];
+// Late tips: shown from Phase 2 onward (after first 30 min)
+const LATE_TIPS: Array<{ text: string; icon: React.ReactNode; color: string }> = [
+  { text: "Keep going! Every Quest you complete earns your team more points", icon: <TrophyIcon />, color: GD_GOLD },
+  { text: "Bonus points are awarded to teams that finish Quests quickly", icon: <ZapIcon />, color: GD_ORANGE },
+  { text: "Use hints for quick tips - they are low cost!", icon: <HelpIcon />, color: GD_ACCENT },
+  { text: "Don't forget: Amazon Q Developer is set up in your environment - use it!", icon: <LightbulbIcon />, color: GD_GOLD },
+  { text: "If you need help, signal a staff member and they will assist you", icon: <UsersIcon />, color: GD_VIOLET },
+  { text: "Check the leaderboard - every Quest counts towards your final score", icon: <RocketIcon />, color: GD_PINK },
+  { text: "Don't worry about completing everything - have fun, experiment, and try new things!", icon: <SparklesIcon />, color: GD_GOLD },
+  { text: "Work together as a team - collaboration is key to climbing the leaderboard", icon: <TargetIcon />, color: GD_PINK },
 ];
 
 // ── Tip Card (big, centered, with icon) ──
 const TIP_DUR = 600; // 20s per tip
 const TipCard: React.FC<{ frame: number }> = ({ frame }) => {
-  const idx = Math.floor(frame / TIP_DUR) % TIPS.length;
+  const tips = frame < 54000 ? EARLY_TIPS : LATE_TIPS;
+  const idx = Math.floor(frame / TIP_DUR) % tips.length;
   const local = frame % TIP_DUR;
   const fadeIn = interpolate(local, [0, 25], [0, 1], { extrapolateRight: "clamp" });
   const fadeOut = interpolate(local, [TIP_DUR - 25, TIP_DUR], [1, 0], { extrapolateRight: "clamp" });
   const o = Math.min(fadeIn, fadeOut);
   const slideY = interpolate(local, [0, 25], [30, 0], { extrapolateRight: "clamp" });
-  const tip = TIPS[idx];
+  const tip = tips[idx];
   return (
     <div style={{ opacity: o, transform: `translateY(${slideY}px)`, display: "flex", flexDirection: "column", alignItems: "center", gap: 28, maxWidth: 850, textAlign: "center" }}>
       <div style={{ width: 100, height: 100, borderRadius: 24, background: `${tip.color}15`, border: `2px solid ${tip.color}33`, display: "flex", alignItems: "center", justifyContent: "center" }}>
