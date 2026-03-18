@@ -1,4 +1,4 @@
-# 🏆 LIVE WINNERS TEMPLATE — MUST UPDATE BEFORE RENDERING
+# 🏆 LIVE WINNERS TEMPLATE  -  MUST UPDATE BEFORE RENDERING
 
 > ⚠️ **The `GameDayClosingWinners` composition contains PLACEHOLDER data.**
 > It will render with white flags 🏳️, "TEAM NAME", and "CITY, COUNTRY" until you update it with real winner data.
@@ -32,7 +32,7 @@ Replace each field with real data from the GameDay scoring results.
 | Field      | Description                          | What to put                    |
 |------------|--------------------------------------|--------------------------------|
 | `teamName` | The team's chosen name (most prominent on screen) | The actual team name from the scoreboard |
-| `ugName`   | User Group name — **must match a key in `LOGO_MAP`** | Exact UG name from `archive/CommunityGamedayEuropeV4.tsx` |
+| `ugName`   | User Group name  -  **must match a key in `LOGO_MAP`** | Exact UG name from `archive/CommunityGamedayEuropeV4.tsx` |
 | `flag`     | Country flag emoji                   | The flag emoji of the UG's country |
 | `city`     | City, Country label                  | The UG's city and country |
 | `score`    | Final score (integer)                | The actual final score from the GameDay |
@@ -49,7 +49,7 @@ To see all valid `ugName` values, check the `LOGO_MAP` export in that file.
 2. Find the `PODIUM_TEAMS` array (~line 65)
 3. Replace all 6 placeholder entries with real winner data
 4. Entries must be ordered by rank: index 0 = 1st place, index 5 = 6th place
-5. Save the file — Remotion Studio will hot-reload automatically
+5. Save the file  -  Remotion Studio will hot-reload automatically
 6. Render: `npx remotion render GameDayClosingWinners`
 
 ## How to Update (Lambda / Automated)
@@ -98,12 +98,12 @@ Render: npx remotion render GameDayClosingWinners --output=out/closing-winners.m
 
 | Phase           | Frames      | Time        | Description                              |
 |-----------------|-------------|-------------|------------------------------------------|
-| Shuffle         | 0–1799      | 0:00–1:00   | Animated bar scroll (all user groups)    |
-| Reveal (6→1)    | 1800–7199   | 1:00–4:00   | Progressive bar chart reveal             |
-| Podium          | 7200–7799   | 4:00–4:20   | Final podium card grid                   |
-| Thank You       | 7800–8999   | 4:20–5:00   | Closing message + fade to black          |
+| Shuffle         | 0 - 1799      | 0:00 - 1:00   | Animated bar scroll (all user groups)    |
+| Reveal (6→1)    | 1800 - 7199   | 1:00 - 4:00   | Progressive bar chart reveal             |
+| Podium          | 7200 - 7799   | 4:00 - 4:20   | Final podium card grid                   |
+| Thank You       | 7800 - 8999   | 4:20 - 5:00   | Closing message + fade to black          |
 
-## Other Compositions (Fixed — Do Not Edit)
+## Other Compositions (Fixed  -  Do Not Edit)
 
 | Composition               | File                    | Notes                    |
 |---------------------------|-------------------------|--------------------------|

@@ -1,6 +1,6 @@
 # GameDay Web Player
 
-A web-based player that runs the AWS Community GameDay Europe stream compositions directly in the browser using the [Remotion Player](https://remotion.dev/docs/player). It auto-switches between compositions based on the event schedule — no manual intervention needed during the live stream.
+A web-based player that runs the AWS Community GameDay Europe stream compositions directly in the browser using the [Remotion Player](https://remotion.dev/docs/player). It auto-switches between compositions based on the event schedule  -  no manual intervention needed during the live stream.
 
 ## Why This Exists
 
@@ -28,7 +28,7 @@ Open `http://localhost:5173` in Chrome.
 
 The player is fully controllable via URL parameters. This makes it easy to test, demo, and run in production.
 
-### `?segment=` — Force a specific segment
+### `?segment=`  -  Force a specific segment
 
 Jump directly to any composition without waiting for the schedule.
 
@@ -43,7 +43,7 @@ Jump directly to any composition without waiting for the schedule.
 
 **Why it exists**: For testing and rehearsal. You can verify each composition renders correctly in the web player without waiting for the actual event time.
 
-### `?time=` — Simulate a CET time
+### `?time=`  -  Simulate a CET time
 
 Pretend it's a specific time on event day. The schedule logic runs normally.
 
@@ -58,7 +58,7 @@ Pretend it's a specific time on event day. The schedule logic runs normally.
 
 **Why it exists**: To test the auto-switching logic. Unlike `?segment=`, this uses the real schedule so you can verify transitions happen at the right times.
 
-### `?date=` — Override the event date
+### `?date=`  -  Override the event date
 
 Use with `?time=` to simulate a specific date.
 
@@ -68,7 +68,7 @@ Use with `?time=` to simulate a specific date.
 
 **Why it exists**: For testing on days other than the event day.
 
-### `?controls=false` — Hide operator controls
+### `?controls=false`  -  Hide operator controls
 
 Hides the control bar at the bottom. You can still toggle it with `Esc`.
 
@@ -78,7 +78,7 @@ Hides the control bar at the bottom. You can still toggle it with `Esc`.
 
 **Why it exists**: For a clean display when screen-sharing. You don't want participants to see the operator buttons.
 
-### `?autoplay=true` — Production mode
+### `?autoplay=true`  -  Production mode
 
 Hides controls completely (no `Esc` toggle) and runs in full auto-schedule mode. This is what you use on event day.
 
@@ -102,8 +102,8 @@ Hides controls completely (no `Esc` toggle) and runs in full auto-schedule mode.
 
 When controls are visible (default), you'll see a bar at the bottom-left:
 
-- **Auto** — Follow the real-time schedule (default)
-- **Countdown / 0–3** — Force-switch to any segment
+- **Auto**  -  Follow the real-time schedule (default)
+- **Countdown / 0 - 3**  -  Force-switch to any segment
 - Press **Esc** to show/hide controls
 
 ---
@@ -125,7 +125,7 @@ Each countdown ticks in real-time. When a milestone passes, it shows "✓ LIVE" 
 
 ### Option A: Screen Share with "Optimize for Video Clip" (Recommended)
 
-This gives you **up to 1080p screen share quality** — the highest Zoom supports.
+This gives you **up to 1080p screen share quality**  -  the highest Zoom supports.
 
 1. **Start the web player** in Chrome:
    ```bash
@@ -136,7 +136,7 @@ This gives you **up to 1080p screen share quality** — the highest Zoom support
 4. **In Zoom**, click the green **Share Screen** button
 5. In the share dialog:
    - Select the **Chrome window** showing the player
-   - ✅ Check **"Share sound"** (bottom-left) — critical for audio compositions
+   - ✅ Check **"Share sound"** (bottom-left)  -  critical for audio compositions
    - ✅ Check **"Optimize for video clip"** (bottom-left)
 6. Click **Share**
 
@@ -167,12 +167,12 @@ If you pre-render compositions to MP4 first:
 
 ### Tips for Maximum Quality
 
-1. **Use wired ethernet** — WiFi packet loss degrades video quality
-2. **Close other apps** — Zoom + Chrome need CPU for smooth playback
-3. **Use Chrome** — Best Remotion Player performance
-4. **Test beforehand** — Do a full dry run with a test Zoom call
-5. **Disable Zoom virtual backgrounds** — They consume GPU
-6. **Participants: Gallery View** — Maximizes the shared screen
+1. **Use wired ethernet**  -  WiFi packet loss degrades video quality
+2. **Close other apps**  -  Zoom + Chrome need CPU for smooth playback
+3. **Use Chrome**  -  Best Remotion Player performance
+4. **Test beforehand**  -  Do a full dry run with a test Zoom call
+5. **Disable Zoom virtual backgrounds**  -  They consume GPU
+6. **Participants: Gallery View**  -  Maximizes the shared screen
 
 ---
 

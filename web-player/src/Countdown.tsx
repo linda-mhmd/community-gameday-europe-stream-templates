@@ -40,7 +40,7 @@ export const CountdownComposition: React.FC<CountdownProps> = ({ eventDate, mile
   const gT = fmt(gMs);
   const gLive = gMs === 0;
 
-  // Descriptions with corrected text color — white with slight transparency instead of purple
+  // Descriptions with corrected text color  -  white with slight transparency instead of purple
   const DESC_COLOR = "rgba(255,255,255,0.65)";
 
   return (
@@ -86,7 +86,7 @@ export const CountdownComposition: React.FC<CountdownProps> = ({ eventDate, mile
       <div style={{ position: "absolute", right: 0, top: 0, width: 560, height: "100%", display: "flex", flexDirection: "column", justifyContent: "center", padding: "0 36px 0 0", marginTop: -20 }}>
         <div style={{ ...anim(14) }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 15, fontWeight: 700, color: GD_ACCENT, textTransform: "uppercase", letterSpacing: 3, marginBottom: 14 }}>
-            <CalendarIcon size={18} /> Schedule (CET) — Community GameDay Europe
+            <CalendarIcon size={18} /> Schedule (CET)  -  Community GameDay Europe
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
             {milestones.map((ms) => {

@@ -18,7 +18,7 @@ const FC_CONFIG = { numRuns: 10 };
  * Render AudioBadge by invoking the FC directly to get the React element tree.
  */
 function renderAudioBadge(muted: boolean): React.ReactElement {
-  // AudioBadge is an FC — call it to get the element tree
+  // AudioBadge is an FC  -  call it to get the element tree
   return AudioBadge({ muted }) as React.ReactElement;
 }
 
@@ -70,7 +70,7 @@ function renderGlassCard(glassCardElement: React.ReactElement): React.ReactEleme
 }
 
 describe("Feature: gameday-mainevent-bugfix", () => {
-  describe("Property 1: Bug Condition — AudioBadge Overlap and Emoji Usage", () => {
+  describe("Property 1: Bug Condition  -  AudioBadge Overlap and Emoji Usage", () => {
     /**
      * **Validates: Requirements 1.1, 1.2, 1.3**
      *
@@ -79,7 +79,7 @@ describe("Feature: gameday-mainevent-bugfix", () => {
      * - Render inline SVG icons (not emoji characters 🔇/🔊)
      * - Use correct icon colors (GD_ACCENT for muted, GD_ORANGE for unmuted)
      *
-     * On UNFIXED code, these tests FAIL — confirming both bugs exist.
+     * On UNFIXED code, these tests FAIL  -  confirming both bugs exist.
      */
 
     it("Test 1 - Position: AudioBadge uses bottom:16, not top:16 (avoids Countdown overlap)", () => {
@@ -136,7 +136,7 @@ describe("Feature: gameday-mainevent-bugfix", () => {
     });
   });
 
-  describe("Property 2: Preservation — AudioBadge GlassCard Styling and Color Scheme", () => {
+  describe("Property 2: Preservation  -  AudioBadge GlassCard Styling and Color Scheme", () => {
     /**
      * **Validates: Requirements 3.2, 3.3, 3.4**
      *

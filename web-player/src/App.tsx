@@ -92,10 +92,10 @@ function getCurrentSegment(): SegmentId {
 
 const SEGMENTS: { id: SegmentId; label: string }[] = [
   { id: "waiting", label: "Countdown" },
-  { id: "preshow", label: "0 — Pre-Show" },
-  { id: "mainevent", label: "1 — Main Event" },
-  { id: "gameplay", label: "2 — Gameplay" },
-  { id: "closing", label: "3 — Closing" },
+  { id: "preshow", label: "0  -  Pre-Show" },
+  { id: "mainevent", label: "1  -  Main Event" },
+  { id: "gameplay", label: "2  -  Gameplay" },
+  { id: "closing", label: "3  -  Closing" },
 ];
 
 const COUNTDOWN_MILESTONES = SCHEDULE.filter((s) => s.id !== "end").map((s) => ({
@@ -192,7 +192,7 @@ export const App: React.FC = () => {
             timezone: TIMEZONE,
             milestones: COUNTDOWN_MILESTONES,
           }}
-          durationInFrames={30 * 60 * 60} // 1 hour of frames — effectively infinite
+          durationInFrames={30 * 60 * 60} // 1 hour of frames  -  effectively infinite
           fps={30}
           compositionWidth={1280}
           compositionHeight={720}
@@ -273,7 +273,7 @@ const Controls: React.FC<{
       ))}
     </div>
     <div style={{ fontSize: 11, marginTop: 4, opacity: 0.6 }}>
-      {override ? `Manual: ${active}` : `Auto mode — current: ${active}`}
+      {override ? `Manual: ${active}` : `Auto mode  -  current: ${active}`}
     </div>
   </div>
 );

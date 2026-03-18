@@ -1,14 +1,14 @@
-# 0. Pre-Show (Muted) — `00-GameDayStreamPreShow-Muted.tsx`
+# 0. Pre-Show (Muted)  -  `00-GameDayStreamPreShow-Muted.tsx`
 
 ## Overview
 
 The Pre-Show is a **looping countdown composition** that plays on screen at every participating User Group location before the live stream begins. It runs for 10 minutes per loop and is designed to loop 3 times (30 minutes total, from 17:30 to 18:00 CET).
 
 The pre-show has two phases:
-- **17:30–17:50** — Countdown to teams being formed, showing basic event information and schedule
-- **17:50–18:00** — Countdown to stream start with reminders (turn on audio, audio test at 17:55)
+- **17:30 - 17:50**  -  Countdown to teams being formed, showing basic event information and schedule
+- **17:50 - 18:00**  -  Countdown to stream start with reminders (turn on audio, audio test at 17:55)
 
-Local User Groups can do whatever they want during this time — the pre-show is just a visual backdrop. Its job is simple: tell attendees what is about to happen, show them the schedule, and count down to the stream start and game start.
+Local User Groups can do whatever they want during this time  -  the pre-show is just a visual backdrop. Its job is simple: tell attendees what is about to happen, show them the schedule, and count down to the stream start and game start.
 
 ## What Attendees See
 
@@ -16,8 +16,8 @@ When you walk into your local User Group meetup and look at the screen, you see:
 
 1. A large **"AWS Community GameDay Europe"** title with "2025 · First Edition" subtitle
 2. Two countdown timers side by side:
-   - **Stream Starts In** (pink) — counting down to when the live host appears
-   - **GameDay Countdown** (violet) — counting down to when the actual game begins
+   - **Stream Starts In** (pink)  -  counting down to when the live host appears
+   - **GameDay Countdown** (violet)  -  counting down to when the actual game begins
 3. An **Event Schedule** at the bottom showing the 4 phases: Pre-Show (30 min), Introductions (30 min), Gameplay (2 hours), Closing (30 min)
 4. An **Audio Badge** in the bottom-right showing "MUTED" (the pre-show has no audio)
 5. In the final 2 minutes: an **Audio Cue Banner** warning attendees to prepare their speakers
@@ -36,7 +36,7 @@ When you walk into your local User Group meetup and look at the screen, you see:
 
 ```typescript
 interface PreShowProps {
-  loopIteration?: number; // 0, 1, or 2 — adjusts countdown offsets
+  loopIteration?: number; // 0, 1, or 2  -  adjusts countdown offsets
 }
 ```
 
@@ -57,10 +57,10 @@ The `loopIteration` prop shifts the countdown calculations so that each 10-minut
 
 | Chapter | Frames | Duration |
 |---------|--------|----------|
-| Title & Countdowns | 0–5399 | 3 min |
-| Schedule Preview | 5400–10799 | 3 min |
-| Community Info | 10800–14399 | 2 min |
-| Audio Cue — Prepare Speakers | 14400–17999 | 2 min |
+| Title & Countdowns | 0 - 5399 | 3 min |
+| Schedule Preview | 5400 - 10799 | 3 min |
+| Community Info | 10800 - 14399 | 2 min |
+| Audio Cue  -  Prepare Speakers | 14400 - 17999 | 2 min |
 
 ### Animations
 
@@ -81,7 +81,7 @@ This is exported for property-based testing.
 
 ## Design Decisions
 
-- **No audio** — The pre-show is a visual-only loop. Attendees are still arriving and setting up.
-- **Relative durations only** — The schedule shows "30 min", "2 hours" etc. instead of clock times, because the event spans 4+ timezones.
-- **Loop-aware countdowns** — The `loopIteration` prop ensures countdowns are accurate across all 3 loops.
-- **Audio cue at the end** — Warns attendees to connect speakers before the live stream starts.
+- **No audio**  -  The pre-show is a visual-only loop. Attendees are still arriving and setting up.
+- **Relative durations only**  -  The schedule shows "30 min", "2 hours" etc. instead of clock times, because the event spans 4+ timezones.
+- **Loop-aware countdowns**  -  The `loopIteration` prop ensures countdowns are accurate across all 3 loops.
+- **Audio cue at the end**  -  Warns attendees to connect speakers before the live stream starts.

@@ -9,7 +9,7 @@ export default defineConfig({
       // Allow importing compositions and shared from the parent project
       "@compositions": path.resolve(__dirname, ".."),
       "@shared": path.resolve(__dirname, "..", "shared"),
-      // CRITICAL: Deduplicate React — both the player and compositions
+      // CRITICAL: Deduplicate React  -  both the player and compositions
       // must use the exact same React instance, otherwise Remotion hooks fail.
       react: path.resolve(__dirname, "node_modules/react"),
       "react-dom": path.resolve(__dirname, "node_modules/react-dom"),

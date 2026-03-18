@@ -1,8 +1,8 @@
-# 3. Closing Ceremony (Audio) — `03-GameDayStreamClosing-Audio.tsx`
+# 3. Closing Ceremony (Audio)  -  `03-GameDayStreamClosing-Audio.tsx`
 
 ## Overview
 
-The Closing Ceremony is the **final 30 minutes** of the GameDay stream (20:30–21:00 CET). Audio is back on. This is where results are revealed, global winners are announced (via slides, not on camera), local UG leaders run their own award ceremonies, and the community celebrates together. The stream ends with music.
+The Closing Ceremony is the **final 30 minutes** of the GameDay stream (20:30 - 21:00 CET). Audio is back on. This is where results are revealed, global winners are announced (via slides, not on camera), local UG leaders run their own award ceremonies, and the community celebrates together. The stream ends with music.
 
 The visual style shifts from violet/pink to **gold/violet** to signal celebration mode.
 
@@ -12,9 +12,9 @@ The visual style shifts from violet/pink to **gold/violet** to signal celebratio
 2. A **Closing Ceremony sidebar** (right, 42% width) with 7 ceremony segments
 3. A **Phase Marker** (bottom-left) with gold/violet progress bar
 4. An **Audio Badge** showing "AUDIO ON"
-5. **Segment transition flashes** — a brief gold/violet screen flash when moving between ceremony segments
+5. **Segment transition flashes**  -  a brief gold/violet screen flash when moving between ceremony segments
 6. A **"Thank You"** message in the final segment (frame 41400+)
-7. A **fade-to-black** in the last 3 seconds (frames 53910–53999)
+7. A **fade-to-black** in the last 3 seconds (frames 53910 - 53999)
 
 ## Technical Details
 
@@ -29,13 +29,13 @@ The visual style shifts from violet/pink to **gold/violet** to signal celebratio
 
 | Segment | Frames | Duration |
 |---------|--------|----------|
-| Results Reveal | 0–5399 | 3 min |
-| Global Winner Announcement | 5400–12599 | 4 min |
-| Local Winner Ceremonies | 12600–23399 | 6 min |
-| Community Highlights | 23400–30599 | 4 min |
-| Organizer Shoutouts | 30600–37799 | 4 min |
-| Sponsor Thanks | 37800–41399 | 2 min |
-| Thank You & Wrap-Up | 41400–53999 | 7 min |
+| Results Reveal | 0 - 5399 | 3 min |
+| Global Winner Announcement | 5400 - 12599 | 4 min |
+| Local Winner Ceremonies | 12600 - 23399 | 6 min |
+| Community Highlights | 23400 - 30599 | 4 min |
+| Organizer Shoutouts | 30600 - 37799 | 4 min |
+| Sponsor Thanks | 37800 - 41399 | 2 min |
+| Thank You & Wrap-Up | 41400 - 53999 | 7 min |
 
 Note: Global top 3 winners are announced via slides only (not shown on camera) due to local setup limitations. Local UG leaders handle their own medal ceremonies and photos.
 
@@ -50,7 +50,7 @@ Note: Global top 3 winners are announced via slides only (not shown on camera) d
 | 5 | Closing Ceremony Sidebar | Right (42% width) | Always |
 | 6 | Phase Marker | Bottom-left | Always |
 | 7 | "Thank You" Message | Center-left (65% width) | Frame ≥ 41400 |
-| 8 | Fade-to-dark | Full screen | Frames 53910–53999 |
+| 8 | Fade-to-dark | Full screen | Frames 53910 - 53999 |
 
 ### Key Visual Details
 
@@ -76,8 +76,8 @@ The Closing Ceremony uses `GD_GOLD` as its primary accent instead of `GD_VIOLET`
 
 ## Design Decisions
 
-- **Gold accent** — Celebration and achievement feel, distinct from the informational violet of the Main Event.
-- **Segment flashes** — Brief visual punctuation so attendees notice when the ceremony moves to the next phase, even if they are chatting.
-- **Large countdown** — 110px font size (largest of any composition) because this is the final countdown of the entire event.
-- **Thank You message** — Takes up 65% of the screen width in the final segment, making it the visual focus while the sidebar still shows progress.
-- **Clean fade-out** — Professional ending that signals "the stream is over" without an abrupt cut.
+- **Gold accent**  -  Celebration and achievement feel, distinct from the informational violet of the Main Event.
+- **Segment flashes**  -  Brief visual punctuation so attendees notice when the ceremony moves to the next phase, even if they are chatting.
+- **Large countdown**  -  110px font size (largest of any composition) because this is the final countdown of the entire event.
+- **Thank You message**  -  Takes up 65% of the screen width in the final segment, making it the visual focus while the sidebar still shows progress.
+- **Clean fade-out**  -  Professional ending that signals "the stream is over" without an abrupt cut.

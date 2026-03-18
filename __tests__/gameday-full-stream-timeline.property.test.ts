@@ -18,7 +18,7 @@ describe("Feature: gameday-full-stream-timeline", () => {
     /**
      * **Validates: Requirements 1.5**
      *
-     * For any non-negative integer totalSeconds (0–7200), formatTime returns
+     * For any non-negative integer totalSeconds (0 - 7200), formatTime returns
      * a string matching /^\d{2,}:\d{2}$/ with correct minute and second values.
      */
     it("for any totalSeconds in [0, 7200], formatTime returns valid MM:SS with correct values", () => {
@@ -50,7 +50,7 @@ describe("Feature: gameday-full-stream-timeline", () => {
     /**
      * **Validates: Requirements 3.1, 3.2, 4.2, 4.3, 4.4, 4.5, 6.5, 9.2, 11.3, 12.1, 12.6**
      *
-     * For any valid frame f (0–216000), offset o in {0, 10, 20, 30, 60, 180},
+     * For any valid frame f (0 - 216000), offset o in {0, 10, 20, 30, 60, 180},
      * and target t > o, calculateCountdown returns a non-negative integer equal to
      * Math.max(0, Math.floor((t * 60 - o * 60) - f / 30))
      */
@@ -98,7 +98,7 @@ describe("Feature: gameday-full-stream-timeline", () => {
     /**
      * **Validates: Requirements 3.8, 6.4, 14.2, 14.5**
      *
-     * For any base frame b, index i (0–20), and stagger s (≥1),
+     * For any base frame b, index i (0 - 20), and stagger s (≥1),
      * staggeredEntry returns b + i * s. Consecutive elements with
      * default stagger are exactly 20 frames apart.
      */
@@ -166,7 +166,7 @@ describe("Feature: gameday-full-stream-timeline", () => {
     });
   });
 
-  describe("Property 4: Segment contiguity — no gaps or overlaps", () => {
+  describe("Property 4: Segment contiguity  -  no gaps or overlaps", () => {
     /**
      * **Validates: Requirements 6.1, 11.1**
      *
@@ -209,7 +209,7 @@ describe("Feature: gameday-full-stream-timeline", () => {
       }
     });
 
-    // CLOSING_SEGMENTS tests removed — the closing-ceremony-v2 redesign
+    // CLOSING_SEGMENTS tests removed  -  the closing-ceremony-v2 redesign
     // replaced segment-based architecture with Phase enum + PHASE_BOUNDARIES.
   });
 
@@ -269,7 +269,7 @@ describe("Feature: gameday-full-stream-timeline", () => {
       );
     });
 
-    // Closing range test removed — CLOSING_SEGMENTS no longer exists after
+    // Closing range test removed  -  CLOSING_SEGMENTS no longer exists after
     // the closing-ceremony-v2 redesign. Phase gating is now tested via
     // closing-ceremony-v2.property.test.ts Property 1.
   });

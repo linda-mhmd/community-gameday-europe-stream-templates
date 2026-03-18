@@ -44,7 +44,7 @@ function getScene4bJSX(): string {
 const scene4bJSX = getScene4bJSX();
 
 describe("Feature: design-system-bugfix", () => {
-  describe("Property 1: Bug Condition — AWS Supporter Color Mismatch in Scene 4b", () => {
+  describe("Property 1: Bug Condition  -  AWS Supporter Color Mismatch in Scene 4b", () => {
     /**
      * **Validates: Requirements 1.1, 1.2, 2.1, 2.2**
      *
@@ -52,7 +52,7 @@ describe("Feature: design-system-bugfix", () => {
      * card boxShadow/border, and supporter country text color SHALL use GD_ORANGE
      * (#f97316), not GD_ACCENT (#c084fc).
      *
-     * On UNFIXED code, these tests FAIL — confirming the color mismatch bug exists.
+     * On UNFIXED code, these tests FAIL  -  confirming the color mismatch bug exists.
      */
 
     it("Test 1 - 'Thank You, AWS' title color uses GD_ORANGE, not GD_ACCENT", () => {
@@ -154,13 +154,13 @@ describe("Feature: design-system-bugfix", () => {
     });
   });
 
-  describe("Property 3: Bug Condition — Typography Scale Defined", () => {
+  describe("Property 3: Bug Condition  -  Typography Scale Defined", () => {
     /**
      * **Validates: Requirements 1.3, 2.3**
      *
      * The design system SHALL export a TYPOGRAPHY constant with all 17 expected keys.
      *
-     * On UNFIXED code, this test FAILS — confirming no typography scale exists.
+     * On UNFIXED code, this test FAILS  -  confirming no typography scale exists.
      */
 
     const EXPECTED_TYPOGRAPHY_KEYS = [
@@ -236,8 +236,8 @@ function getScene4JSX(): string {
 
 const scene4JSX = getScene4JSX();
 
-describe("Feature: design-system-bugfix — Preservation", () => {
-  describe("Property 2: Preservation — Community Organizer Colors and Design System Exports Unchanged", () => {
+describe("Feature: design-system-bugfix  -  Preservation", () => {
+  describe("Property 2: Preservation  -  Community Organizer Colors and Design System Exports Unchanged", () => {
     /**
      * **Validates: Requirements 3.1, 3.2, 3.3, 3.4, 3.5**
      *

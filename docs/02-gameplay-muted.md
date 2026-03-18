@@ -1,8 +1,8 @@
-# 2. Gameplay (Muted) — `02-GameDayStreamGameplay-Muted.tsx`
+# 2. Gameplay (Muted)  -  `02-GameDayStreamGameplay-Muted.tsx`
 
 ## Overview
 
-The Gameplay composition is the **muted overlay** that displays during the 2-hour competitive game (18:30–20:30 event time). The stream audio is muted — teams are playing the AWS GameDay challenges at their local User Group locations.
+The Gameplay composition is the **muted overlay** that displays during the 2-hour competitive game (18:30 - 20:30 event time). The stream audio is muted  -  teams are playing the AWS GameDay challenges at their local User Group locations.
 
 This composition is intentionally minimal. Its job is to:
 - Show a countdown to game end
@@ -15,7 +15,7 @@ This composition is intentionally minimal. Its job is to:
 For most of the 2 hours, the screen shows:
 
 1. A **Time Left** countdown (top-right, compact GlassCard) counting down from 120:00
-2. A **Phase Indicator** (bottom-left) showing the current quarter (e.g., "Hour 1 — Q2")
+2. A **Phase Indicator** (bottom-left) showing the current quarter (e.g., "Hour 1  -  Q2")
 3. An **Audio Badge** showing "MUTED"
 4. The background with minimal darkening (0.25) so it feels lighter than other compositions
 
@@ -30,7 +30,7 @@ For most of the 2 hours, the screen shows:
 - The countdown shifts to **GD_PINK** with an urgency glow
 - The label changes to **"Almost Done!"**
 - A pulsing pink box-shadow creates visual urgency
-- An **Audio Cue Banner** appears at the top: "Audio will be needed for Closing Ceremony — Prepare your speakers"
+- An **Audio Cue Banner** appears at the top: "Audio will be needed for Closing Ceremony  -  Prepare your speakers"
 
 ## Technical Details
 
@@ -45,14 +45,14 @@ For most of the 2 hours, the screen shows:
 
 | Phase | Frames | Duration |
 |-------|--------|----------|
-| Hour 1 — Q1 (0–15 min) | 0–26999 | 15 min |
-| Hour 1 — Q2 (15–30 min) | 27000–53999 | 15 min |
-| Hour 1 — Q3 (30–45 min) | 54000–80999 | 15 min |
-| Hour 1 — Q4 (45–60 min) | 81000–107999 | 15 min |
-| Hour 2 — Q1 (60–75 min) | 108000–134999 | 15 min |
-| Hour 2 — Q2 (75–90 min) | 135000–161999 | 15 min |
-| Hour 2 — Q3 (90–105 min) | 162000–188999 | 15 min |
-| Hour 2 — Final Q (105–120 min) | 189000–215999 | 15 min |
+| Hour 1  -  Q1 (0 - 15 min) | 0 - 26999 | 15 min |
+| Hour 1  -  Q2 (15 - 30 min) | 27000 - 53999 | 15 min |
+| Hour 1  -  Q3 (30 - 45 min) | 54000 - 80999 | 15 min |
+| Hour 1  -  Q4 (45 - 60 min) | 81000 - 107999 | 15 min |
+| Hour 2  -  Q1 (60 - 75 min) | 108000 - 134999 | 15 min |
+| Hour 2  -  Q2 (75 - 90 min) | 135000 - 161999 | 15 min |
+| Hour 2  -  Q3 (90 - 105 min) | 162000 - 188999 | 15 min |
+| Hour 2  -  Final Q (105 - 120 min) | 189000 - 215999 | 15 min |
 
 ### Exported Helper Functions
 
@@ -64,12 +64,12 @@ export function isGameplayAudioCueBannerVisible(frame: number): boolean {
   return frame >= 207000;
 }
 
-// Final 30 minutes — orange urgency
+// Final 30 minutes  -  orange urgency
 export function isFinal30MinutesActive(frame: number): boolean {
   return frame >= 162000;
 }
 
-// Final 5 minutes — pink urgency glow
+// Final 5 minutes  -  pink urgency glow
 export function isUrgencyGlowActive(frame: number): boolean {
   return frame >= 207000;
 }
@@ -88,20 +88,20 @@ export function isUrgencyGlowActive(frame: number): boolean {
 
 ## Design Decisions
 
-- **Minimal overlay** — Teams are focused on their AWS consoles, not the stream. The overlay should be unobtrusive.
-- **Light background** — Only 25% darkening (vs 60–70% in other compositions) to feel less heavy during the long gameplay period.
-- **No sidebar** — No schedule needed during gameplay. Just the timer and phase.
-- **Progressive urgency** — Visual intensity increases gradually: normal → orange (30 min) → pink glow (5 min) to naturally draw attention as time runs out.
-- **Audio cue** — Critical reminder since the closing ceremony requires audio and teams may have disconnected speakers.
+- **Minimal overlay**  -  Teams are focused on their AWS consoles, not the stream. The overlay should be unobtrusive.
+- **Light background**  -  Only 25% darkening (vs 60 - 70% in other compositions) to feel less heavy during the long gameplay period.
+- **No sidebar**  -  No schedule needed during gameplay. Just the timer and phase.
+- **Progressive urgency**  -  Visual intensity increases gradually: normal → orange (30 min) → pink glow (5 min) to naturally draw attention as time runs out.
+- **Audio cue**  -  Critical reminder since the closing ceremony requires audio and teams may have disconnected speakers.
 
 ## Key Gameplay Moments
 
 | Time (CET) | Frame | What Happens |
 |-------------|-------|-------------|
-| 19:30 | 108000 | Half-time — leaderboard shown, QR code for self-check |
-| 19:45–20:00 | 135000–162000 | Survey quest unhidden (5000 bonus points) |
-| 20:00 | 162000 | Final 30 minutes — orange urgency begins |
-| 20:25 | 207000 | Final 5 minutes — pink urgency glow + audio cue banner |
+| 19:30 | 108000 | Half-time  -  leaderboard shown, QR code for self-check |
+| 19:45 - 20:00 | 135000 - 162000 | Survey quest unhidden (5000 bonus points) |
+| 20:00 | 162000 | Final 30 minutes  -  orange urgency begins |
+| 20:25 | 207000 | Final 5 minutes  -  pink urgency glow + audio cue banner |
 | 20:30 | 216000 | Game ends |
 
-All information during gameplay is visual only — no voice communication from the stream during this phase. The leaderboard will be shown periodically, and a QR code is provided so attendees can check it on their own devices.
+All information during gameplay is visual only  -  no voice communication from the stream during this phase. The leaderboard will be shown periodically, and a QR code is provided so attendees can check it on their own devices.

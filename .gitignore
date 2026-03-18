@@ -18,6 +18,7 @@ Thumbs.db
 
 # Editor
 .idea/
+.vscode/
 *.swp
 *.swo
 *~
@@ -39,4 +40,9 @@ web-player/dist/
 # Screenshots — keep only readme-* files in git, rest are local debug captures
 screenshots/*
 !screenshots/readme-*
-docs/input/*.MP4
+
+# Video files — render locally, never commit
+*.mp4
+*.MP4
+*.mov
+*.MOV

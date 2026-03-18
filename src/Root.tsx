@@ -1,142 +1,166 @@
 import React from "react";
 import { Composition } from "remotion";
-import { GameDayPreShow } from "../compositions/00-GameDayStreamPreShow-Muted";
-import { GameDayMainEvent } from "../compositions/01-GameDayStreamMainEvent-Audio";
-import { GameDayGameplay } from "../compositions/02-GameDayStreamGameplay-Muted";
-import {
-  GameDayClosingCountdown,
-} from "../compositions/03a-ClosingFixed";
-import { GameDayClosingWinners } from "../compositions/03b-ClosingWinners";
-import { OrganizersMarketingVideo } from "../compositions/OrganizersMarketingVideo";
-import { GameDayPreShowInfo } from "../compositions/04-GameDayStreamPreShowInfo-Muted";
-import { GameDayPreShowInfoV2 } from "../compositions/04v2-GameDayStreamPreShowInfo-V2";
-import { GameDayPreShowInfoV3 } from "../compositions/04v3-GameDayStreamPreShowInfo-V3";
-import { GameDayPreShowInfoV4 } from "../compositions/04v4-GameDayStreamPreShowInfo-V4";
-import { GameDayMainEventV2 } from "../compositions/01v2-GameDayStreamMainEvent-V2";
-import { GameDayMainEventV3 } from "../compositions/01v3-GameDayStreamMainEvent-V3";
+
+// ── Pre-Event ───────────────────────────────────────────────────────────────
+import { Countdown } from "./compositions/00-preshow/Countdown";
+import { InfoLoop } from "./compositions/00-preshow/InfoLoop";
+
+// ── Live Event ──────────────────────────────────────────────────────────────
+import { MainEvent } from "./compositions/01-main-event/MainEvent";
+import { Gameplay } from "./compositions/02-gameplay/Gameplay";
+
+// ── Closing ─────────────────────────────────────────────────────────────────
+import { ClosingPreRendered } from "./compositions/03-closing/ClosingPreRendered";
+import { ClosingWinnersTemplate } from "./compositions/03-closing/ClosingWinnersTemplate";
+
+// ── Marketing ───────────────────────────────────────────────────────────────
+import { MarketingVideo } from "./compositions/marketing/MarketingVideo";
+
+// ── Inserts: Event Flow ─────────────────────────────────────────────────────
+import { QuestsLive } from "./compositions/inserts/event-flow/QuestsLive";
+import { HalfTime } from "./compositions/inserts/event-flow/HalfTime";
+import { FinalCountdown } from "./compositions/inserts/event-flow/FinalCountdown";
+import { GameExtended } from "./compositions/inserts/event-flow/GameExtended";
+import { LeaderboardHidden } from "./compositions/inserts/event-flow/LeaderboardHidden";
+import { ScoresCalculating } from "./compositions/inserts/event-flow/ScoresCalculating";
+import { BreakAnnouncement } from "./compositions/inserts/event-flow/BreakAnnouncement";
+import { WelcomeBack } from "./compositions/inserts/event-flow/WelcomeBack";
+
+// ── Inserts: Live Commentary ────────────────────────────────────────────────
+import { FirstCompletion } from "./compositions/inserts/commentary/FirstCompletion";
+import { CloseRace } from "./compositions/inserts/commentary/CloseRace";
+import { ComebackAlert } from "./compositions/inserts/commentary/ComebackAlert";
+import { TopTeams } from "./compositions/inserts/commentary/TopTeams";
+import { CollectiveMilestone } from "./compositions/inserts/commentary/CollectiveMilestone";
+import { TeamSpotlight } from "./compositions/inserts/commentary/TeamSpotlight";
+
+// ── Inserts: Quest Operations ───────────────────────────────────────────────
+import { QuestFixed } from "./compositions/inserts/quest/QuestFixed";
+import { QuestBroken } from "./compositions/inserts/quest/QuestBroken";
+import { QuestUpdate } from "./compositions/inserts/quest/QuestUpdate";
+import { QuestHint } from "./compositions/inserts/quest/QuestHint";
+import { NewQuestAvailable } from "./compositions/inserts/quest/NewQuestAvailable";
+import { SurveyReminder } from "./compositions/inserts/quest/SurveyReminder";
+
+// ── Inserts: Operational ────────────────────────────────────────────────────
+import { StreamInterruption } from "./compositions/inserts/ops/StreamInterruption";
+import { TechnicalIssue } from "./compositions/inserts/ops/TechnicalIssue";
+import { Leaderboard } from "./compositions/inserts/ops/Leaderboard";
+import { ScoreCorrection } from "./compositions/inserts/ops/ScoreCorrection";
+import { GamemastersUpdate } from "./compositions/inserts/ops/GamemastersUpdate";
+
+// ── Inserts: People & Community ─────────────────────────────────────────────
+import { StreamHostUpdate } from "./compositions/inserts/people/StreamHostUpdate";
+import { LocationShoutout } from "./compositions/inserts/people/LocationShoutout";
+import { ImportantReminder } from "./compositions/inserts/people/ImportantReminder";
+
+// ─────────────────────────────────────────────────────────────────────────────
+// All compositions are 1280x720 @ 30fps.
+// Inserts are always 900 frames (30 seconds).
+// See src/compositions/README.md for the event sequence.
+// See src/compositions/inserts/README.md for insert reference.
+// ─────────────────────────────────────────────────────────────────────────────
+
 export const RemotionRoot: React.FC = () => {
   return (
     <>
-      {/* 0. Pre-Show (Muted): 10-min loop — web player handles looping */}
-      <Composition
-        id="GameDayPreShow"
-        component={GameDayPreShow}
-        durationInFrames={18000}
-        fps={30}
-        width={1280}
-        height={720}
+
+      {/* ── 00 · Pre-Event ────────────────────────────────────────────────────
+       * Countdown: minimal timer-only display, optional before InfoLoop
+       * InfoLoop:  rotating user groups, organizers, schedule - the main pre-show
+       */}
+      <Composition id="00-Countdown" component={Countdown}
+        durationInFrames={18000} fps={30} width={1280} height={720}
         defaultProps={{ loopIteration: 0 }}
       />
-
-      {/* 1. Main Event (Audio): 30 min live introductions */}
-      <Composition
-        id="GameDayMainEvent"
-        component={GameDayMainEvent}
-        durationInFrames={54000}
-        fps={30}
-        width={1280}
-        height={720}
+      <Composition id="00-InfoLoop" component={InfoLoop}
+        durationInFrames={54000} fps={30} width={1280} height={720}
       />
 
-      {/* 1v2. Main Event V2 (Audio): cinematic intro, map animation, GameDay logo progress, Mihaly video */}
-      <Composition
-        id="GameDayMainEventV2"
-        component={GameDayMainEventV2}
-        durationInFrames={54000}
-        fps={30}
-        width={1280}
-        height={720}
+      {/* ── 01 · Main Event ───────────────────────────────────────────────── */}
+      <Composition id="01-MainEvent" component={MainEvent}
+        durationInFrames={54000} fps={30} width={1280} height={720}
       />
 
-      {/* 1v3. Main Event V3 (Audio): true cinematic scene-by-scene, one focus at a time, no overlaps */}
-      <Composition
-        id="GameDayMainEventV3"
-        component={GameDayMainEventV3}
-        durationInFrames={54000}
-        fps={30}
-        width={1280}
-        height={720}
+      {/* ── 02 · Gameplay ─────────────────────────────────────────────────── */}
+      <Composition id="02-Gameplay" component={Gameplay}
+        durationInFrames={216000} fps={30} width={1280} height={720}
       />
 
-      {/* 2. Gameplay (Muted): 2h muted overlay */}
-      <Composition
-        id="GameDayGameplay"
-        component={GameDayGameplay}
-        durationInFrames={216000}
-        fps={30}
-        width={1280}
-        height={720}
+      {/* ── 03 · Closing ──────────────────────────────────────────────────────
+       * Part A: pre-rendered - hero intro, fast scroll, shuffle countdown
+       * Part B: template    - update PODIUM_TEAMS in ClosingWinnersTemplate.tsx
+       */}
+      <Composition id="03A-ClosingPreRendered" component={ClosingPreRendered}
+        durationInFrames={4200} fps={30} width={1280} height={720}
+      />
+      <Composition id="03B-ClosingWinnersTemplate" component={ClosingWinnersTemplate}
+        durationInFrames={9000} fps={30} width={1280} height={720}
       />
 
-      {/* 3. Closing Countdown (Part A): HeroIntro + FastScroll + Shuffle + Winners Teaser — pre-rendered */}
-      <Composition
-        id="GameDayClosingCountdown"
-        component={GameDayClosingCountdown}
-        durationInFrames={4200}
-        fps={30}
-        width={1280}
-        height={720}
+      {/* ── Marketing ─────────────────────────────────────────────────────────
+       * Standalone - not part of the event sequence
+       */}
+      <Composition id="Marketing-OrganizersVideo" component={MarketingVideo}
+        durationInFrames={640} fps={30} width={1280} height={720}
       />
 
-      {/* 3a. Closing Winners (Part B): Shuffle + Reveal/Podium + ThankYou — updated live during stream */}
-      <Composition
-        id="GameDayClosingWinners"
-        component={GameDayClosingWinners}
-        durationInFrames={9000}
-        fps={30}
-        width={1280}
-        height={720}
-      />
+      {/* ── Inserts: Event Flow ───────────────────────────────────────────────
+       * Phase markers and timing anchors. Use these to mark transitions
+       * in the event: kickoff, check-ins, breaks, end of game.
+       * See inserts/event-flow/README.md
+       */}
+      <Composition id="Insert-QuestsLive"        component={QuestsLive}        durationInFrames={900} fps={30} width={1280} height={720} />
+      <Composition id="Insert-HalfTime"          component={HalfTime}          durationInFrames={900} fps={30} width={1280} height={720} />
+      <Composition id="Insert-FinalCountdown"    component={FinalCountdown}    durationInFrames={900} fps={30} width={1280} height={720} />
+      <Composition id="Insert-GameExtended"      component={GameExtended}      durationInFrames={900} fps={30} width={1280} height={720} />
+      <Composition id="Insert-LeaderboardHidden" component={LeaderboardHidden} durationInFrames={900} fps={30} width={1280} height={720} />
+      <Composition id="Insert-ScoresCalculating" component={ScoresCalculating} durationInFrames={900} fps={30} width={1280} height={720} />
+      <Composition id="Insert-BreakAnnouncement" component={BreakAnnouncement} durationInFrames={900} fps={30} width={1280} height={720} />
+      <Composition id="Insert-WelcomeBack"       component={WelcomeBack}       durationInFrames={900} fps={30} width={1280} height={720} />
 
-      {/* 4. Organizers Marketing Video: standalone 15s social media clip */}
-      <Composition
-        id="OrganizersMarketingVideo"
-        component={OrganizersMarketingVideo}
-        durationInFrames={640}
-        fps={30}
-        width={1280}
-        height={720}
-      />
+      {/* ── Inserts: Live Commentary ──────────────────────────────────────────
+       * Narrative broadcast moments - drama, momentum, human interest.
+       * These make the stream feel like live commentary, not a status board.
+       * See inserts/commentary/README.md
+       */}
+      <Composition id="Insert-FirstCompletion"   component={FirstCompletion}   durationInFrames={900} fps={30} width={1280} height={720} />
+      <Composition id="Insert-CloseRace"         component={CloseRace}         durationInFrames={900} fps={30} width={1280} height={720} />
+      <Composition id="Insert-ComebackAlert"     component={ComebackAlert}     durationInFrames={900} fps={30} width={1280} height={720} />
+      <Composition id="Insert-TopTeams"          component={TopTeams}          durationInFrames={900} fps={30} width={1280} height={720} />
+      <Composition id="Insert-CollectiveMilestone" component={CollectiveMilestone} durationInFrames={900} fps={30} width={1280} height={720} />
+      <Composition id="Insert-TeamSpotlight"     component={TeamSpotlight}     durationInFrames={900} fps={30} width={1280} height={720} />
 
-      {/* 5. Pre-Show Info Loop (Muted): 30 min with rotating content sections */}
-      <Composition
-        id="GameDayPreShowInfo"
-        component={GameDayPreShowInfo}
-        durationInFrames={54000}
-        fps={30}
-        width={1280}
-        height={720}
-      />
+      {/* ── Inserts: Quest Operations ─────────────────────────────────────────
+       * Quest status changes - fixed, broken, new, hints, bonuses.
+       * See inserts/quest/README.md
+       */}
+      <Composition id="Insert-QuestFixed"        component={QuestFixed}        durationInFrames={900} fps={30} width={1280} height={720} />
+      <Composition id="Insert-QuestBroken"       component={QuestBroken}       durationInFrames={900} fps={30} width={1280} height={720} />
+      <Composition id="Insert-QuestUpdate"       component={QuestUpdate}       durationInFrames={900} fps={30} width={1280} height={720} />
+      <Composition id="Insert-QuestHint"         component={QuestHint}         durationInFrames={900} fps={30} width={1280} height={720} />
+      <Composition id="Insert-NewQuestAvailable" component={NewQuestAvailable} durationInFrames={900} fps={30} width={1280} height={720} />
+      <Composition id="Insert-SurveyReminder"    component={SurveyReminder}    durationInFrames={900} fps={30} width={1280} height={720} />
 
-      {/* 5v2. Pre-Show Info V2 (Muted): cinematic 30-min loop — enhanced version */}
-      <Composition
-        id="GameDayPreShowInfoV2"
-        component={GameDayPreShowInfoV2}
-        durationInFrames={54000}
-        fps={30}
-        width={1280}
-        height={720}
-      />
+      {/* ── Inserts: Operational ──────────────────────────────────────────────
+       * Platform and environment status. Technical issues, score corrections,
+       * leaderboard reveals, and Gamemaster announcements.
+       * See inserts/ops/README.md
+       */}
+      <Composition id="Insert-StreamInterruption" component={StreamInterruption} durationInFrames={900} fps={30} width={1280} height={720} />
+      <Composition id="Insert-TechnicalIssue"    component={TechnicalIssue}    durationInFrames={900} fps={30} width={1280} height={720} />
+      <Composition id="Insert-Leaderboard"       component={Leaderboard}       durationInFrames={900} fps={30} width={1280} height={720} />
+      <Composition id="Insert-ScoreCorrection"   component={ScoreCorrection}   durationInFrames={900} fps={30} width={1280} height={720} />
+      <Composition id="Insert-GamemastersUpdate" component={GamemastersUpdate} durationInFrames={900} fps={30} width={1280} height={720} />
 
-      {/* 5v3. Pre-Show Info V3 (Muted): SVG icons, UG logos, community education slides */}
-      <Composition
-        id="GameDayPreShowInfoV3"
-        component={GameDayPreShowInfoV3}
-        durationInFrames={54000}
-        fps={30}
-        width={1280}
-        height={720}
-      />
-
-      {/* 5v4. Pre-Show Info V4 (Muted): borderless logos, country/city stats, program badges, generic Hero slide */}
-      <Composition
-        id="GameDayPreShowInfoV4"
-        component={GameDayPreShowInfoV4}
-        durationInFrames={54000}
-        fps={30}
-        width={1280}
-        height={720}
-      />
+      {/* ── Inserts: People & Community ───────────────────────────────────────
+       * Person-focused and location moments - stream host, city shoutouts,
+       * and catch-all important reminders.
+       * See inserts/people/README.md
+       */}
+      <Composition id="Insert-StreamHostUpdate"  component={StreamHostUpdate}  durationInFrames={900} fps={30} width={1280} height={720} />
+      <Composition id="Insert-LocationShoutout"  component={LocationShoutout}  durationInFrames={900} fps={30} width={1280} height={720} />
+      <Composition id="Insert-ImportantReminder" component={ImportantReminder} durationInFrames={900} fps={30} width={1280} height={720} />
 
     </>
   );
