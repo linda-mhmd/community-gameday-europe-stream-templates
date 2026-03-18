@@ -14,18 +14,18 @@ The numbered folders follow the event in order. Each one is a standalone composi
 | `03-closing/` | `03A-ClosingPreRendered`, `03B-ClosingWinnersTemplate` | ~2.5 min / ~5 min | Closing ceremony and winner reveal |
 
 ### Pre-Show
-![InfoLoop](../../../screenshots/readme-infoloop.png)
-![Countdown](../../../screenshots/readme-countdown.png)
+![InfoLoop](../../../screenshots/compositions/readme-infoloop.png)
+![Countdown](../../../screenshots/compositions/readme-countdown.png)
 
 ### Main Event
-![MainEvent](../../../screenshots/readme-mainevent.png)
+![MainEvent](../../../screenshots/compositions/readme-mainevent.png)
 
 ### Gameplay
-![Gameplay](../../../screenshots/readme-gameplay.png)
+![Gameplay](../../../screenshots/compositions/readme-gameplay.png)
 
 ### Closing
-![ClosingPreRendered](../../../screenshots/readme-closing-prerendered.png)
-![ClosingWinnersTemplate](../../../screenshots/readme-closing-winners.png)
+![ClosingPreRendered](../../../screenshots/compositions/readme-closing-prerendered.png)
+![ClosingWinnersTemplate](../../../screenshots/compositions/readme-closing-winners.png)
 
 ---
 
@@ -33,7 +33,7 @@ The numbered folders follow the event in order. Each one is a standalone composi
 
 `marketing/` contains standalone compositions not part of the event sequence. Used for social media and promotion.
 
-![MarketingVideo](../../../screenshots/readme-marketing.png)
+![MarketingVideo](../../../screenshots/compositions/readme-marketing.png)
 
 ---
 

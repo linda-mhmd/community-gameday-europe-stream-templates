@@ -21,11 +21,11 @@ Phase markers and timing anchors. Use these to mark the major transitions in the
 
 | | | |
 |--|--|--|
-| ![QuestsLive](../../../../../screenshots/readme-insert-quests-live.png) | ![HalfTime](../../../../../screenshots/readme-insert-halftime.png) | ![FinalCountdown](../../../../../screenshots/readme-insert-final-countdown.png) |
+| ![QuestsLive](../../../../../screenshots/inserts/readme-insert-quests-live.png) | ![HalfTime](../../../../../screenshots/inserts/readme-insert-halftime.png) | ![FinalCountdown](../../../../../screenshots/inserts/readme-insert-final-countdown.png) |
 | `Insert-QuestsLive` | `Insert-HalfTime` | `Insert-FinalCountdown` |
-| ![GameExtended](../../../../../screenshots/readme-insert-game-extended.png) | ![LeaderboardHidden](../../../../../screenshots/readme-insert-leaderboard-hidden.png) | ![ScoresCalculating](../../../../../screenshots/readme-insert-scores-calculating.png) |
+| ![GameExtended](../../../../../screenshots/inserts/readme-insert-game-extended.png) | ![LeaderboardHidden](../../../../../screenshots/inserts/readme-insert-leaderboard-hidden.png) | ![ScoresCalculating](../../../../../screenshots/inserts/readme-insert-scores-calculating.png) |
 | `Insert-GameExtended` | `Insert-LeaderboardHidden` | `Insert-ScoresCalculating` |
-| ![BreakAnnouncement](../../../../../screenshots/readme-insert-break-announcement.png) | ![WelcomeBack](../../../../../screenshots/readme-insert-welcome-back.png) | |
+| ![BreakAnnouncement](../../../../../screenshots/inserts/readme-insert-break-announcement.png) | ![WelcomeBack](../../../../../screenshots/inserts/readme-insert-welcome-back.png) | |
 | `Insert-BreakAnnouncement` | `Insert-WelcomeBack` | |
 
 ---

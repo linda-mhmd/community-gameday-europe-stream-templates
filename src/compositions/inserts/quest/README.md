@@ -21,9 +21,9 @@ Quest status changes. Use these whenever the state of a quest changes — broken
 
 | | | |
 |--|--|--|
-| ![QuestFixed](../../../../../screenshots/readme-insert-quest-fixed.png) | ![QuestBroken](../../../../../screenshots/readme-insert-quest-broken.png) | ![QuestUpdate](../../../../../screenshots/readme-insert-quest-update.png) |
+| ![QuestFixed](../../../../../screenshots/inserts/readme-insert-quest-fixed.png) | ![QuestBroken](../../../../../screenshots/inserts/readme-insert-quest-broken.png) | ![QuestUpdate](../../../../../screenshots/inserts/readme-insert-quest-update.png) |
 | `Insert-QuestFixed` | `Insert-QuestBroken` | `Insert-QuestUpdate` |
-| ![QuestHint](../../../../../screenshots/readme-insert-quest-hint.png) | ![NewQuestAvailable](../../../../../screenshots/readme-insert-new-quest.png) | ![SurveyReminder](../../../../../screenshots/readme-insert-survey-reminder.png) |
+| ![QuestHint](../../../../../screenshots/inserts/readme-insert-quest-hint.png) | ![NewQuestAvailable](../../../../../screenshots/inserts/readme-insert-new-quest.png) | ![SurveyReminder](../../../../../screenshots/inserts/readme-insert-survey-reminder.png) |
 | `Insert-QuestHint` | `Insert-NewQuestAvailable` | `Insert-SurveyReminder` |
 
 ---

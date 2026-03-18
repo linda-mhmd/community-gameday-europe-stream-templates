@@ -21,9 +21,9 @@ Narrative broadcast moments. These make the stream feel like live commentary rat
 
 | | | |
 |--|--|--|
-| ![FirstCompletion](../../../../../screenshots/readme-insert-first-completion.png) | ![CloseRace](../../../../../screenshots/readme-insert-close-race.png) | ![ComebackAlert](../../../../../screenshots/readme-insert-comeback-alert.png) |
+| ![FirstCompletion](../../../../../screenshots/inserts/readme-insert-first-completion.png) | ![CloseRace](../../../../../screenshots/inserts/readme-insert-close-race.png) | ![ComebackAlert](../../../../../screenshots/inserts/readme-insert-comeback-alert.png) |
 | `Insert-FirstCompletion` | `Insert-CloseRace` | `Insert-ComebackAlert` |
-| ![TopTeams](../../../../../screenshots/readme-insert-top-teams.png) | ![CollectiveMilestone](../../../../../screenshots/readme-insert-collective-milestone.png) | ![TeamSpotlight](../../../../../screenshots/readme-insert-team-spotlight.png) |
+| ![TopTeams](../../../../../screenshots/inserts/readme-insert-top-teams.png) | ![CollectiveMilestone](../../../../../screenshots/inserts/readme-insert-collective-milestone.png) | ![TeamSpotlight](../../../../../screenshots/inserts/readme-insert-team-spotlight.png) |
 | `Insert-TopTeams` | `Insert-CollectiveMilestone` | `Insert-TeamSpotlight` |
 
 ---

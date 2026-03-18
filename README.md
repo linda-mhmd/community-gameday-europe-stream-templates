@@ -11,23 +11,23 @@ These compositions are the visual layer of a live stream that plays at every par
 ## Preview
 
 ### Pre-Show Info Loop
-![Pre-Show Info Loop](screenshots/readme-infoloop.png)
+![Pre-Show Info Loop](screenshots/compositions/readme-infoloop.png)
 
 ### Main Event — Speaker & Schedule
-![Main Event](screenshots/readme-mainevent.png)
+![Main Event](screenshots/compositions/readme-mainevent.png)
 
 ### Gameplay Overlay
-![Gameplay](screenshots/readme-gameplay.png)
+![Gameplay](screenshots/compositions/readme-gameplay.png)
 
 ### Closing — Shuffle Phase (Part A)
-![Closing Pre-Rendered](screenshots/readme-closing-prerendered.png)
+![Closing Pre-Rendered](screenshots/compositions/readme-closing-prerendered.png)
 
 ### Closing — Bar Chart Reveal (Part B)
-![Closing Winners](screenshots/readme-closing-winners.png)
+![Closing Winners](screenshots/compositions/readme-closing-winners.png)
 
 ### Live Inserts — Commentary & Operations
-![Close Race Insert](screenshots/readme-insert-close-race.png)
-![Gamemasters Update Insert](screenshots/readme-insert-gamemasters-update.png)
+![Close Race Insert](screenshots/inserts/readme-insert-close-race.png)
+![Gamemasters Update Insert](screenshots/inserts/readme-insert-gamemasters-update.png)
 
 ---
 
@@ -209,7 +209,7 @@ All compositions share a unified design system in `src/design/`. See [src/design
 
 The 53+ user group logos are not stored locally — they load at render time from a shared Notion database. The URL mapping lives in `config/logos.ts`.
 
-[![Notion Gallery — AWS User Groups](screenshots/readme-notion-gallery.png)](https://awscommunitydach.notion.site/89ae998ccfc941f8a4ebf3e7b6586045?v=11f535253b02470f963a6d844ca671d4)
+[![Notion Gallery — AWS User Groups](screenshots/misc/readme-notion-gallery.png)](https://awscommunitydach.notion.site/89ae998ccfc941f8a4ebf3e7b6586045?v=11f535253b02470f963a6d844ca671d4)
 > Click to open the public Notion gallery.
 
 Rendering requires internet access. If a logo URL is unreachable, a flag-only card is shown as fallback.

@@ -20,9 +20,9 @@ Platform and environment status, score management, and Gamemaster announcements.
 
 | | | |
 |--|--|--|
-| ![StreamInterruption](../../../../../screenshots/readme-insert-stream-interruption.png) | ![TechnicalIssue](../../../../../screenshots/readme-insert-technical-issue.png) | ![Leaderboard](../../../../../screenshots/readme-insert-leaderboard.png) |
+| ![StreamInterruption](../../../../../screenshots/inserts/readme-insert-stream-interruption.png) | ![TechnicalIssue](../../../../../screenshots/inserts/readme-insert-technical-issue.png) | ![Leaderboard](../../../../../screenshots/inserts/readme-insert-leaderboard.png) |
 | `Insert-StreamInterruption` | `Insert-TechnicalIssue` | `Insert-Leaderboard` |
-| ![ScoreCorrection](../../../../../screenshots/readme-insert-score-correction.png) | ![GamemastersUpdate](../../../../../screenshots/readme-insert-gamemasters-update.png) | |
+| ![ScoreCorrection](../../../../../screenshots/inserts/readme-insert-score-correction.png) | ![GamemastersUpdate](../../../../../screenshots/inserts/readme-insert-gamemasters-update.png) | |
 | `Insert-ScoreCorrection` | `Insert-GamemastersUpdate` | |
 
 ---

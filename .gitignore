@@ -37,12 +37,28 @@ yarn-error.log*
 web-player/node_modules/
 web-player/dist/
 
-# Screenshots — keep only readme-* files in git, rest are local debug captures
+# Screenshots — only readme-* files in subfolders are tracked; root-level debug captures are ignored
 screenshots/*
-!screenshots/readme-*
+!screenshots/compositions/
+!screenshots/inserts/
+!screenshots/studio/
+!screenshots/misc/
+screenshots/compositions/*
+!screenshots/compositions/readme-*.png
+!screenshots/compositions/README.md
+screenshots/inserts/*
+!screenshots/inserts/readme-*.png
+!screenshots/inserts/README.md
+screenshots/studio/*
+!screenshots/studio/readme-*.png
+!screenshots/studio/README.md
+screenshots/misc/*
+!screenshots/misc/readme-*.png
+!screenshots/misc/README.md
 
 # Video files — render locally, never commit
 *.mp4
 *.MP4
 *.mov
 *.MOV
+.claude

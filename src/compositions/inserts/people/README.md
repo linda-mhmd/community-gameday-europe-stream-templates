@@ -20,7 +20,7 @@ Person-focused moments and location highlights. These keep the stream personal a
 
 | | | |
 |--|--|--|
-| ![StreamHostUpdate](../../../../../screenshots/readme-insert-stream-host-update.png) | ![LocationShoutout](../../../../../screenshots/readme-insert-location-shoutout.png) | ![ImportantReminder](../../../../../screenshots/readme-insert-important-reminder.png) |
+| ![StreamHostUpdate](../../../../../screenshots/inserts/readme-insert-stream-host-update.png) | ![LocationShoutout](../../../../../screenshots/inserts/readme-insert-location-shoutout.png) | ![ImportantReminder](../../../../../screenshots/inserts/readme-insert-important-reminder.png) |
 | `Insert-StreamHostUpdate` | `Insert-LocationShoutout` | `Insert-ImportantReminder` |
 
 ---
