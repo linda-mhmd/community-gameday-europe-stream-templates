@@ -26,9 +26,15 @@ import {
   TYPOGRAPHY,
 } from "../../design";
 import { formatTime } from "../../utils/timing";
-import { USER_GROUPS } from "../../../config/participants";
+import { USER_GROUPS, ORGANIZERS, AWS_SUPPORTERS } from "../../../config/participants";
 import { LOGO_MAP } from "../../../config/logos";
-import { ORGANIZERS, AWS_SUPPORTERS } from "../../../config/participants";
+import { EVENT_DATE, EVENT_NAME } from "../../../config/event";
+
+// Format EVENT_DATE ("2026-03-17") → "17 MARCH 2026"
+const [_ey, _em, _ed] = EVENT_DATE.split("-").map(Number);
+const EVENT_DATE_DISPLAY = new Date(_ey, _em - 1, _ed).toLocaleDateString("en-GB", {
+  day: "numeric", month: "long", year: "numeric",
+}).toUpperCase(); // "17 MARCH 2026"
 
 // ── Logo lookup (handles UG / User Group name variations) ──
 function findLogo(name: string): string | null {
@@ -241,12 +247,12 @@ const HeroIntro: React.FC<{ frame: number }> = ({ frame }) => {
           </div>
           {/* Date */}
           <div style={{ position: "absolute", top: "58%", left: 0, right: 0, textAlign: "center", opacity: dateFade }}>
-            <span style={{ fontSize: TYPOGRAPHY.h5, fontWeight: 600, color: GD_GOLD, fontFamily: "'Inter', sans-serif", letterSpacing: 3 }}>17 MARCH 2026</span>
+            <span style={{ fontSize: TYPOGRAPHY.h5, fontWeight: 600, color: GD_GOLD, fontFamily: "'Inter', sans-serif", letterSpacing: 3 }}>{EVENT_DATE_DISPLAY}</span>
           </div>
           {/* Subtitle */}
           <div style={{ position: "absolute", top: "65%", left: 0, right: 0, textAlign: "center", opacity: subtitleFade }}>
             <span style={{ fontSize: TYPOGRAPHY.body, fontWeight: 400, color: "rgba(255,255,255,0.6)", fontFamily: "'Inter', sans-serif", letterSpacing: 2 }}>
-              THE FIRST AWS COMMUNITY GAMEDAY EUROPE
+              THE FIRST {EVENT_NAME.toUpperCase()}
             </span>
           </div>
         </AbsoluteFill>

@@ -37,5 +37,10 @@ export const GAME_START_OFFSET_MINUTES = 60;   // 18:30 CET  -  GameDay game beg
 export const GAME_END_OFFSET_MINUTES = 180;    // 20:30 CET  -  Game ends, closing ceremony
 export const EVENT_END_OFFSET_MINUTES = 210;   // 21:00 CET  -  Stream ends with music
 
+// ── Assets ──
+// Set to true once public/assets/support-process-h264.mp4 has been added.
+// When false, the support process scene shows a placeholder card instead of the video.
+export const SUPPORT_VIDEO_AVAILABLE = false;
+
 // ── Derived Frame Constants ──
 export const FRAMES_PER_MINUTE = 60 * STREAM_FPS; // 1800 frames per minute

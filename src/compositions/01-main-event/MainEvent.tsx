@@ -70,7 +70,21 @@ import {
 import {
   STREAM_START_OFFSET_MINUTES as STREAM_START,
   GAME_START_OFFSET_MINUTES as GAME_START,
+  EVENT_DATE,
+  SUPPORT_VIDEO_AVAILABLE,
 } from "../../../config/event";
+import { AWS_SUPPORTERS as CONFIG_AWS } from "../../../config/participants";
+
+// ── Derived from config ──────────────────────────────────────────────────────
+// Gamemasters = AWS supporters whose country field is "Gamemaster"
+const GAMEMASTERS = CONFIG_AWS.filter((p) => p.country === "Gamemaster");
+const GM_LABEL    = GAMEMASTERS.map((p) => p.name).join(" & ");
+
+// Format EVENT_DATE ("2026-03-17") → "March 17, 2026"
+const [_ey, _em, _ed] = EVENT_DATE.split("-").map(Number);
+const EVENT_DATE_LONG = new Date(_ey, _em - 1, _ed).toLocaleDateString("en-US", {
+  month: "long", day: "numeric", year: "numeric",
+});
 
 // ─────────────────────────────────────────────────────────────────────────────
 // SCENE CONSTANTS  - single source of truth for every frame gate
@@ -217,9 +231,9 @@ const CHAPTERS: ScheduleSegment[] = [
   { label: "Linda  - Intro Guest",       startFrame: 13380, endFrame: 15179, speakers: "Linda Mohamed" },
   { label: "Special Guest",             startFrame: 15180, endFrame: 23399 },
   { label: "Linda  - Intro Gamemasters", startFrame: 23400, endFrame: 25199, speakers: "Linda Mohamed" },
-  { label: "GameDay Rules & Scoring",   startFrame: 25200, endFrame: 32399, speakers: "Arnaud & Loïc" },
-  { label: "Challenge Walkthrough",     startFrame: 32400, endFrame: 39599, speakers: "Arnaud & Loïc" },
-  { label: "Tips & Final Prep",         startFrame: 39600, endFrame: 44999, speakers: "Arnaud & Loïc" },
+  { label: "GameDay Rules & Scoring",   startFrame: 25200, endFrame: 32399, speakers: GM_LABEL },
+  { label: "Challenge Walkthrough",     startFrame: 32400, endFrame: 39599, speakers: GM_LABEL },
+  { label: "Tips & Final Prep",         startFrame: 39600, endFrame: 44999, speakers: GM_LABEL },
   { label: "Distribute Team Codes",     startFrame: 45000, endFrame: 49499 },
   { label: "Final Prep & Game Start!",  startFrame: 49500, endFrame: 53999 },
 ];
@@ -318,7 +332,7 @@ const WelcomeHero: React.FC<{ frame: number; fps: number }> = ({ frame, fps }) =
             fontSize: TYPOGRAPHY.h6, fontWeight: 500,
             color: "rgba(255,255,255,0.7)", fontFamily: FF, letterSpacing: 2,
           }}>
-            The first edition  - March 17, 2026
+            The first edition  - {EVENT_DATE_LONG}
           </div>
           <div style={{ width: 80, height: 1, background: `linear-gradient(90deg, ${GD_ACCENT}66, transparent)` }} />
         </div>
@@ -1089,20 +1103,12 @@ const ArnaudLoicCard: React.FC<{ frame: number; fps: number }> = ({ frame, fps }
   const pulse    = 0.55 + Math.sin(frame * 0.13) * 0.45;
   const glowSize = 6 + Math.sin(frame * 0.09) * 4;
 
-  const people = [
-    {
-      name: "Arnaud",
-      face: "assets/faces/arnaud.jpg",
-      title: "Sr. Developer Advocate",
-      company: "Amazon Web Services",
-    },
-    {
-      name: "Loïc",
-      face: "assets/faces/loic.jpg",
-      title: "Sr. Technical Account Manager",
-      company: "Amazon Web Services",
-    },
-  ];
+  const people = GAMEMASTERS.map((p) => ({
+    name: p.name,
+    face: p.face,
+    title: p.role.replace(/, AWS$/, ""),
+    company: "Amazon Web Services",
+  }));
 
   return (
     <div style={{
@@ -1886,10 +1892,22 @@ const SupportVideoBody: React.FC = () => {
         border: `1px solid ${GD_VIOLET}44`,
         zIndex: 56,
       }}>
-        <Video
-          src={SUPPORT_VID}
-          style={{ width: "100%", height: "100%", objectFit: "cover" }}
-        />
+        {SUPPORT_VIDEO_AVAILABLE ? (
+          <Video
+            src={SUPPORT_VID}
+            style={{ width: "100%", height: "100%", objectFit: "cover" }}
+          />
+        ) : (
+          <div style={{
+            width: "100%", height: "100%",
+            background: "linear-gradient(135deg, #0c0820 0%, #1a0f3a 100%)",
+            display: "flex", alignItems: "center", justifyContent: "center",
+          }}>
+            <div style={{ color: "rgba(255,255,255,0.25)", fontSize: 14, fontFamily: "'Inter', sans-serif", textAlign: "center" }}>
+              Add public/assets/support-process-h264.mp4<br />and set SUPPORT_VIDEO_AVAILABLE = true in config/event.ts
+            </div>
+          </div>
+        )}
 
         {/* Lower-third bar  -  no slide, fades in as MihalyIntroCard magic-moves here */}
         <div style={{
@@ -2063,13 +2081,13 @@ const COMMUNITY_FACES = [
   "andreas","lucian","manuel","marcel",
 ] as const;
 
-// AWS supporter data (shown in the AWS GlassCard)
-const AWS_SUPPORTERS = [
-  { key: "arnaud",  name: "Arnaud",  title: "Sr. Developer Advocate",   sub: "Gamemaster"          },
-  { key: "loic",    name: "Loïc",    title: "Sr. Tech Account Manager", sub: "Gamemaster"          },
-  { key: "uliana",  name: "Uliana",  title: "Community Manager",        sub: "DACH, CEE & MENAT"   },
-  { key: "natalia", name: "Natalia", title: "DevEx Community Manager",  sub: "EMEA / Europe South" },
-] as const;
+// AWS supporter data (shown in the AWS GlassCard) — derived from config/participants
+const AWS_SUPPORTERS = CONFIG_AWS.map((p) => ({
+  key: p.face.replace("assets/faces/", "").replace(/\.\w+$/, ""),
+  name: p.name,
+  title: p.role.replace(/, AWS$/, ""),
+  sub: p.country,
+}));
 
 // Phase breakpoints (frames relative to COLLAB_IN)  -  each value = end of that phase
 const COLLAB_PA = 150;   //  5 s - Phase A ends: just Linda, no boxes, no backdrop
