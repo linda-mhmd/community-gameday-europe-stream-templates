@@ -4,7 +4,7 @@ import { InfoLoop } from "@compositions/src/compositions/00-preshow/InfoLoop";
 import { MainEvent } from "@compositions/src/compositions/01-main-event/MainEvent";
 import { Gameplay } from "@compositions/src/compositions/02-gameplay/Gameplay";
 import { ClosingPreRendered } from "@compositions/src/compositions/03-closing/ClosingPreRendered";
-import { CountdownComposition } from "./Countdown";
+import { ResponsiveCountdown } from "./ResponsiveCountdown";
 import {
   EVENT_DATE,
   SCHEDULE,
@@ -183,25 +183,14 @@ export const App: React.FC = () => {
     window.history.replaceState({}, "", url.toString());
   }, []);
 
-  // ─── Waiting: Remotion-rendered countdown ────────────────────────
+  // ─── Waiting: responsive countdown page ─────────────────────────
   if (active === "waiting") {
     return (
-      <div style={{ width: "100vw", height: "100vh", background: "#0c0820", position: "relative" }}>
-        <Player
-          component={CountdownComposition as React.FC}
-          inputProps={{
-            eventDate: EVENT_DATE,
-            timezone: TIMEZONE,
-            milestones: COUNTDOWN_MILESTONES,
-          }}
-          durationInFrames={30 * 60 * 60} // 1 hour of frames  -  effectively infinite
-          fps={30}
-          compositionWidth={1280}
-          compositionHeight={720}
-          autoPlay
-          loop
-          controls={false}
-          style={{ width: "100%", height: "100%" }}
+      <div style={{ position: "relative" }}>
+        <ResponsiveCountdown
+          eventDate={EVENT_DATE}
+          timezone={TIMEZONE}
+          milestones={COUNTDOWN_MILESTONES}
         />
         {showControls && <Controls active={active} override={override} onOverride={handleOverride} onAuto={handleAutoMode} />}
       </div>
@@ -211,7 +200,7 @@ export const App: React.FC = () => {
   if (active === "end") {
     return (
       <div style={screenStyle}>
-        <img src="/assets/aws-community-logo.png" style={{ height: 80, marginBottom: 32, opacity: 0.9 }} />
+        <img src={`${import.meta.env.BASE_URL}assets/aws-community-logo.png`} style={{ height: 80, marginBottom: 32, opacity: 0.9 }} />
         <div style={{ fontSize: 13, fontWeight: 700, letterSpacing: 4, textTransform: "uppercase", color: "#8b5cf6", marginBottom: 16 }}>
           AWS Community GameDay Europe · March 17, 2026
         </div>
