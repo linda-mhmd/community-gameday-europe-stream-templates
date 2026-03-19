@@ -1,3 +1,5 @@
+export const FONT_FAMILY = "'Inter', 'Amazon Ember', sans-serif";
+
 export const TYPOGRAPHY = {
   h1: 104,
   h2: 72,

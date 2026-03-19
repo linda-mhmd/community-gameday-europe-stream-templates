@@ -1,10 +1,11 @@
 import React from "react";
 import { AbsoluteFill, Img, interpolate, staticFile, useCurrentFrame } from "remotion";
 import { GD_DARK, GD_PURPLE, GD_VIOLET, GD_ACCENT, GD_ORANGE, GD_GOLD } from "@compositions/src/design/colors";
+import { FONT_FAMILY } from "@compositions/src/design/typography";
 import { BackgroundLayer, HexGridOverlay } from "@compositions/src/components";
 import { AudioIcon, MutedIcon, GamepadIcon, CalendarIcon, CheckCircleIcon, MonitorIcon, ClockIcon, UsersIcon, GlobeIcon, ChairIcon, CodeIcon } from "./icons";
 
-const FONT = "'Amazon Ember', 'Inter', system-ui, sans-serif";
+const FONT = FONT_FAMILY;
 const LOGO = staticFile("assets/logos/gameday-logo-white.png");
 const COMMUNITY_LOGO = staticFile("assets/aws-community-logo.png");
 

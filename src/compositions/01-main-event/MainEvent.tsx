@@ -54,6 +54,7 @@ import {
   GD_ORANGE,
   GD_GOLD,
   TYPOGRAPHY,
+  FONT_FAMILY,
   springConfig,
 } from "../../design";
 import {
@@ -164,7 +165,7 @@ const L = {
   LEFT_W:       220,   // progress bar left-panel width  -  wide enough for "AWS Gamemasters Intro"
 } as const;
 
-const FF = "'Inter', 'Amazon Ember', sans-serif";
+const FF = FONT_FAMILY;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // SVG ICONS (no emojis)

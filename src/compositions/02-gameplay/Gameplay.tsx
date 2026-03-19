@@ -9,6 +9,7 @@ import {
 import {
   GD_DARK, GD_PURPLE, GD_VIOLET, GD_PINK, GD_ACCENT, GD_ORANGE, GD_GOLD,
 } from "../../design/colors";
+import { FONT_FAMILY } from "../../design/typography";
 import { springConfig } from "../../design/animations";
 import { calculateCountdown, formatTime, staggeredEntry } from "../../utils/timing";
 import { type ScheduleSegment } from "../../utils/phases";
@@ -17,7 +18,7 @@ import {
   GAME_END_OFFSET_MINUTES as GAME_END,
 } from "../../../config/event";
 
-const F = "'Amazon Ember', 'Inter', sans-serif";
+const F = FONT_FAMILY;
 const GAMEDAY_LOGO = staticFile("assets/logos/gameday-logo-geometric.png");
 const COMMUNITY_LOGO = staticFile("assets/aws-community-logo.png");
 const EUROPE_MAP = staticFile("assets/europe-map.png");

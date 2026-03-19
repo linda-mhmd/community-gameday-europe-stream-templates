@@ -42,6 +42,7 @@ import {
   GD_ORANGE,
   GD_GOLD,
   TYPOGRAPHY,
+  FONT_FAMILY,
   springConfig,
 } from "../../design";
 import { calculateCountdown, formatTime } from "../../utils/timing";
@@ -63,7 +64,7 @@ const GAMEDAY_LOGO = staticFile(
 const EUROPE_MAP = staticFile("assets/europe-map.png");
 
 // ─── Timing constants ─────────────────────────────────────────────────────────
-const F = "'Amazon Ember', 'Inter', sans-serif";
+const F = FONT_FAMILY;
 const S = 900;  // 30 s - content slides
 const U = 330;  // 11 s - UG spotlight
 const T = 20;   // transition overlap frames
