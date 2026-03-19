@@ -38,9 +38,11 @@ export const CountdownComposition: React.FC<CountdownProps> = ({ eventDate, mile
   });
 
   const gameplay = milestones.find((m) => m.id === "gameplay")!;
+  const closing = milestones.find((m) => m.id === "closing")!;
   const gMs = msUntil(eventDate, gameplay.time);
   const gT = fmt(gMs);
-  const gLive = gMs === 0;
+  const hasEnded = closing && msUntil(eventDate, closing.time) === 0;
+  const gLive = gMs === 0 && !hasEnded;
 
   // Descriptions with corrected text color  -  white with slight transparency instead of purple
   const DESC_COLOR = "rgba(255,255,255,0.65)";
@@ -59,28 +61,46 @@ export const CountdownComposition: React.FC<CountdownProps> = ({ eventDate, mile
         </div>
 
         <div style={{ ...anim(6), textAlign: "center" }}>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10, fontSize: 20, fontWeight: 700, color: GD_GOLD, textTransform: "uppercase", letterSpacing: 4, marginBottom: 14 }}>
-            <GamepadIcon size={24} color={GD_GOLD} /> Game Starts In
-          </div>
-
-          {gLive ? (
-            <div style={{ fontSize: 68, fontWeight: 800, color: "#22c55e", textShadow: "0 0 40px #22c55e44" }}>GAME ON</div>
+          {hasEnded ? (
+            <>
+              <div style={{ fontSize: 13, fontWeight: 700, letterSpacing: 4, textTransform: "uppercase", color: GD_ACCENT, marginBottom: 16 }}>
+                March 17, 2026 · Vienna, Austria
+              </div>
+              <div style={{ fontSize: 64, fontWeight: 900, color: GD_GOLD, lineHeight: 1.1, marginBottom: 16 }}>
+                Event Complete
+              </div>
+              <div style={{ fontSize: 17, color: DESC_COLOR, marginBottom: 8 }}>
+                2 hours of competitive cloud gaming
+              </div>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
+                <GlobeIcon size={16} color={DESC_COLOR} />
+                <span style={{ fontSize: 15, color: DESC_COLOR }}>53+ User Groups · 20+ Countries · 4+ Timezones</span>
+              </div>
+            </>
           ) : (
-            <div style={{ display: "flex", gap: 10, justifyContent: "center", alignItems: "flex-end" }}>
-              {gT.d > 0 && <><Digit v={String(gT.d)} u="days" pulse={pulse} /><Sep pulse={pulse} /></>}
-              <Digit v={gT.h} u="hours" pulse={pulse} />
-              <Sep pulse={pulse} />
-              <Digit v={gT.m} u="min" pulse={pulse} />
-              <Sep pulse={pulse} />
-              <Digit v={gT.s} u="sec" pulse={pulse} />
-            </div>
+            <>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10, fontSize: 20, fontWeight: 700, color: GD_GOLD, textTransform: "uppercase", letterSpacing: 4, marginBottom: 14 }}>
+                <GamepadIcon size={24} color={GD_GOLD} /> Game Starts In
+              </div>
+              {gLive ? (
+                <div style={{ fontSize: 68, fontWeight: 800, color: "#22c55e", textShadow: "0 0 40px #22c55e44" }}>GAME ON</div>
+              ) : (
+                <div style={{ display: "flex", gap: 10, justifyContent: "center", alignItems: "flex-end" }}>
+                  {gT.d > 0 && <><Digit v={String(gT.d)} u="days" pulse={pulse} /><Sep pulse={pulse} /></>}
+                  <Digit v={gT.h} u="hours" pulse={pulse} />
+                  <Sep pulse={pulse} />
+                  <Digit v={gT.m} u="min" pulse={pulse} />
+                  <Sep pulse={pulse} />
+                  <Digit v={gT.s} u="sec" pulse={pulse} />
+                </div>
+              )}
+              <div style={{ fontSize: 17, color: GD_ACCENT, marginTop: 18, opacity: 0.85 }}>2 hours of competitive cloud gaming</div>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6, marginTop: 6 }}>
+                <GlobeIcon size={16} color={DESC_COLOR} />
+                <span style={{ fontSize: 15, color: DESC_COLOR }}>53+ User Groups across 20+ Countries in 4+ Timezones</span>
+              </div>
+            </>
           )}
-
-          <div style={{ fontSize: 17, color: GD_ACCENT, marginTop: 18, opacity: 0.85 }}>2 hours of competitive cloud gaming</div>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6, marginTop: 6 }}>
-            <GlobeIcon size={16} color={DESC_COLOR} />
-            <span style={{ fontSize: 15, color: DESC_COLOR }}>53+ User Groups across 20+ Countries in 4+ Timezones</span>
-          </div>
         </div>
       </div>
 
