@@ -539,7 +539,7 @@ const SlideMeetAndaJerome: React.FC = () => {
         <div style={{ fontSize: TYPOGRAPHY.label, fontWeight: 700, color: GD_ACCENT, textTransform: "uppercase", letterSpacing: 4, marginBottom: 6, display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
           <UsersIcon size={14} color={GD_ACCENT} /> The People Behind This Event
         </div>
-        <div style={{ fontSize: TYPOGRAPHY.h4, fontWeight: 900, color: "white" }}>Meet Anda &amp; Jerome</div>
+        <div style={{ fontSize: TYPOGRAPHY.h4, fontWeight: 900, color: "white" }}>Meet {anda.name} &amp; {jerome.name}</div>
       </div>
 
       <div style={{ display: "flex", gap: 24, width: "100%", maxWidth: 1060, marginBottom: 16 }}>
@@ -1452,7 +1452,7 @@ const CONTENT_SLIDES: { key: string; name: string; el: React.ReactNode }[] = [
   { key: "hero", name: "Hero + Countdown", el: <SlideHero /> },
   { key: "whats-happening", name: "What's Happening?", el: <SlideWhatsHappening /> },
   { key: "meet-linda", name: `Meet ${HOST.fullName}`, el: <SlideMeetLinda /> },
-  { key: "meet-anda-jerome", name: "Meet Anda & Jerome", el: <SlideMeetAndaJerome /> },
+  { key: "meet-anda-jerome", name: `Meet ${ORGANIZERS[1].name} & ${ORGANIZERS[0].name}`, el: <SlideMeetAndaJerome /> },
   { key: "meet-gamemasters", name: `Meet ${GM_LABEL}`, el: <SlideMeetGamemasters /> },
   { key: "aws-community", name: "What is the AWS Community?", el: <SlideAWSCommunity /> },
   { key: "ug-leader", name: "What is a UG Leader?", el: <SlideUGLeader /> },

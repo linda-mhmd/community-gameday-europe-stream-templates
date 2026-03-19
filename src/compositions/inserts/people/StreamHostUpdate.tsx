@@ -25,6 +25,7 @@ import {
 import { GD_DARK, GD_VIOLET } from "../../../design/colors";
 import { TYPOGRAPHY } from "../../../design/typography";
 import { ORGANIZERS } from "../../../../config/participants";
+import { STREAM_HOST_NAME } from "../../../../config/event";
 
 export interface StreamHostUpdateProps {
   streamHostName?: string;
@@ -32,7 +33,7 @@ export interface StreamHostUpdateProps {
 }
 
 const DEFAULT_PROPS: StreamHostUpdateProps = {
-  streamHostName: "Linda",
+  streamHostName: STREAM_HOST_NAME,
   message: "has an update for you",
 };
 
