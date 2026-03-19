@@ -1,5 +1,7 @@
 import React from "react";
-import { GD_PURPLE, GD_ACCENT } from "@compositions/shared/GameDayDesignSystem";
+
+const GD_PURPLE = "#6c3fa0";
+const GD_ACCENT = "#c084fc";
 
 const svgBase = { strokeWidth: 2, strokeLinecap: "round" as const, strokeLinejoin: "round" as const, fill: "none" };
 const I: React.FC<{ size?: number; color?: string; children: React.ReactNode }> = ({ size = 18, color = GD_ACCENT, children }) => (

@@ -9,7 +9,10 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "paths": {
+      "@compositions/*": ["../*"]
+    }
   },
-  "include": ["src", "../shared", "../00-GameDayStreamPreShow-Muted.tsx", "../01-GameDayStreamMainEvent-Audio.tsx", "../02-GameDayStreamGameplay-Muted.tsx", "../03-GameDayStreamClosing-Audio.tsx"]
+  "include": ["src", "../src"]
 }

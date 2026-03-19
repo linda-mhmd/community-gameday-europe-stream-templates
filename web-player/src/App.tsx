@@ -186,7 +186,7 @@ export const App: React.FC = () => {
     return (
       <div style={{ width: "100vw", height: "100vh", background: "#0c0820", position: "relative" }}>
         <Player
-          component={CountdownComposition}
+          component={CountdownComposition as React.FC}
           inputProps={{
             eventDate: EVENT_DATE,
             timezone: TIMEZONE,

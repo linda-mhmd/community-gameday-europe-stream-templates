@@ -1,11 +1,12 @@
 import React from "react";
 import { AbsoluteFill, Img, interpolate, staticFile, useCurrentFrame } from "remotion";
-import { GD_DARK, GD_PURPLE, GD_VIOLET, GD_ACCENT, GD_ORANGE, GD_GOLD, BackgroundLayer, HexGridOverlay } from "@shared/GameDayDesignSystem";
+import { GD_DARK, GD_PURPLE, GD_VIOLET, GD_ACCENT, GD_ORANGE, GD_GOLD } from "@compositions/src/design/colors";
+import { BackgroundLayer, HexGridOverlay } from "@compositions/src/components";
 import { AudioIcon, MutedIcon, GamepadIcon, CalendarIcon, CheckCircleIcon, MonitorIcon, ClockIcon, UsersIcon, GlobeIcon, ChairIcon, CodeIcon } from "./icons";
 
 const FONT = "'Amazon Ember', 'Inter', system-ui, sans-serif";
-const LOGO = staticFile("AWSCommunityGameDayEurope/GameDay_Solid_Logo_for_swag/GameDay Logo Solid White Geometric with text.png");
-const COMMUNITY_LOGO = staticFile("AWSCommunityGameDayEurope/AWSCommunityEurope_last_nobackground.png");
+const LOGO = staticFile("assets/logos/gameday-logo-white.png");
+const COMMUNITY_LOGO = staticFile("assets/aws-community-logo.png");
 
 interface Milestone { label: string; time: string; id: string; desc: string }
 interface CountdownProps { eventDate: string; timezone: string; milestones: Milestone[] }
