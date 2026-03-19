@@ -3,6 +3,7 @@ import { AbsoluteFill, interpolate, spring, useCurrentFrame, useVideoConfig } fr
 import { BackgroundLayer, HexGridOverlay, GlassCard, AudioBadge } from "../../../components";
 import { GD_DARK, GD_GOLD } from "../../../design/colors";
 import { TYPOGRAPHY } from "../../../design/typography";
+import { EVENT_NAME } from "../../../../config/event";
 
 const TITLE = "HALF TIME";
 const MESSAGE = "Check the leaderboard and review your quest progress. 60 minutes remaining - keep going!";
@@ -82,7 +83,7 @@ export const HalfTime: React.FC = () => {
           opacity: interpolate(frame, [45, 75], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
         }}>
           <span style={{ fontSize: TYPOGRAPHY.bodySmall, color: "rgba(255,255,255,0.5)", letterSpacing: 2 }}>
-            AWS Community GameDay Europe
+            {EVENT_NAME}
           </span>
         </div>
       </AbsoluteFill>

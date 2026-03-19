@@ -29,6 +29,7 @@ import {
   GD_ORANGE,
 } from "../../../design/colors";
 import { TYPOGRAPHY } from "../../../design/typography";
+import { EVENT_NAME } from "../../../../config/event";
 
 const TOTAL_FRAMES = 900;
 const FADE_OUT_START = 840;
@@ -236,7 +237,7 @@ export const StreamInterruption: React.FC = () => {
             color: "rgba(255,255,255,0.4)",
             letterSpacing: 2,
           }}>
-            AWS Community GameDay Europe
+            {EVENT_NAME}
           </span>
         </div>
 

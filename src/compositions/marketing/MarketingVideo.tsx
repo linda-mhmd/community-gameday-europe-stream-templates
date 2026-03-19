@@ -13,6 +13,7 @@ import {
   springConfig,
 } from "../../design";
 import { ORGANIZERS, AWS_SUPPORTERS } from "../../../config/participants";
+import { EVENT_NAME } from "../../../config/event";
 
 // ── SVG Icons ──
 const MapPinIcon: React.FC<{ size?: number; color?: string }> = ({ size = 16, color = GD_ORANGE }) => (
@@ -196,7 +197,7 @@ const OutroScene: React.FC<{ frame: number; fps: number }> = ({ frame, fps }) =>
           <Img src={staticFile("assets/aws-community-logo.png")} style={{ width: 180, objectFit: "contain" }} />
         </div>
         <div style={{ opacity: taglineOpacity, fontSize: TYPOGRAPHY.h6, fontWeight: 600, color: "white", letterSpacing: 1, textAlign: "center", marginTop: 12 }}>
-          AWS Community GameDay Europe · 17 March 2026
+          {EVENT_NAME} · 17 March 2026
         </div>
         <div style={{ opacity: ctaOpacity, fontSize: TYPOGRAPHY.body, fontWeight: 700, color: GD_GOLD, letterSpacing: 2, textAlign: "center" }}>
           www.awsgameday.eu

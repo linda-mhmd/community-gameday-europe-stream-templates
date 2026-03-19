@@ -50,12 +50,24 @@ import {
   STREAM_START_OFFSET_MINUTES as STREAM_START,
   GAME_START_OFFSET_MINUTES as GAME_START,
   STREAM_HOST_NAME,
+  EVENT_DATE,
+  EVENT_NAME,
+  EVENT_EDITION,
+  HOST_TIMEZONE,
+  STREAM_START_TIME,
 } from "../../../config/event";
 import { USER_GROUPS, ORGANIZERS, AWS_SUPPORTERS } from "../../../config/participants";
 import { LOGO_MAP } from "../../../config/logos";
 
 const HOST     = ORGANIZERS.find((p) => p.name === STREAM_HOST_NAME)!;
 const GM_LABEL = AWS_SUPPORTERS.filter((p) => p.country === "Gamemaster").map((p) => p.name).join(" & ");
+
+// ─── Derived event display strings ────────────────────────────────────────────
+const [_ey, _em, _ed] = EVENT_DATE.split("-").map(Number);
+const _eventDate = new Date(_ey, _em - 1, _ed);
+const EVENT_DAY_NAME   = _eventDate.toLocaleDateString("en-US", { weekday: "long" });
+const EVENT_DATE_SHORT = _eventDate.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
+const EVENT_HERO_DATE  = `${EVENT_DAY_NAME}, ${EVENT_DATE_SHORT} · Starting ${STREAM_START_TIME} ${HOST_TIMEZONE}`;
 
 // ─── Asset paths ──────────────────────────────────────────────────────────────
 const COMMUNITY_LOGO = staticFile(
@@ -410,8 +422,8 @@ const SlideHero: React.FC = () => {
       </div>
       <div style={{ opacity: titleE, transform: `translateY(${interpolate(titleE, [0, 1], [24, 0])}px)`, textAlign: "center", marginBottom: 20 }}>
         <div style={{ fontSize: TYPOGRAPHY.captionSmall, fontWeight: 700, color: GD_ACCENT, letterSpacing: 5, textTransform: "uppercase", marginBottom: 8 }}>The First-Ever</div>
-        <div style={{ fontSize: TYPOGRAPHY.h2, fontWeight: 900, letterSpacing: -1, lineHeight: 1.05, background: `linear-gradient(135deg, #fff 0%, ${GD_ACCENT} 45%, ${GD_PINK} 100%)`, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>AWS Community GameDay Europe</div>
-        <div style={{ fontSize: TYPOGRAPHY.body, color: "rgba(255,255,255,0.45)", marginTop: 8, letterSpacing: 2 }}>Tuesday, March 17 2026 · Starting 18:00 CET</div>
+        <div style={{ fontSize: TYPOGRAPHY.h2, fontWeight: 900, letterSpacing: -1, lineHeight: 1.05, background: `linear-gradient(135deg, #fff 0%, ${GD_ACCENT} 45%, ${GD_PINK} 100%)`, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>{EVENT_NAME}</div>
+        <div style={{ fontSize: TYPOGRAPHY.body, color: "rgba(255,255,255,0.45)", marginTop: 8, letterSpacing: 2 }}>{EVENT_HERO_DATE}</div>
       </div>
       <div style={{ opacity: timerE, transform: `scale(${interpolate(timerE, [0, 1], [0.9, 1])})`, textAlign: "center", marginBottom: 24 }}>
         <div style={{ fontSize: TYPOGRAPHY.label, fontWeight: 700, color: GD_GOLD, textTransform: "uppercase", letterSpacing: 4, marginBottom: 10, display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
@@ -466,7 +478,7 @@ const SlideWhatsHappening: React.FC = () => {
 // ═══════════════════════════════════════════════════════════════════════════════
 // SLIDE 3 - Meet the Stream Host (StreamHostCard-inspired)
 // ═══════════════════════════════════════════════════════════════════════════════
-const SlideMeetLinda: React.FC = () => {
+const SlideMeetHost: React.FC = () => {
   const ugLogo = USER_GROUPS.find((g) => g.name === HOST.role)?.logo;
   const cardE = useEntry(0);
   const textE = useStagger(3, 8);
@@ -521,7 +533,7 @@ const SlideMeetLinda: React.FC = () => {
 // ═══════════════════════════════════════════════════════════════════════════════
 // SLIDE 4 - Meet Anda & Jerome (OrganizerSection-inspired)
 // ═══════════════════════════════════════════════════════════════════════════════
-const SlideMeetAndaJerome: React.FC = () => {
+const SlideMeetCoOrganizers: React.FC = () => {
   const jerome = ORGANIZERS.find((p) => p.name === "Jerome")!;
   const anda = ORGANIZERS.find((p) => p.name === "Anda")!;
   const headingE = useEntry(0);
@@ -903,7 +915,7 @@ const SlideHowItWorks: React.FC = () => {
   ];
   return (
     <AbsoluteFill style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-      <SectionLabel icon={<GamepadIcon size={20} color={GD_ACCENT} />} text="How the AWS Community GameDay Europe Works" />
+      <SectionLabel icon={<GamepadIcon size={20} color={GD_ACCENT} />} text={`How the ${EVENT_NAME} Works`} />
       <div style={{ display: "flex", gap: 14, width: "100%", maxWidth: 1060 }}>
         {steps.map((step, i) => {
           const o = useStagger(i, 7);
@@ -1451,8 +1463,8 @@ type Section = { key: string; name: string; dur: number; el: React.ReactNode };
 const CONTENT_SLIDES: { key: string; name: string; el: React.ReactNode }[] = [
   { key: "hero", name: "Hero + Countdown", el: <SlideHero /> },
   { key: "whats-happening", name: "What's Happening?", el: <SlideWhatsHappening /> },
-  { key: "meet-linda", name: `Meet ${HOST.fullName}`, el: <SlideMeetLinda /> },
-  { key: "meet-anda-jerome", name: `Meet ${ORGANIZERS[1].name} & ${ORGANIZERS[0].name}`, el: <SlideMeetAndaJerome /> },
+  { key: "meet-linda", name: `Meet ${HOST.fullName}`, el: <SlideMeetHost /> },
+  { key: "meet-anda-jerome", name: `Meet ${ORGANIZERS[1].name} & ${ORGANIZERS[0].name}`, el: <SlideMeetCoOrganizers /> },
   { key: "meet-gamemasters", name: `Meet ${GM_LABEL}`, el: <SlideMeetGamemasters /> },
   { key: "aws-community", name: "What is the AWS Community?", el: <SlideAWSCommunity /> },
   { key: "ug-leader", name: "What is a UG Leader?", el: <SlideUGLeader /> },

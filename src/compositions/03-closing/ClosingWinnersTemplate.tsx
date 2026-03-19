@@ -41,6 +41,7 @@ import {
   TYPOGRAPHY,
 } from "../../design";
 import { USER_GROUPS } from "../../../config/participants";
+import { EVENT_NAME } from "../../../config/event";
 import { LOGO_MAP } from "../../../config/logos";
 
 // ── Part B Constants ──
@@ -605,7 +606,7 @@ const ThankYouPhase: React.FC<{ frame: number }> = ({ frame }) => {
           fontSize: TYPOGRAPHY.h5, color: GD_ACCENT, fontWeight: 500, letterSpacing: 4, textTransform: "uppercase",
           opacity: subtitleSpring, transform: `translateY(${interpolate(subtitleSpring, [0, 1], [20, 0])}px)`,
           fontFamily: "'Inter', sans-serif",
-        }}>AWS Community GameDay Europe</div>
+        }}>{EVENT_NAME}</div>
         <div style={{
           fontSize: TYPOGRAPHY.h1, fontWeight: 800, color: "white", textAlign: "center",
           opacity: titleSpring, transform: `translateY(${interpolate(titleSpring, [0, 1], [30, 0])}px) scale(${interpolate(titleSpring, [0, 1], [0.85, 1])})`,

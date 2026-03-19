@@ -25,7 +25,7 @@ import {
 import { GD_DARK, GD_VIOLET } from "../../../design/colors";
 import { TYPOGRAPHY } from "../../../design/typography";
 import { ORGANIZERS } from "../../../../config/participants";
-import { STREAM_HOST_NAME } from "../../../../config/event";
+import { STREAM_HOST_NAME, EVENT_NAME } from "../../../../config/event";
 
 export interface StreamHostUpdateProps {
   streamHostName?: string;
@@ -179,7 +179,7 @@ export const StreamHostUpdate: React.FC<StreamHostUpdateProps> = ({
             color: "rgba(255,255,255,0.5)",
             letterSpacing: 2,
           }}>
-            AWS Community GameDay Europe
+            {EVENT_NAME}
           </span>
         </div>
       </AbsoluteFill>

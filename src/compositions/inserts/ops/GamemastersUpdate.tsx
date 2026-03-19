@@ -25,6 +25,7 @@ import {
 import { GD_DARK, GD_ORANGE } from "../../../design/colors";
 import { TYPOGRAPHY } from "../../../design/typography";
 import { AWS_SUPPORTERS } from "../../../../config/participants";
+import { EVENT_NAME } from "../../../../config/event";
 
 export interface GamemastersUpdateProps {
   message?: string;
@@ -204,7 +205,7 @@ export const GamemastersUpdate: React.FC<GamemastersUpdateProps> = ({
             color: "rgba(255,255,255,0.5)",
             letterSpacing: 2,
           }}>
-            AWS Community GameDay Europe
+            {EVENT_NAME}
           </span>
         </div>
       </AbsoluteFill>

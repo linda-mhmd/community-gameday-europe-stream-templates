@@ -3,6 +3,7 @@ import { AbsoluteFill, interpolate, spring, useCurrentFrame, useVideoConfig } fr
 import { BackgroundLayer, HexGridOverlay, GlassCard, AudioBadge } from "../../../components";
 import { GD_DARK, GD_ACCENT } from "../../../design/colors";
 import { TYPOGRAPHY } from "../../../design/typography";
+import { EVENT_NAME } from "../../../../config/event";
 
 export interface LocationShoutoutProps {
   city?: string;
@@ -122,7 +123,7 @@ export const LocationShoutout: React.FC<LocationShoutoutProps> = ({
           opacity: interpolate(frame, [45, 75], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
         }}>
           <span style={{ fontSize: TYPOGRAPHY.bodySmall, color: "rgba(255,255,255,0.5)", letterSpacing: 2 }}>
-            AWS Community GameDay Europe
+            {EVENT_NAME}
           </span>
         </div>
       </AbsoluteFill>

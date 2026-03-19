@@ -32,11 +32,12 @@ export const STREAM_WIDTH = 1280;
 export const STREAM_HEIGHT = 720;
 
 // ── Timing Offsets (minutes from event start) ──
-// Event start = 17:30 CET
-// All offsets are relative to event start time.
-// The event spans 4+ timezones  -  CET is used as the reference.
-export const EVENT_START_OFFSET_MINUTES = 0;  // 17:30 CET  -  Pre-Show begins (optional local setup)
-export const STREAM_START_OFFSET_MINUTES = 30; // 18:00 CET  -  Live stream starts
+// All offsets are relative to EVENT_START_TIME in HOST_TIMEZONE.
+// The event spans 4+ timezones  -  HOST_TIMEZONE is used as the reference.
+export const EVENT_START_TIME = "17:30";   // Base event start — Pre-Show begins
+export const STREAM_START_TIME = "18:00";  // Live stream goes live
+export const EVENT_START_OFFSET_MINUTES = 0;  // Pre-Show begins (optional local setup)
+export const STREAM_START_OFFSET_MINUTES = 30; // Live stream starts
 export const GAME_START_OFFSET_MINUTES = 60;   // 18:30 CET  -  GameDay game begins
 export const GAME_END_OFFSET_MINUTES = 180;    // 20:30 CET  -  Game ends, closing ceremony
 export const EVENT_END_OFFSET_MINUTES = 210;   // 21:00 CET  -  Stream ends with music

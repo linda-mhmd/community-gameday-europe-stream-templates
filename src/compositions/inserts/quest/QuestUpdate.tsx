@@ -26,6 +26,7 @@ import {
   GD_GREEN,
 } from "../../../design/colors";
 import { TYPOGRAPHY } from "../../../design/typography";
+import { EVENT_NAME } from "../../../../config/event";
 
 export interface QuestUpdateProps {
   fixedQuestName?: string;
@@ -237,7 +238,7 @@ export const QuestUpdate: React.FC<QuestUpdateProps> = ({
             color: "rgba(255,255,255,0.5)",
             letterSpacing: 2,
           }}>
-            AWS Community GameDay Europe
+            {EVENT_NAME}
           </span>
         </div>
       </AbsoluteFill>

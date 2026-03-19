@@ -4,7 +4,7 @@ import { BackgroundLayer, HexGridOverlay, GlassCard, AudioBadge } from "../../co
 import { GD_DARK, GD_ORANGE, GD_GOLD, GD_VIOLET } from "../../design/colors";
 import { TYPOGRAPHY } from "../../design/typography";
 import { springConfig } from "../../design/animations";
-import { STREAM_FPS } from "../../../config/event";
+import { STREAM_FPS, EVENT_NAME } from "../../../config/event";
 
 // ─── CUSTOMIZE THESE 3 VALUES ─────────────────────────────────────────────────
 const TITLE = "Your Title Here";
@@ -128,7 +128,7 @@ export const InsertTemplate: React.FC = () => {
             color: "rgba(255,255,255,0.5)",
             letterSpacing: 2,
           }}>
-            AWS Community GameDay Europe
+            {EVENT_NAME}
           </span>
         </div>
       </AbsoluteFill>

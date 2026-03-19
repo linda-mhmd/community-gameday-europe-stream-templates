@@ -71,6 +71,8 @@ import {
   STREAM_START_OFFSET_MINUTES as STREAM_START,
   GAME_START_OFFSET_MINUTES as GAME_START,
   EVENT_DATE,
+  EVENT_NAME,
+  EVENT_EDITION,
   SUPPORT_VIDEO_AVAILABLE,
   STREAM_HOST_NAME,
   SUPPORT_VIDEO_PRESENTER_NAME,
@@ -167,7 +169,7 @@ const S = {
 // Frame at which Arnaud & Loïc take over from Linda's Gamemasters intro
 const GAMEMASTER_SPEAKING = 25200;
 
-// ── Magic-move transition window: MihalyIntroCard → SupportVideoBody lower-third
+// ── Magic-move transition window: SupportPresenterIntroCard → SupportVideoBody lower-third
 // Starts 55 frames before the video, completes 28 frames into the video.
 const MAGIC_MOVE_START = S.VIDEO_IN - 55;   // 10745
 const MAGIC_MOVE_END   = S.VIDEO_IN + 28;   // 10828  (≤ MIHALY_OUT=10850 ✓)
@@ -522,7 +524,7 @@ const BigStat: React.FC<{ frame: number; fps: number; def: StatDef }> = ({ frame
 // ─────────────────────────────────────────────────────────────────────────────
 // SCENE 3  - VIENNA SPOTLIGHT (centered, 870 - 1080)
 // ─────────────────────────────────────────────────────────────────────────────
-const ViennaScene: React.FC<{ frame: number; fps: number }> = ({ frame, fps }) => {
+const HostLocationScene: React.FC<{ frame: number; fps: number }> = ({ frame, fps }) => {
   if (frame < S.VIENNA_IN || frame > S.VIENNA_OUT) return null;
 
   const op  = fadeWindow(frame, S.VIENNA_IN, S.VIENNA_OUT, 25);
@@ -551,7 +553,7 @@ const ViennaScene: React.FC<{ frame: number; fps: number }> = ({ frame, fps }) =
               fontSize: TYPOGRAPHY.h6, fontWeight: 700, color: GD_PINK,
               fontFamily: FF, letterSpacing: 2,
             }}>
-              Vienna, Austria
+              {HOST.city}
             </div>
           </div>
 
@@ -561,7 +563,7 @@ const ViennaScene: React.FC<{ frame: number; fps: number }> = ({ frame, fps }) =
             fontFamily: FF, lineHeight: 1.25, marginBottom: 16,
           }}>
             Hello and welcome<br />
-            from Vienna!
+            from {HOST.city?.split(",")[0]}!
           </div>
 
           {/* Detail */}
@@ -569,7 +571,7 @@ const ViennaScene: React.FC<{ frame: number; fps: number }> = ({ frame, fps }) =
             fontSize: TYPOGRAPHY.body, color: "rgba(255,255,255,0.72)",
             fontFamily: FF, lineHeight: 1.6,
           }}>
-            AWS User Group Vienna is participating today too - my co-organizers are hosting it in the room right next door!
+            {HOST.role} is participating today too - my co-organizers are hosting it in the room right next door!
           </div>
         </GlassCard>
       </div>
@@ -580,7 +582,7 @@ const ViennaScene: React.FC<{ frame: number; fps: number }> = ({ frame, fps }) =
 // ─────────────────────────────────────────────────────────────────────────────
 // SCENE 4  - LINDA FULL INTRO CARD (1080 - 1320, large centered presentation)
 // ─────────────────────────────────────────────────────────────────────────────
-const LindaIntroCard: React.FC<{ frame: number; fps: number }> = ({ frame, fps }) => {
+const HostIntroCard: React.FC<{ frame: number; fps: number }> = ({ frame, fps }) => {
   // Exit fly starts 45 frames before LINDA_OUT so the card arrives at the corner
   const EXIT_START = S.LINDA_OUT - 45; // frame 1275
 
@@ -704,7 +706,7 @@ const LindaIntroCard: React.FC<{ frame: number; fps: number }> = ({ frame, fps }
                     fontSize: TYPOGRAPHY.caption, color: "rgba(255,255,255,0.45)",
                     fontFamily: FF, display: "flex", alignItems: "center", gap: 5,
                   }}>
-                    <PinIcon s={11} c={GD_ACCENT} /> Vienna, Austria
+                    <PinIcon s={11} c={GD_ACCENT} /> {HOST.city}
                   </div>
                 </div>
               </div>
@@ -722,8 +724,7 @@ const LindaIntroCard: React.FC<{ frame: number; fps: number }> = ({ frame, fps }
                     fontSize: TYPOGRAPHY.h6, fontWeight: 600, color: "rgba(255,255,255,0.88)",
                     fontFamily: FF, lineHeight: 1.6, fontStyle: "italic",
                   }}>
-                    "Welcome to the first AWS Community GameDay Europe!
-                    Make sure your audio is on for the next 30 minutes."
+                    {`"Welcome to the first ${EVENT_NAME}! Make sure your audio is on for the next 30 minutes."`}
                   </div>
                 </div>
               </div>
@@ -750,7 +751,7 @@ const LINDA_ON_STREAM: Array<{ in: number; out: number }> = [
   { in: S.GAMEMASTER_IN, out: GAMEMASTER_SPEAKING - 1 }, // 23400 - 25199
 ];
 
-const LindaHostCard: React.FC<{ frame: number }> = ({ frame }) => {
+const HostCard: React.FC<{ frame: number }> = ({ frame }) => {
   const win = LINDA_ON_STREAM.find(w => frame >= w.in && frame <= w.out);
   if (!win) return null;
 
@@ -858,7 +859,7 @@ const SpeechBubble: React.FC<{ frame: number; fps: number }> = ({ frame, fps }) 
         }}>
           "Today we will have <strong style={{ color: GD_ACCENT }}>53 AWS User Groups</strong> all over Europe competing
           against each other across <strong style={{ color: GD_VIOLET }}>23 countries</strong> and
-          4 timezones - the first edition of AWS Community GameDay Europe."
+          {`4 timezones - the first edition of ${EVENT_NAME}."`}
         </div>
       </GlassCard>
       {/* Tail */}
@@ -954,7 +955,7 @@ const InfoCard: React.FC<{ frame: number; fps: number; def: InfoCardDef }> = ({ 
 // ─────────────────────────────────────────────────────────────────────────────
 // SCENE 6  - JEROME & ANDA (1800 - 9300, organizer intro only  - no text cards)
 // ─────────────────────────────────────────────────────────────────────────────
-const JeromeAndaCard: React.FC<{ frame: number; fps: number }> = ({ frame, fps }) => {
+const CoOrganizersCard: React.FC<{ frame: number; fps: number }> = ({ frame, fps }) => {
   if (frame < S.ORG_IN || frame > S.ORG_OUT) return null;
 
   const op  = fadeWindow(frame, S.ORG_IN, S.ORG_OUT, 30);
@@ -1082,7 +1083,7 @@ const JeromeAndaCard: React.FC<{ frame: number; fps: number }> = ({ frame, fps }
 // ─────────────────────────────────────────────────────────────────────────────
 // SCENE 10  - ARNAUD & LOÏC GAMEMASTERS (23400 - 44999)
 // ─────────────────────────────────────────────────────────────────────────────
-const ArnaudLoicCard: React.FC<{ frame: number; fps: number }> = ({ frame, fps }) => {
+const GamemastersCard: React.FC<{ frame: number; fps: number }> = ({ frame, fps }) => {
   if (frame < S.GAMEMASTER_IN || frame > S.GAMEMASTER_OUT) return null;
 
   const op  = fadeWindow(frame, S.GAMEMASTER_IN, S.GAMEMASTER_OUT, 30);
@@ -1476,7 +1477,7 @@ const CodeDistributionScene: React.FC<{
           color: "rgba(255,255,255,0.25)", fontFamily: FF, letterSpacing: 3,
           textTransform: "uppercase" as const,
         }}>
-          AWS Community GameDay Europe 2026
+          {EVENT_NAME} {EVENT_EDITION}
         </div>
         <Img
           src={staticFile("assets/gameday-unicorn.png")}
@@ -1562,7 +1563,7 @@ const SpeakerIndicator: React.FC<{ frame: number; fps: number }> = ({ frame, fps
   const chapter = CHAPTERS.find((c) => frame >= c.startFrame && frame <= c.endFrame);
   const speaker = chapter?.speakers;
   if (!speaker) return null;
-  // LindaHostCard already handles Linda with face + pulsing rings  -  skip duplicate
+  // HostCard already handles Linda with face + pulsing rings  -  skip duplicate
   if (speaker === HOST.fullName) return null;
 
   const entry = spring({ frame: frame - S.SPEAKER_IN, fps, config: springConfig.entry });
@@ -1605,7 +1606,7 @@ const SpeakerIndicator: React.FC<{ frame: number; fps: number }> = ({ frame, fps
 // On exit, Mihaly's face tracks precisely to the support video lower-third position
 // and fades out exactly at VIDEO_IN  -  creating a seamless face-to-lower-third handoff.
 // ─────────────────────────────────────────────────────────────────────────────
-const MihalyIntroCard: React.FC<{ frame: number; fps: number }> = ({ frame, fps }) => {
+const SupportPresenterIntroCard: React.FC<{ frame: number; fps: number }> = ({ frame, fps }) => {
   if (frame < S.MIHALY_IN || frame > S.MIHALY_OUT) return null;
 
   // Entry spring
@@ -1617,7 +1618,7 @@ const MihalyIntroCard: React.FC<{ frame: number; fps: number }> = ({ frame, fps 
   const logoSp  = spring({ frame: frame - S.MIHALY_IN - 22, fps, config: springConfig.entry });
 
   // Exit: when magic-move overlay takes over, the card (border + background)
-  // fades out quickly. The MihalyMagicMoveOverlay then carries the face/name/UG.
+  // fades out quickly. The SupportPresenterMagicMoveOverlay then carries the face/name/UG.
   const entryOp = Math.min(1, interpolate(frame,
     [S.MIHALY_IN, S.MIHALY_IN + 20], [0, 1],
     { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
@@ -1755,7 +1756,7 @@ const MihalyIntroCard: React.FC<{ frame: number; fps: number }> = ({ frame, fps 
 // zIndex 62: above SupportVideoBody (z=55) so the elements visually fly on top
 // of the video background as they drift toward their destination.
 //
-// Source layout (MihalyIntroCard steady-state, card maxWidth=620 centred in
+// Source layout (SupportPresenterIntroCard steady-state, card maxWidth=620 centred in
 // left area left=40..888, card padding=36/44):
 //   card_left = 40 + (848-620)/2 = 154 px
 //   flex-row top  ≈ 258 px (card_top 183 + padding 36 + label+gap 39)
@@ -1770,7 +1771,7 @@ const MihalyIntroCard: React.FC<{ frame: number; fps: number }> = ({ frame, fps 
 //   name left=298  top=510  (h6=24)
 //   UG   left=298  top=537  (caption=16)
 // ─────────────────────────────────────────────────────────────────────────────
-const MihalyMagicMoveOverlay: React.FC<{ frame: number }> = ({ frame }) => {
+const SupportPresenterMagicMoveOverlay: React.FC<{ frame: number }> = ({ frame }) => {
   if (frame < MAGIC_MOVE_START || frame > MAGIC_MOVE_END) return null;
 
   const rawT = interpolate(frame, [MAGIC_MOVE_START, MAGIC_MOVE_END], [0, 1], {
@@ -1869,7 +1870,7 @@ const SupportVideoBody: React.FC = () => {
   });
   const op = fadeIn * fadeOut;
 
-  // Lower-third: no slide animation  -  the MihalyMagicMoveOverlay carries the
+  // Lower-third: no slide animation  -  the SupportPresenterMagicMoveOverlay carries the
   // face/name/UG to this position. Lower-third fades in as the overlay arrives.
   const lowerThirdOff = 0;
   const lowerThirdOp  = interpolate(frame, [30, 48], [0, 1], {
@@ -1908,7 +1909,7 @@ const SupportVideoBody: React.FC = () => {
           </div>
         )}
 
-        {/* Lower-third bar  -  no slide, fades in as MihalyIntroCard magic-moves here */}
+        {/* Lower-third bar  -  no slide, fades in as SupportPresenterIntroCard magic-moves here */}
         <div style={{
           position: "absolute",
           bottom: 0, left: 0, right: 0,
@@ -1977,7 +1978,7 @@ const SupportVideoBody: React.FC = () => {
 // SCENE 8  - LINDA TRANSITION BACK (13380 - 15179)
 // Linda reappears after Mihaly's video and introduces the AWS special guest.
 // ─────────────────────────────────────────────────────────────────────────────
-const LindaGuestIntro: React.FC<{ frame: number; fps: number }> = ({ frame, fps }) => {
+const HostGuestIntro: React.FC<{ frame: number; fps: number }> = ({ frame, fps }) => {
   if (frame < S.LINDA_BACK_IN || frame > S.LINDA_BACK_OUT) return null;
   if (frame >= S.COLLAB_IN) return null;  // collab scene takes over at COLLAB_IN
 
@@ -2626,13 +2627,13 @@ export const MainEvent: React.FC = () => {
       ))}
 
       {/* ── Scene 3: Vienna spotlight (870 - 1080) ── */}
-      {!isVideoScene && <ViennaScene frame={frame} fps={fps} />}
+      {!isVideoScene && <HostLocationScene frame={frame} fps={fps} />}
 
       {/* ── Scene 4: Linda full intro card (1080 - 1320) ── */}
-      {!isVideoScene && <LindaIntroCard frame={frame} fps={fps} />}
+      {!isVideoScene && <HostIntroCard frame={frame} fps={fps} />}
 
       {/* ── Linda host card (hidden during collab boxes so it doesn't bleed through) ── */}
-      {!isCollabBoxes && <LindaHostCard frame={frame} />}
+      {!isCollabBoxes && <HostCard frame={frame} />}
 
       {/* ── Scene 5a: Speech bubble (1320 - 1500) ── */}
       {!isVideoScene && <SpeechBubble frame={frame} fps={fps} />}
@@ -2643,16 +2644,16 @@ export const MainEvent: React.FC = () => {
       ))}
 
       {/* ── Scene 6: Jerome & Anda (1800 - 9300, no text cards) ── */}
-      {!isVideoScene && <JeromeAndaCard frame={frame} fps={fps} />}
+      {!isVideoScene && <CoOrganizersCard frame={frame} fps={fps} />}
 
       {/* ── Scene 6b: Mihaly "Coming Up" (9300 - 10850)  -  Linda's transition to support process ── */}
-      <MihalyIntroCard frame={frame} fps={fps} />
+      <SupportPresenterIntroCard frame={frame} fps={fps} />
 
       {/* ── Magic-move overlay: face+name+UG fly from intro card to lower-third ── */}
-      <MihalyMagicMoveOverlay frame={frame} />
+      <SupportPresenterMagicMoveOverlay frame={frame} />
 
       {/* ── Scene 10: Arnaud & Loïc Gamemasters (23400 - 44999) ── */}
-      <ArnaudLoicCard frame={frame} fps={fps} />
+      <GamemastersCard frame={frame} fps={fps} />
 
       {/* ── Scene 11: Code distribution (45000 - 53999, 5 min before game start) ── */}
       <CodeDistributionScene frame={frame} fps={fps} gameCountdownSeconds={gameCountdown} />
@@ -2673,7 +2674,7 @@ export const MainEvent: React.FC = () => {
       </Sequence>
 
       {/* ── Scene 8: Linda transition back → AWS special guest intro (13380 - 15179) ── */}
-      <LindaGuestIntro frame={frame} fps={fps} />
+      <HostGuestIntro frame={frame} fps={fps} />
 
       {/* ── Scene 9a: Collab intro  -  5 s hold then community × AWS cards (15330 - 15660) ── */}
       <CollabIntroScene frame={frame} fps={fps} />
