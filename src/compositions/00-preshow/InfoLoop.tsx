@@ -62,7 +62,7 @@ import {
   CODES_TIME,
   EDITION_LABEL,
 } from "../../../config/event";
-import { USER_GROUPS, ORGANIZERS, AWS_SUPPORTERS, type UserGroup, getOrganizerRole, getOrganizerUserGroup } from "../../../config/participants";
+import { USER_GROUPS, COUNTRIES, ORGANIZERS, AWS_SUPPORTERS, type UserGroup, getOrganizerRole, getOrganizerUserGroup } from "../../../config/participants";
 
 const ALL_PEOPLE    = [...ORGANIZERS, ...AWS_SUPPORTERS];
 const HOST          = ALL_PEOPLE.find((p) => p.streamRole === "host")!;
@@ -404,7 +404,7 @@ const SlideHero: React.FC = () => {
 
   const stats = [
     { v: String(USER_GROUPS.length), l: "User Groups", c: GD_GOLD },
-    { v: "23", l: "Countries", c: GD_PINK },
+    { v: String(COUNTRIES.length), l: "Countries", c: GD_PINK },
     { v: "4", l: "Timezones", c: GD_VIOLET },
     { v: "1st", l: "Edition", c: GD_ORANGE },
   ];
@@ -1376,7 +1376,7 @@ const SlideFinalCountdown: React.FC = () => {
 const SlideStats: React.FC = () => {
   const stats = [
     { v: String(USER_GROUPS.length), l: "User Groups", sub: "Cities across Europe", c: GD_GOLD },
-    { v: "23", l: "Countries", sub: "From Iceland to Turkey", c: GD_PINK },
+    { v: String(COUNTRIES.length), l: "Countries", sub: "From Iceland to Turkey", c: GD_PINK },
     { v: "4", l: "Timezones", sub: "UTC+0 through UTC+3", c: GD_VIOLET },
     { v: "1st", l: "Edition", sub: "History being made today", c: GD_ORANGE },
   ];

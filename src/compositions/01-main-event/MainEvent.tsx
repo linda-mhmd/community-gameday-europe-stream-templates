@@ -2597,7 +2597,7 @@ export const MainEvent: React.FC = () => {
       inFrame: S.STAT1_IN, outFrame: S.STAT1_OUT,
     },
     {
-      value: "23", label: "Countries", sub: "United for the first time",
+      value: String(COUNTRIES.length), label: "Countries", sub: "United for the first time",
       color: GD_VIOLET, icon: <GlobeIcon s={32} c={GD_VIOLET} />,
       inFrame: S.STAT2_IN, outFrame: S.STAT2_OUT,
     },
