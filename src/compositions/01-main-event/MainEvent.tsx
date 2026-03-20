@@ -78,9 +78,11 @@ import {
 import { AWS_SUPPORTERS as CONFIG_AWS, ORGANIZERS, USER_GROUPS } from "../../../config/participants";
 
 // ── Derived from config ──────────────────────────────────────────────────────
-const ALL_PEOPLE  = [...ORGANIZERS, ...CONFIG_AWS];
-const GAMEMASTERS = ALL_PEOPLE.filter((p) => p.streamRole === "gamemaster");
-const GM_LABEL    = GAMEMASTERS.map((p) => p.name).join(" & ");
+const ALL_PEOPLE    = [...ORGANIZERS, ...CONFIG_AWS];
+const GAMEMASTERS   = ALL_PEOPLE.filter((p) => p.streamRole === "gamemaster");
+const GM_LABEL      = GAMEMASTERS.map((p) => p.name).join(" & ");
+const CO_ORGANIZERS = ALL_PEOPLE.filter((p) => p.streamRole === "co-organizer");
+const CO_ORG_LABEL  = CO_ORGANIZERS.map((p) => p.name).join(" & ");
 
 const HOST      = ALL_PEOPLE.find((p) => p.streamRole === "host")!;
 const PRESENTER = ALL_PEOPLE.find((p) => p.streamRole === "support-presenter")!;
@@ -234,7 +236,7 @@ const SEGMENTS: ScheduleSegment[] = [
 
 const CHAPTERS: ScheduleSegment[] = [
   { label: `${HOST.fullName ?? HOST.name}  - Welcome`,           startFrame: 0,     endFrame: 1799,  speakers: HOST.fullName ?? HOST.name },
-  { label: "Jerome & Anda",                    startFrame: 1800,  endFrame: 9299,  speakers: "Jerome & Anda" },
+  { label: CO_ORG_LABEL,                        startFrame: 1800,  endFrame: 9299,  speakers: CO_ORG_LABEL },
   { label: `${HOST.fullName ?? HOST.name}  - Transition`,        startFrame: 9300,  endFrame: 10799, speakers: HOST.fullName ?? HOST.name },
   { label: `${PRESENTER.fullName ?? PRESENTER.name}  - Support Process`, startFrame: 10800, endFrame: 13379, speakers: PRESENTER.fullName ?? PRESENTER.name },
   { label: `${HOST.fullName ?? HOST.name}  - Intro Guest`,       startFrame: 13380, endFrame: 15179, speakers: HOST.fullName ?? HOST.name },
@@ -961,7 +963,7 @@ const CoOrganizersCard: React.FC<{ frame: number; fps: number }> = ({ frame, fps
   const off = interpolate(sp, [0, 1], [24, 0]);
 
   const CARD_COLORS = [GD_VIOLET, GD_PINK, GD_ACCENT, GD_ORANGE];
-  const people = ORGANIZERS.filter((p) => p.type === "community").slice(0, 2).map((p, i) => ({
+  const people = CO_ORGANIZERS.map((p, i) => ({
     name: p.name,
     face: p.face,
     title: "AWS User Group Leader",
