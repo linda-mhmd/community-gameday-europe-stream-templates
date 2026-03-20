@@ -26,7 +26,7 @@ import {
   TYPOGRAPHY,
 } from "../../design";
 import { formatTime } from "../../utils/timing";
-import { USER_GROUPS, ORGANIZERS, AWS_SUPPORTERS } from "../../../config/participants";
+import { USER_GROUPS, ORGANIZERS, AWS_SUPPORTERS, type UserGroup } from "../../../config/participants";
 import { EVENT_DATE, EVENT_NAME } from "../../../config/event";
 
 // Format EVENT_DATE ("2026-03-17") → "17 MARCH 2026"
@@ -35,16 +35,10 @@ const EVENT_DATE_DISPLAY = new Date(_ey, _em - 1, _ed).toLocaleDateString("en-GB
   day: "numeric", month: "long", year: "numeric",
 }).toUpperCase(); // "17 MARCH 2026"
 
-// ── Logo lookup (handles UG / User Group name variations) ──
+// ── Logo lookup by exact USER_GROUPS name ──
+// Cast to UserGroup is safe — `satisfies UserGroup[]` in participants.ts guarantees the shape.
 function findLogo(name: string): string | null {
-  // First: check logo field directly on USER_GROUPS entry (exact match)
-  const ug = USER_GROUPS.find((g) => g.name === name);
-  if (ug?.logo) return ug.logo;
-
-  // Fallback: fuzzy match against USER_GROUPS logos
-  const fuzzy = USER_GROUPS.find((g) => g.name.includes(name) || name.includes(g.name));
-  if (fuzzy?.logo) return fuzzy.logo;
-  return null;
+  return (USER_GROUPS.find((g) => g.name === name) as UserGroup | undefined)?.logo ?? null;
 }
 
 // ── SVG Icons ──

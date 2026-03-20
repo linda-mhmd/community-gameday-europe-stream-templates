@@ -75,7 +75,7 @@ import {
   EVENT_EDITION,
   SUPPORT_VIDEO_AVAILABLE,
 } from "../../../config/event";
-import { AWS_SUPPORTERS as CONFIG_AWS, ORGANIZERS, USER_GROUPS } from "../../../config/participants";
+import { AWS_SUPPORTERS as CONFIG_AWS, ORGANIZERS, USER_GROUPS, type UserGroup } from "../../../config/participants";
 
 // ── Derived from config ──────────────────────────────────────────────────────
 const ALL_PEOPLE    = [...ORGANIZERS, ...CONFIG_AWS];
@@ -214,13 +214,14 @@ const GD_MAP       = staticFile("assets/europe-map.png");
 const GAMEDAY_LOGO = staticFile("assets/logos/gameday-logo-white.png");
 const SUPPORT_VID  = staticFile("assets/support-process-h264.mp4");
 // UG logos derived from USER_GROUPS — add logo URLs to participants.ts, not here
-function ugLogo(name: string): string | undefined {
-  return USER_GROUPS.find((g) => g.name === name)?.logo;
+// Cast to UserGroup is safe — `satisfies UserGroup[]` in participants.ts guarantees the shape.
+function ugLogo(name: string | undefined): string | undefined {
+  if (!name) return undefined;
+  return (USER_GROUPS.find((g) => g.name === name) as UserGroup | undefined)?.logo;
 }
-const UG_VIE_LOGO = ugLogo(HOST.role);
-const UG_BEL_LOGO = ugLogo("AWS User Group Belgium");
-const UG_GEN_LOGO = ugLogo("AWS Swiss UG  -  Geneva");
-const UG_BUD_LOGO = PRESENTER ? ugLogo(PRESENTER.role) : undefined;
+const UG_VIE_LOGO     = ugLogo(HOST.userGroup);
+const UG_CO_ORG_LOGOS = CO_ORGANIZERS.map((p) => ugLogo(p.userGroup)).filter(Boolean);
+const UG_BUD_LOGO     = PRESENTER ? ugLogo(PRESENTER.userGroup) : undefined;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // SCHEDULE DATA
@@ -968,7 +969,7 @@ const CoOrganizersCard: React.FC<{ frame: number; fps: number }> = ({ frame, fps
     face: p.face,
     title: "AWS User Group Leader",
     ug: p.role,
-    ugLogo: USER_GROUPS.find((g) => g.name === p.role)?.logo,
+    ugLogo: ugLogo(p.userGroup),
     city: p.country,
     color: CARD_COLORS[i] ?? GD_ACCENT,
   }));
@@ -1443,7 +1444,7 @@ const CodeDistributionScene: React.FC<{
         opacity: logosSp,
         transform: `translateY(${interpolate(logosSp, [0, 1], [8, 0])}px)`,
       }}>
-        {[UG_VIE_LOGO, UG_BEL_LOGO, UG_GEN_LOGO, UG_BUD_LOGO].filter(Boolean).map((logo, i) => (
+        {[UG_VIE_LOGO, ...UG_CO_ORG_LOGOS, UG_BUD_LOGO].filter(Boolean).map((logo, i) => (
           <div key={i} style={{
             width: 56, height: 56, borderRadius: 12,
             background: "rgba(255,255,255,0.05)",

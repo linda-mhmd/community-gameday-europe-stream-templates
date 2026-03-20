@@ -54,7 +54,7 @@ import {
   HOST_TIMEZONE,
   STREAM_START_TIME,
 } from "../../../config/event";
-import { USER_GROUPS, ORGANIZERS, AWS_SUPPORTERS } from "../../../config/participants";
+import { USER_GROUPS, ORGANIZERS, AWS_SUPPORTERS, type UserGroup } from "../../../config/participants";
 
 const ALL_PEOPLE    = [...ORGANIZERS, ...AWS_SUPPORTERS];
 const HOST          = ALL_PEOPLE.find((p) => p.streamRole === "host")!;
@@ -94,16 +94,10 @@ const SHUFFLED = [...USER_GROUPS].sort((a, b) => {
   return h(a.name) - h(b.name);
 });
 
-// ─── Logo lookup (handles UG / User Group name variations) ────────────────────
+// ─── Logo lookup by exact USER_GROUPS name ────────────────────────────────────
+// Cast to UserGroup is safe — `satisfies UserGroup[]` in participants.ts guarantees the shape.
 function findLogo(name: string): string | null {
-  // First: check logo field directly on USER_GROUPS entry (exact match)
-  const ug = USER_GROUPS.find((g) => g.name === name);
-  if (ug?.logo) return ug.logo;
-
-  // Fallback: fuzzy match against USER_GROUPS logos
-  const fuzzy = USER_GROUPS.find((g) => g.name.includes(name) || name.includes(g.name));
-  if (fuzzy?.logo) return fuzzy.logo;
-  return null;
+  return (USER_GROUPS.find((g) => g.name === name) as UserGroup | undefined)?.logo ?? null;
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -473,7 +467,7 @@ const SlideWhatsHappening: React.FC = () => {
 // SLIDE 3 - Meet the Stream Host (StreamHostCard-inspired)
 // ═══════════════════════════════════════════════════════════════════════════════
 const SlideMeetHost: React.FC = () => {
-  const ugLogo = USER_GROUPS.find((g) => g.name === HOST.role)?.logo;
+  const ugLogo = findLogo(HOST.userGroup ?? HOST.role);
   const cardE = useEntry(0);
   const textE = useStagger(3, 8);
   const noteE = useStagger(10, 8);
@@ -537,7 +531,7 @@ const SlideMeetCoOrganizers: React.FC = () => {
   const people = CO_ORGANIZERS.map((person, i) => ({
     person,
     c: CO_ORG_COLORS[i % CO_ORG_COLORS.length],
-    logo: findLogo(person.role),
+    logo: findLogo(person.userGroup ?? person.role),
     desc: person.bio?.[0] ?? "",
   }));
 
@@ -939,7 +933,7 @@ const SlideAllOrganizers: React.FC = () => (
     <div style={{ display: "flex", flexWrap: "wrap", gap: 12, justifyContent: "center", maxWidth: 1140, marginBottom: 24 }}>
       {ORGANIZERS.map((p, i) => {
         const o = useStagger(i, 5);
-        const logo = findLogo(p.role.replace("AWS ", "AWS User Group ").split(",")[0]) ?? findLogo(p.role);
+        const logo = p.userGroup ? findLogo(p.userGroup) : null;
         return (
           <div key={p.name} style={{ opacity: o, transform: `translateY(${interpolate(o, [0, 1], [14, 0])}px)`, display: "flex", alignItems: "center", gap: 14, background: "rgba(255,255,255,0.05)", border: `1px solid ${GD_PURPLE}33`, borderRadius: 14, padding: "14px 18px", width: 350 }}>
             <Img src={staticFile(p.face)} style={{ width: 56, height: 56, borderRadius: 28, objectFit: "cover", flexShrink: 0 }} />
