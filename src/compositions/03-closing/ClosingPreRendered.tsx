@@ -27,7 +27,7 @@ import {
 } from "../../design";
 import { formatTime } from "../../utils/timing";
 import { USER_GROUPS, ORGANIZERS, AWS_SUPPORTERS, type UserGroup, getOrganizerRole } from "../../../config/participants";
-import { EVENT_DATE, EVENT_NAME } from "../../../config/event";
+import { EVENT_DATE, EVENT_NAME, TIMEZONE_COUNT, GAMEPLAY_HOURS } from "../../../config/event";
 
 // Format EVENT_DATE ("2026-03-17") → "17 MARCH 2026"
 const [_ey, _em, _ed] = EVENT_DATE.split("-").map(Number);
@@ -111,6 +111,18 @@ const UNIQUE_FLAGS = Array.from(new Set(USER_GROUPS.map((g) => g.flag)));
 // ── Card Accent Colors ──
 const CARD_ACCENTS = [GD_VIOLET, GD_PURPLE, GD_PINK, GD_ACCENT, "#6366f1", GD_VIOLET];
 
+// ── Responsive people-grid layout helper ──
+// Returns flex container width and per-item sizes for 1–9 people.
+// Using flexbox + justifyContent:"center" means incomplete last rows are also centered.
+function peopleLayout(n: number): { imgSize: number; itemW: number; colGap: number; rowGap: number; containerW: number } {
+  const cols   = n <= 3 ? n : n === 4 ? 2 : n <= 6 ? 3 : n <= 8 ? 4 : 3;
+  const imgSize = n <= 2 ? 150 : n <= 4 ? 135 : n <= 6 ? 125 : 115;
+  const colGap  = n <= 2 ? 90  : n <= 4 ? 70  : n <= 6 ? 55  : 45;
+  const rowGap  = 44;
+  const itemW   = imgSize + 50; // fixed width so text wraps inside
+  return { imgSize, itemW, colGap, rowGap, containerW: cols * itemW + (cols - 1) * colGap };
+}
+
 // ── Transition Flash Constants ──
 const FLASH_DURATION = 60;
 const PHASE_BOUNDARY_FRAMES_A = [0];
@@ -173,11 +185,11 @@ const HeroIntro: React.FC<{ frame: number }> = ({ frame }) => {
   // ── SCENE 2: Stats cascade (frames 160-379)  -  overlaps with scene 1 for crossfade ──
   const s2Opacity = interpolate(frame, [160, 195, 350, 379], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   const STATS = [
-    { value: 53, label: "USER GROUPS", suffix: "+", delay: 190 },
+    { value: USER_GROUPS.length, label: "USER GROUPS", suffix: "+", delay: 190 },
     { value: COUNTRIES.length, label: "COUNTRIES", suffix: "+", delay: 210 },
-    { value: 2, label: "HOURS OF GAMEPLAY", suffix: "", delay: 230 },
+    { value: GAMEPLAY_HOURS, label: "HOURS OF GAMEPLAY", suffix: "", delay: 230 },
     { value: 1, label: "EPIC DAY", suffix: "", delay: 250 },
-    { value: 4, label: "TIMEZONES", suffix: "+", delay: 270 },
+    { value: TIMEZONE_COUNT, label: "TIMEZONES", suffix: "+", delay: 270 },
   ];
 
   // ── SCENE 3: Flag parade (frames 360-549)  -  overlaps with scene 2 ──
@@ -343,41 +355,52 @@ const HeroIntro: React.FC<{ frame: number }> = ({ frame }) => {
               color: GD_VIOLET, letterSpacing: 1,
             }}>From the Community, for the Community</div>
           </div>
-          {/* Organizer cards */}
-          <div style={{
-            position: "absolute", top: "25%", left: "50%", transform: "translateX(-50%)",
-            display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "36px 80px", maxWidth: 1250,
-          }}>
-            {ORGANIZERS.map((org, i) => {
-              const cardSpring = spring({ frame: Math.max(0, frame - 565 - i * 18), fps, config: { damping: 18, stiffness: 80, mass: 1 } });
-              const cardScale = interpolate(cardSpring, [0, 1], [0.5, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
-              return (
-                <div key={org.name} style={{
-                  display: "flex", flexDirection: "column", alignItems: "center", gap: 10,
-                  opacity: cardSpring, transform: `scale(${cardScale}) translateY(${interpolate(cardSpring, [0, 1], [20, 0])}px)`,
+          {/* Organizer cards — responsive flex grid, 1-9 people */}
+          {(() => {
+            const gl = peopleLayout(ORGANIZERS.length);
+            return (
+              <div style={{
+                position: "absolute", top: 130, bottom: 20, left: 0, right: 0,
+                display: "flex", alignItems: "center", justifyContent: "center",
+              }}>
+                <div style={{
+                  display: "flex", flexWrap: "wrap", justifyContent: "center",
+                  gap: `${gl.rowGap}px ${gl.colGap}px`,
+                  width: gl.containerW,
                 }}>
-                  <div style={{
-                    width: 130, height: 130, borderRadius: "50%", overflow: "hidden",
-                    boxShadow: `0 0 30px ${GD_VIOLET}70, 0 0 60px ${GD_PURPLE}40, 0 4px 16px rgba(0,0,0,0.4)`,
-                  }}>
-                    <Img src={staticFile(org.face)} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                  </div>
-                  <div style={{ textAlign: "center" }}>
-                    <div style={{ fontSize: TYPOGRAPHY.h6, fontWeight: 800, color: "#ffffff", fontFamily: "'Inter', sans-serif" }}>
-                      {org.name}
-                    </div>
-                    <div style={{ fontSize: TYPOGRAPHY.bodySmall, color: "rgba(255,255,255,0.55)", fontFamily: "'Inter', sans-serif", marginTop: 3, whiteSpace: "nowrap" }}>
-                      {getOrganizerRole(org)}
-                    </div>
-                    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 4, marginTop: 2 }}>
-                      <span style={{ fontSize: 16 }}>{org.flag}</span>
-                      <span style={{ fontSize: TYPOGRAPHY.caption, color: "rgba(255,255,255,0.4)", fontFamily: "'Inter', sans-serif" }}>{org.location}</span>
-                    </div>
-                  </div>
+                  {ORGANIZERS.map((org, i) => {
+                    const cardSpring = spring({ frame: Math.max(0, frame - 565 - i * 18), fps, config: { damping: 18, stiffness: 80, mass: 1 } });
+                    const cardScale = interpolate(cardSpring, [0, 1], [0.5, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+                    return (
+                      <div key={org.name} style={{
+                        width: gl.itemW, display: "flex", flexDirection: "column", alignItems: "center", gap: 10,
+                        opacity: cardSpring, transform: `scale(${cardScale}) translateY(${interpolate(cardSpring, [0, 1], [20, 0])}px)`,
+                      }}>
+                        <div style={{
+                          width: gl.imgSize, height: gl.imgSize, borderRadius: "50%", overflow: "hidden",
+                          boxShadow: `0 0 30px ${GD_VIOLET}70, 0 0 60px ${GD_PURPLE}40, 0 4px 16px rgba(0,0,0,0.4)`,
+                        }}>
+                          <Img src={staticFile(org.face)} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                        </div>
+                        <div style={{ textAlign: "center" }}>
+                          <div style={{ fontSize: TYPOGRAPHY.h6, fontWeight: 800, color: "#ffffff", fontFamily: "'Inter', sans-serif" }}>
+                            {org.name}
+                          </div>
+                          <div style={{ fontSize: TYPOGRAPHY.bodySmall, color: "rgba(255,255,255,0.55)", fontFamily: "'Inter', sans-serif", marginTop: 3 }}>
+                            {getOrganizerRole(org)}
+                          </div>
+                          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 4, marginTop: 2 }}>
+                            <span style={{ fontSize: 16 }}>{org.flag}</span>
+                            <span style={{ fontSize: TYPOGRAPHY.caption, color: "rgba(255,255,255,0.4)", fontFamily: "'Inter', sans-serif" }}>{org.location}</span>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
-              );
-            })}
-          </div>
+              </div>
+            );
+          })()}
         </AbsoluteFill>
       )}
 
@@ -402,41 +425,54 @@ const HeroIntro: React.FC<{ frame: number }> = ({ frame }) => {
               Orga Support & Gamemasters making this event possible
             </span>
           </div>
-          {/* AWS supporter cards  -  grid layout */}
-          <div style={{
-            position: "absolute", top: "28%", left: "50%", transform: "translateX(-50%)",
-            display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "24px 50px", maxWidth: 1100,
-          }}>
-            {AWS_SUPPORTERS.map((person, i) => {
-              const cardSpring = spring({ frame: Math.max(0, frame - 1070 - i * 18), fps, config: { damping: 18, stiffness: 80, mass: 1 } });
-              const cardScale = interpolate(cardSpring, [0, 1], [0.5, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
-              return (
-                <div key={person.name} style={{
-                  display: "flex", flexDirection: "column", alignItems: "center", gap: 8,
-                  opacity: cardSpring, transform: `scale(${cardScale}) translateY(${interpolate(cardSpring, [0, 1], [20, 0])}px)`,
+          {/* AWS supporter cards — responsive flex grid, 1-9 people */}
+          {(() => {
+            const gl = peopleLayout(AWS_SUPPORTERS.length);
+            return (
+              <div style={{
+                position: "absolute", top: 130, bottom: 180, left: 0, right: 0,
+                display: "flex", alignItems: "center", justifyContent: "center",
+              }}>
+                <div style={{
+                  display: "flex", flexWrap: "wrap", justifyContent: "center",
+                  gap: `${gl.rowGap}px ${gl.colGap}px`,
+                  width: gl.containerW,
                 }}>
-                  <div style={{
-                    width: 120, height: 120, borderRadius: "50%", overflow: "hidden",
-                    boxShadow: `0 0 30px ${GD_ORANGE}70, 0 0 60px ${GD_ORANGE}40, 0 4px 16px rgba(0,0,0,0.4)`,
-                    border: `2px solid ${GD_ORANGE}40`,
-                  }}>
-                    <Img src={staticFile(person.face)} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                  </div>
-                  <div style={{ textAlign: "center" }}>
-                    <div style={{ fontSize: TYPOGRAPHY.h6, fontWeight: 800, color: "#ffffff", fontFamily: "'Inter', sans-serif" }}>
-                      {person.name}
-                    </div>
-                    <div style={{ fontSize: TYPOGRAPHY.bodySmall, color: "rgba(255,255,255,0.55)", fontFamily: "'Inter', sans-serif", marginTop: 3, whiteSpace: "nowrap" }}>
-                      {getOrganizerRole(person)}
-                    </div>
-                    <div style={{ fontSize: TYPOGRAPHY.caption, color: "rgba(255,255,255,0.4)", fontFamily: "'Inter', sans-serif", marginTop: 2 }}>
-                      {person.location}
-                    </div>
-                  </div>
+                  {AWS_SUPPORTERS.map((person, i) => {
+                    const cardSpring = spring({ frame: Math.max(0, frame - 1070 - i * 18), fps, config: { damping: 18, stiffness: 80, mass: 1 } });
+                    const cardScale = interpolate(cardSpring, [0, 1], [0.5, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+                    return (
+                      <div key={person.name} style={{
+                        width: gl.itemW, display: "flex", flexDirection: "column", alignItems: "center", gap: 8,
+                        opacity: cardSpring, transform: `scale(${cardScale}) translateY(${interpolate(cardSpring, [0, 1], [20, 0])}px)`,
+                      }}>
+                        <div style={{
+                          width: gl.imgSize, height: gl.imgSize, borderRadius: "50%", overflow: "hidden",
+                          boxShadow: `0 0 30px ${GD_ORANGE}70, 0 0 60px ${GD_ORANGE}40, 0 4px 16px rgba(0,0,0,0.4)`,
+                          border: `2px solid ${GD_ORANGE}40`,
+                        }}>
+                          <Img src={staticFile(person.face)} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                        </div>
+                        <div style={{ textAlign: "center" }}>
+                          <div style={{ fontSize: TYPOGRAPHY.h6, fontWeight: 800, color: "#ffffff", fontFamily: "'Inter', sans-serif" }}>
+                            {person.name}
+                          </div>
+                          <div style={{ fontSize: TYPOGRAPHY.bodySmall, color: "rgba(255,255,255,0.55)", fontFamily: "'Inter', sans-serif", marginTop: 3 }}>
+                            {getOrganizerRole(person)}
+                          </div>
+                          {person.location && (
+                            <div style={{ fontSize: TYPOGRAPHY.caption, color: "rgba(255,255,255,0.4)", fontFamily: "'Inter', sans-serif", marginTop: 2 }}>
+                              {person.location}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
-              );
-            })}
-          </div>
+              </div>
+            );
+          })()}
 
           {/* Thank-you sentences */}
           <div style={{
