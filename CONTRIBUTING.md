@@ -14,7 +14,29 @@ This project is licensed under [CC BY-NC-SA 4.0](LICENSE). This means:
 
 ## How to adapt for your own event
 
-All event-specific data lives in `config/`. You should only need to change these four files:
+There are two scenarios:
+
+### Scenario A — use the template as-is, change only event data
+
+Fork [`community-gameday-europe-event`](https://github.com/mzzavaa/community-gameday-europe-event), update the config files, push. The template repo (this one) is pulled automatically during the build. You never touch this repo.
+
+→ See the [event repo README](https://github.com/mzzavaa/community-gameday-europe-event) for setup steps.
+
+### Scenario B — modify the template itself (compositions, design, new inserts)
+
+1. Fork this repo (`community-gameday-europe-stream-templates`) and make your changes
+2. Fork [`community-gameday-europe-event`](https://github.com/mzzavaa/community-gameday-europe-event) for your event config
+3. In your event repo fork, go to **Settings → Secrets and variables → Actions → Variables tab**
+4. Create a repository variable:
+   - **Name:** `TEMPLATE_REPO`
+   - **Value:** `your-org/your-template-repo-name`
+5. Push to `main` — your event repo now builds from your modified template
+
+No workflow file edits needed.
+
+---
+
+All event-specific data lives in `config/`. You should only need to change these files:
 
 ### `config/event.ts`
 Update event name, edition year, date, host timezone, and timing offsets:
