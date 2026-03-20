@@ -6,7 +6,7 @@
  */
 
 import { TIMEZONE_COUNT, EDITION, GAMEPLAY_HOURS } from "../../config/event";
-import { USER_GROUPS, COUNTRIES, type StatType, type StatConfig } from "../../config/participants";
+import { USER_GROUPS, COUNTRIES, EVENT_REGION, type StatType, type StatConfig } from "../../config/participants";
 import { GEO_EXTREMES } from "../../config/geo-extremes";
 
 export interface StatItem {
@@ -23,7 +23,7 @@ export interface StatItem {
 }
 
 const STAT_DEFS: Record<StatType, StatItem> = {
-  "user-groups":    { v: String(USER_GROUPS.length), n: USER_GROUPS.length, l: "User Groups",      sub: "Cities across Europe",       suffix: "+" },
+  "user-groups":    { v: String(USER_GROUPS.length), n: USER_GROUPS.length, l: "User Groups",      sub: `Cities across ${EVENT_REGION}`,       suffix: "+" },
   "countries":      { v: String(COUNTRIES.length),   n: COUNTRIES.length,   l: "Countries",         sub: `From ${GEO_EXTREMES.northCountry} to ${GEO_EXTREMES.southCountry}`, suffix: "+" },
   "timezones":      { v: String(TIMEZONE_COUNT),     n: TIMEZONE_COUNT,     l: "Timezones",         sub: "UTC+0 through UTC+3",        suffix: "+" },
   "edition":        { v: EDITION,                    n: 1,                  l: "Edition",           sub: "History being made today",   suffix: "st" },

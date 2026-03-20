@@ -77,8 +77,9 @@ import {
   CODES_TIME,
   GAME_START as GAME_START_LABEL,
   EDITION_LABEL,
+  TIMEZONE_COUNT,
 } from "../../../config/event";
-import { AWS_SUPPORTERS as CONFIG_AWS, ORGANIZERS, USER_GROUPS, COUNTRIES, DISPLAY_STATS, COMMUNITY_PROGRAM_LABELS, type UserGroup, getOrganizerRole, getOrganizerUserGroup } from "../../../config/participants";
+import { AWS_SUPPORTERS as CONFIG_AWS, ORGANIZERS, USER_GROUPS, COUNTRIES, DISPLAY_STATS, COMMUNITY_PROGRAM_LABELS, EVENT_REGION, type UserGroup, getOrganizerRole, getOrganizerUserGroup } from "../../../config/participants";
 import { resolveStats } from "../../utils/stats";
 
 // ── Derived from config ──────────────────────────────────────────────────────
@@ -862,9 +863,9 @@ const SpeechBubble: React.FC<{ frame: number; fps: number }> = ({ frame, fps }) 
           fontSize: TYPOGRAPHY.body, fontWeight: 500, color: "white",
           fontFamily: FF, lineHeight: 1.65,
         }}>
-          {`"Today we will have `}<strong style={{ color: GD_ACCENT }}>{USER_GROUPS.length} AWS User Groups</strong>{` all over Europe competing
-          against each other across `}<strong style={{ color: GD_VIOLET }}>23 countries</strong>{` and
-          4 timezones - the ${EDITION_LABEL} of ${EVENT_NAME}."`}
+          {`"Today we will have `}<strong style={{ color: GD_ACCENT }}>{USER_GROUPS.length} AWS User Groups</strong>{` across ${EVENT_REGION} competing
+          against each other across `}<strong style={{ color: GD_VIOLET }}>{COUNTRIES.length} countries</strong>{`
+          and ${TIMEZONE_COUNT} timezones - the ${EDITION_LABEL} of ${EVENT_NAME}."`}
         </div>
       </GlassCard>
       {/* Tail */}
@@ -972,7 +973,7 @@ const CoOrganizersCard: React.FC<{ frame: number; fps: number }> = ({ frame, fps
     name: p.name,
     face: p.face,
     title: "AWS User Group Leader",
-    ug: getOrganizerRole(p),
+    ug: getOrganizerUserGroup(p) ?? "",
     ugLogo: ugLogo(getOrganizerUserGroup(p)),
     location: p.location ?? "",
     color: CARD_COLORS[i] ?? GD_ACCENT,
@@ -1010,7 +1011,7 @@ const CoOrganizersCard: React.FC<{ frame: number; fps: number }> = ({ frame, fps
               fontSize: TYPOGRAPHY.h6, fontWeight: 600,
               color: "rgba(255,255,255,0.65)", fontFamily: FF,
             }}>
-              How Community GameDay Europe was born
+              About {EVENT_NAME}
             </div>
           </div>
 
@@ -1463,7 +1464,7 @@ const CodeDistributionScene: React.FC<{
           fontSize: TYPOGRAPHY.caption, color: "rgba(255,255,255,0.28)",
           fontFamily: FF, marginLeft: 6,
         }}>
-          + 49 more user groups across Europe
+          {`+ ${Math.max(0, USER_GROUPS.length - [UG_VIE_LOGO, ...UG_CO_ORG_LOGOS, UG_BUD_LOGO].filter(Boolean).length)} more user groups`}
         </div>
       </div>
 
@@ -2204,7 +2205,7 @@ const CollabIntroScene: React.FC<{ frame: number; fps: number }> = ({ frame, fps
               fontSize: TYPOGRAPHY.caption, color: "rgba(255,255,255,0.45)",
               fontFamily: FF, marginBottom: 18,
             }}>
-              8 organizers from AWS User Groups across Europe
+              {ORGANIZERS.filter((p) => p.type === "community").length} organizers from AWS User Groups
             </div>
 
             {/* Program logos */}

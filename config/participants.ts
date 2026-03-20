@@ -212,6 +212,8 @@ export const AWS_SUPPORTERS: Organizer[] = [
   { name: "Natalia", jobTitle: "DevEx Community Manager, AWS",      flag: "🌍", face: "assets/faces/natalia.jpg", type: "aws" },
 ];
 
+export const EVENT_REGION = "Europe";
+
 // ── Display Stats Config ────────────────────────────────────────────────────
 // Pick which 1–5 stats appear in the "By the Numbers" sections.
 // Values are resolved automatically from participants + event config.

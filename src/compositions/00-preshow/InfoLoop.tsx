@@ -63,7 +63,7 @@ import {
   EDITION_LABEL,
 
 } from "../../../config/event";
-import { USER_GROUPS, ORGANIZERS, AWS_SUPPORTERS, DISPLAY_STATS, type UserGroup, getOrganizerRole, getOrganizerUserGroup } from "../../../config/participants";
+import { USER_GROUPS, ORGANIZERS, AWS_SUPPORTERS, DISPLAY_STATS, EVENT_REGION, type UserGroup, getOrganizerRole, getOrganizerUserGroup } from "../../../config/participants";
 import { resolveStats } from "../../utils/stats";
 
 // Colours assigned left-to-right to whatever stats are in DISPLAY_STATS
@@ -454,10 +454,10 @@ const SlideHero: React.FC = () => {
 // ═══════════════════════════════════════════════════════════════════════════════
 const SlideWhatsHappening: React.FC = () => {
   const cards = [
-    { icon: <BroadcastIcon size={28} color={GD_VIOLET} />, title: `One Stream, ${USER_GROUPS.length} Cities`, body: "Right now, AWS User Groups all over Europe are watching this exact stream at their local venue. You are part of the first-ever pan-European AWS Community GameDay.", c: GD_VIOLET },
+    { icon: <BroadcastIcon size={28} color={GD_VIOLET} />, title: `One Stream, ${USER_GROUPS.length} Cities`, body: `Right now, AWS User Groups across ${EVENT_REGION} are watching this exact stream at their local venue. You are part of the first-ever ${EVENT_NAME}.`, c: GD_VIOLET },
     { icon: <VolumeMuteIcon size={28} color={GD_PINK} />, title: "Why Is It Muted Right Now?", body: `This is the pre-show loop before the live stream at ${STREAM_START_LABEL}. At ${AUDIO_CHECK} the stream host will do a ~30 second audio test - make sure you can hear it!`, c: GD_PINK },
     { icon: <GamepadIcon size={28} color={GD_GOLD} />, title: "The Competition", body: `At ${GAME_START_LABEL} all ${USER_GROUPS.length} groups start a 2-hour AWS challenge simultaneously. Your local UG leader gives your team access codes at ${CODES_TIME}.`, c: GD_GOLD },
-    { icon: <TrophyIcon size={28} color={GD_ORANGE} />, title: "Stay for the Closing!", body: `At ${GAME_END_LABEL} the stream returns live. Winners are revealed globally, together. Don't leave - celebrate with ${USER_GROUPS.length} cities across Europe all at once.`, c: GD_ORANGE },
+    { icon: <TrophyIcon size={28} color={GD_ORANGE} />, title: "Stay for the Closing!", body: `At ${GAME_END_LABEL} the stream returns live. Winners are revealed globally, together. Don't leave - celebrate with ${USER_GROUPS.length} cities all at once.`, c: GD_ORANGE },
   ];
   return (
     <AbsoluteFill style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
@@ -519,7 +519,7 @@ const SlideMeetHost: React.FC = () => {
             ))}
           </GlassCard>
           <div style={{ opacity: noteE, transform: `translateY(${interpolate(noteE, [0, 1], [10, 0])}px)`, marginTop: 10, background: `${GD_PURPLE}22`, border: `1px solid ${GD_PURPLE}44`, borderRadius: 12, padding: "10px 16px", fontSize: TYPOGRAPHY.caption, color: "rgba(255,255,255,0.5)", lineHeight: 1.5 }}>
-            <strong style={{ color: GD_ACCENT }}>Not sure who this is?</strong> Just like the organizers of all local GameDay events across Europe, {HOST.fullName ?? HOST.name} is a volunteer who organizes community events in their free time. Not an AWS employee.
+            <strong style={{ color: GD_ACCENT }}>Not sure who this is?</strong> Just like the organizers of all local GameDay events, {HOST.fullName ?? HOST.name} is a volunteer who organizes community events in their free time. Not an AWS employee.
           </div>
         </div>
       </div>
@@ -897,7 +897,7 @@ const SlideSchedule: React.FC = () => {
           );
         })}
       </div>
-      {(() => { const o = useStagger(6, 7); return <div style={{ opacity: o, marginTop: 12, fontSize: TYPOGRAPHY.caption, color: "rgba(255,255,255,0.3)", letterSpacing: 1 }}>Broadcast simultaneously to all {USER_GROUPS.length} User Groups across Europe</div>; })()}
+      {(() => { const o = useStagger(6, 7); return <div style={{ opacity: o, marginTop: 12, fontSize: TYPOGRAPHY.caption, color: "rgba(255,255,255,0.3)", letterSpacing: 1 }}>Broadcast simultaneously to all {USER_GROUPS.length} User Groups across {EVENT_REGION}</div>; })()}
     </AbsoluteFill>
   );
 };
@@ -1378,7 +1378,7 @@ const SlideStats: React.FC = () => {
   const mapE = useStagger(5, 8);
   return (
     <AbsoluteFill style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-      <SectionLabel icon={<TrophyIcon size={20} color={GD_ACCENT} />} text="Community GameDay Europe - By the Numbers" />
+      <SectionLabel icon={<TrophyIcon size={20} color={GD_ACCENT} />} text={`${EVENT_NAME} - By the Numbers`} />
       <div style={{ display: "flex", gap: 20, marginBottom: 24 }}>
         {stats.map((s, i) => {
           const o = useStagger(i, 8);
