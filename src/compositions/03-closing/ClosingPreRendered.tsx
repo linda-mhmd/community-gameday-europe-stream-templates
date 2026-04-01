@@ -113,9 +113,8 @@ const UNIQUE_FLAGS = Array.from(new Set(USER_GROUPS.map((g) => g.flag)));
 const CARD_ACCENTS = [GD_VIOLET, GD_PURPLE, GD_PINK, GD_ACCENT, "#6366f1", GD_VIOLET];
 
 // ── Responsive people-grid layout helper ──
-// Returns flex container width and per-item sizes for 1–9 people.
-// Using flexbox + justifyContent:"center" means incomplete last rows are also centered.
-function peopleLayout(n: number): { imgSize: number; itemW: number; colGap: number; rowGap: number; containerW: number } {
+// Returns grid layout values for 1–9 people.
+function peopleLayout(n: number): { cols: number; imgSize: number; itemW: number; colGap: number; rowGap: number; containerW: number } {
   const cols   = n <= 3 ? n : n === 4 ? 2 : n <= 6 ? 3 : n <= 8 ? 4 : 3;
   const imgSize = n <= 2 ? 150 : n <= 4 ? 135 : n <= 6 ? 125 : 115;
   // colGap reduced slightly for n>6 to give each card more text room within 1280px canvas
@@ -123,7 +122,7 @@ function peopleLayout(n: number): { imgSize: number; itemW: number; colGap: numb
   const rowGap  = 44;
   // itemW widened for n>6: 195px lets "AWS User Group Leader" fit on one line at 16px
   const itemW   = n <= 6 ? imgSize + 50 : imgSize + 80;
-  return { imgSize, itemW, colGap, rowGap, containerW: cols * itemW + (cols - 1) * colGap };
+  return { cols, imgSize, itemW, colGap, rowGap, containerW: cols * itemW + (cols - 1) * colGap };
 }
 
 // ── Layout for AWS supporters — single row for n<=5, 2-row wrap grid for n>=6 ──
