@@ -8,7 +8,7 @@ Volunteer AWS User Group leaders, community organizers, and anyone running a com
 
 This project is licensed under [CC BY-NC-SA 4.0](LICENSE). This means:
 - You may use and adapt it for **non-commercial community events**
-- You must **credit** the original authors (AWS Community GameDay Europe organizers)
+- You must **credit** the original authors (AWS Community GameDay Europe co-organizer Linda Mohamed)
 - Derivative works must use the **same license**
 - **Commercial use is not permitted**
 
@@ -55,32 +55,24 @@ Update the segment timeline to match your event's run-of-show. All times are min
 Replace organizer bios, AWS supporter info, and the user group list with your event's participants. Update face image paths to match files in `public/assets/faces/`.
 
 ### `config/logos.ts`
-Add user group logo URLs. See the comment block at the top of the file for the Notion-based workflow used in the 2026 edition.
+Add user group logo URLs.
 
-## How to source user group logos
-
-The 2026 edition used a shared Notion database:
-1. Create a Notion database with one page per user group
-2. Each group uploads their logo as an image attachment
-3. Copy the Notion CDN URL (right-click image → copy image address)
-4. Add to `config/logos.ts`
-
-If a group has no logo, their flag emoji is shown as a fallback.
 
 ## How to contribute back
 
-Contributions welcome:
-- **New inserts**: Copy `_TEMPLATE.tsx`, customize, and submit a PR
-- **Composition improvements**: Bug fixes, accessibility, performance
-- **Logo additions**: New user groups added to future editions
-- **Documentation**: Clearer setup instructions, troubleshooting
+**PRs are not accepted from non-collaborators at this time.**
 
-### Submitting a PR
+This is a small project maintained by one person. The design, architecture, and roadmap are intentional - unsolicited PRs will be closed without review.
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Open a pull request with a clear description
+Here is what you can do:
+
+- **Bug reports** - open a GitHub issue if something is broken. Include steps to reproduce and what you expected to happen.
+- **Feature suggestions** - open a GitHub issue if you have an idea for a genuinely new capability (a new insert type, a new workflow integration, etc.). Suggestions for actual new features are welcome.
+- **Reach out directly** - if you want to collaborate or have something more substantial to discuss, contact me directly via GitHub or LinkedIn.
+
+**Design is not in scope for community input.** The visual design is maintained by me and is not open for pull requests or design review requests. If you need different visuals for your own event, fork the repo and make the changes in your fork (Scenario B above).
+
+If you are interested in becoming a collaborator, reach out and we can talk.
 
 ## About the ClosingWinnersTemplate automation
 
